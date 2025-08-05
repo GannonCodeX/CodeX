@@ -1,8 +1,8 @@
 // app/layout.js
 import "./globals.css";
 
-// IMPORTANT: Replace this with your actual production domain
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.gannoncodex.com';
+// IMPORTANT: Set NEXT_PUBLIC_SITE_URL in your Vercel project settings
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
 
 export const metadata = {
   metadataBase: new URL(siteUrl),
@@ -19,9 +19,9 @@ export const metadata = {
     siteName: 'Gannon CodeX',
     images: [
       {
-        url: '/assets/images/2x Logo Header.png', // Assuming this is the correct path in /public
-        width: 1200, // Replace with actual width
-        height: 630, // Replace with actual height
+        url: '/assets/images/2x Logo Header.png', // Relative path is correct with metadataBase
+        width: 1200,
+        height: 630,
       },
     ],
     locale: 'en_US',
@@ -31,7 +31,7 @@ export const metadata = {
     card: 'summary_large_image',
     title: 'Gannon CodeX',
     description: 'Gannon University\'s premier student-run coding organization.',
-    images: [siteUrl + '/assets/images/2x Logo Header.png'], // Must be an absolute URL
+    images: ['/assets/images/logo.png'], // Corrected path
   },
 };
 

@@ -41,19 +41,22 @@ export async function generateMetadata({ params: paramsPromise }) {
   if (!project) {
     return { title: 'Project Not Found' }
   }
+
+  const imageUrl = project.mainImage ? urlFor(project.mainImage).width(1200).height(630).url() : '/assets/images/logo.png';
+
   return {
     title: `${project.title} | Gannon CodeX`,
     description: project.excerpt,
     openGraph: {
       title: project.title,
       description: project.excerpt,
-      images: project.mainImage ? [
-        {
-          url: urlFor(project.mainImage).width(1200).height(630).url(),
-          width: 1200,
-          height: 630,
-        },
-      ] : [],
+      images: [{ url: imageUrl, width: 1200, height: 630 }],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: project.title,
+      description: project.excerpt,
+      images: [imageUrl],
     },
   }
 }

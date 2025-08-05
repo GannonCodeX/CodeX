@@ -39,19 +39,22 @@ export async function generateMetadata({ params: paramsPromise }) {
   if (!event) {
     return { title: 'Event Not Found' }
   }
+
+  const imageUrl = event.mainImage ? urlFor(event.mainImage).width(1200).height(630).url() : '/assets/images/logo.png';
+
   return {
     title: `${event.title} | Gannon CodeX`,
     description: event.description,
     openGraph: {
       title: event.title,
       description: event.description,
-      images: event.mainImage ? [
-        {
-          url: urlFor(event.mainImage).width(1200).height(630).url(),
-          width: 1200,
-          height: 630,
-        },
-      ] : [],
+      images: [{ url: imageUrl, width: 1200, height: 630 }],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: event.title,
+      description: event.description,
+      images: [imageUrl],
     },
   }
 }

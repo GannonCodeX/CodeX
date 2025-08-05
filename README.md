@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="public/assets/images/{GCX}.svg" alt="Gannon CodeX Logo" width="400"/>
+  <img src="public/assets/images/%7BGCX%7D.svg" alt="Gannon CodeX Logo" width="400"/>
   <h1><strong>Gannon CodeX - Official Website</strong></h1>
   <p>The source code for the official website of Gannon University's premier coding organization.</p>
   
