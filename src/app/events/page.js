@@ -1,12 +1,16 @@
-'use client';
-
-import React, { useState, useEffect } from 'react';
 import { client } from '@/sanity/lib/client';
 import Header from '@/app/components/Header';
 import Footer from '@/app/components/Footer';
-import EventCard from '@/app/components/EventCard';
+import EventsClient from './EventsClient'; // Import the new client component
 import styles from './events.module.css';
 
+// Metadata can stay here because this is now a Server Component
+export const metadata = {
+  title: 'Events | Gannon CodeX',
+  description: 'Explore upcoming and past events, workshops, and hackathons hosted by Gannon CodeX. Join us to learn, build, and connect with the tech community.',
+};
+
+// Data fetching happens on the server
 async function getEvents() {
   const query = `*[_type == "event"] | order(date desc){
     title,
@@ -20,19 +24,9 @@ async function getEvents() {
   return events;
 }
 
-const EventsPage = () => {
-  const [filter, setFilter] = useState('UPCOMING');
-  const [events, setEvents] = useState([]);
-
-  useEffect(() => {
-    async function fetchData() {
-      const allEvents = await getEvents();
-      setEvents(allEvents);
-    }
-    fetchData();
-  }, []);
-
-  const filteredEvents = events.filter(event => event.status === filter);
+// The page is now an async Server Component
+export default async function EventsPage() {
+  const events = await getEvents();
 
   return (
     <>
@@ -45,34 +39,12 @@ const EventsPage = () => {
           </p>
         </div>
 
-        <div className={styles.filterContainer}>
-          <button
-            className={`${styles.filterButton} ${filter === 'UPCOMING' ? styles.active : ''}`}
-            onClick={() => setFilter('UPCOMING')}
-          >
-            // Upcoming
-          </button>
-          <button
-            className={`${styles.filterButton} ${filter === 'PAST' ? styles.active : ''}`}
-            onClick={() => setFilter('PAST')}
-          >
-            // Past
-          </button>
-        </div>
+        {/* Render the client component with server-fetched data */}
+        <EventsClient initialEvents={events} />
 
-        <div className={styles.eventsGrid}>
-          {filteredEvents.length > 0 ? (
-            filteredEvents.map((event, index) => (
-              <EventCard key={index} event={event} />
-            ))
-          ) : (
-            <p className={styles.noEvents}>No {filter.toLowerCase()} events to show right now. Check back soon!</p>
-          )}
-        </div>
       </main>
       <Footer />
     </>
   );
 };
 
-export default EventsPage;

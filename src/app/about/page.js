@@ -5,6 +5,11 @@ import WavyMarquee from '../components/WavyMarquee';
 import Pillars from '../components/Pillars';
 import styles from './about.module.css';
 
+export const metadata = {
+  title: 'About Us | Gannon CodeX',
+  description: 'Learn about the mission and values of Gannon CodeX. We are a collective of builders, thinkers, and innovators united by a passion for technology.',
+};
+
 const AboutPage = () => {
   return (
     <>

@@ -33,13 +33,14 @@ async function getEvent(slug) {
   return event
 }
 
-export async function generateMetadata({ params: { slug } }) {
-  const event = await client.fetch(`*[_type == "event" && slug.current == $slug][0]{title, description, mainImage}`, { slug });
+export async function generateMetadata({ params: paramsPromise }) {
+  const params = await paramsPromise; // Await the params promise
+  const event = await client.fetch(`*[_type == "event" && slug.current == $slug][0]{title, description, mainImage}`, { slug: params.slug });
   if (!event) {
     return { title: 'Event Not Found' }
   }
   return {
-    title: event.title,
+    title: `${event.title} | Gannon CodeX`,
     description: event.description,
     openGraph: {
       title: event.title,
@@ -55,8 +56,9 @@ export async function generateMetadata({ params: { slug } }) {
   }
 }
 
-export default async function EventPage({ params: { slug } }) {
-  const event = await getEvent(slug)
+export default async function EventPage({ params: paramsPromise }) {
+  const params = await paramsPromise; // Await the params promise
+  const event = await getEvent(params.slug)
 
   if (!event) {
     return <div>Event not found</div>

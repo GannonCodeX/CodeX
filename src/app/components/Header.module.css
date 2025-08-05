@@ -2,20 +2,19 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 2rem 4rem;
+  padding: 1.5rem 4rem;
   border-bottom: 2px solid var(--border-color);
 }
 
 .logo {
-  font-family: var(--mono);
-  font-size: 2rem;
-  font-weight: 700;
-  color: var(--fg);
-  text-decoration: none;
+  position: relative; /* Required for next/image with fill */
+  width: 120px; /* Set a width for the logo */
+  height: 50px; /* Set a height for the logo */
+  transition: transform 0.3s ease-in-out;
 }
 
 .logo:hover {
-  color: var(--accent);
+  transform: scale(1.05); /* A more engaging hover effect */
 }
 
 .nav {

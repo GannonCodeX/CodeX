@@ -8,8 +8,8 @@ import Footer from '@/app/components/Footer'
 import styles from './projects.module.css'
 
 export const metadata = {
-  title: 'Projects',
-  description: 'A collection of projects built by the Gannon Codex community.',
+  title: 'Projects | Gannon CodeX',
+  description: 'Browse a collection of innovative projects built by the Gannon CodeX community. From web apps to open-source tools, see what our members are creating.',
 };
 
 const builder = imageUrlBuilder(client)

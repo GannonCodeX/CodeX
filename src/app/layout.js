@@ -1,29 +1,37 @@
 // app/layout.js
 import "./globals.css";
 
-const siteUrl = 'https://your-production-domain.com'; // Replace with your actual domain later
+// IMPORTANT: Replace this with your actual production domain
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.gannoncodex.com';
 
 export const metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: 'Gannon Codex',
-    template: '%s | Gannon Codex',
+    default: 'Gannon CodeX',
+    template: '%s | Gannon CodeX',
   },
-  description: 'Gannon University\'s student-run coding club. We build, break, and learn together.',
+  description: 'Gannon University\'s premier student-run coding organization. We build, break, and learn together through projects, workshops, and events.',
+  keywords: ['Gannon University', 'Gannon', 'CodeX', 'Gannon CodeX', 'Coding Club', 'Software Development', 'Erie PA'],
   openGraph: {
-    title: 'Gannon Codex',
-    description: 'Gannon University\'s student-run coding club.',
+    title: 'Gannon CodeX',
+    description: 'Gannon University\'s premier student-run coding organization.',
     url: siteUrl,
-    siteName: 'Gannon Codex',
+    siteName: 'Gannon CodeX',
     images: [
       {
-        url: '/assets/images/Neo-brutalist Poster Aug 5 2025.png',
-        width: 1200,
-        height: 630,
+        url: '/assets/images/2x Logo Header.png', // Assuming this is the correct path in /public
+        width: 1200, // Replace with actual width
+        height: 630, // Replace with actual height
       },
     ],
     locale: 'en_US',
     type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Gannon CodeX',
+    description: 'Gannon University\'s premier student-run coding organization.',
+    images: [siteUrl + '/assets/images/2x Logo Header.png'], // Must be an absolute URL
   },
 };
 

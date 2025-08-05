@@ -35,13 +35,14 @@ async function getProject(slug) {
   return project
 }
 
-export async function generateMetadata({ params: { slug } }) {
-  const project = await client.fetch(`*[_type == "project" && slug.current == $slug][0]{title, excerpt, mainImage}`, { slug });
+export async function generateMetadata({ params: paramsPromise }) {
+  const params = await paramsPromise; // Await the params promise
+  const project = await client.fetch(`*[_type == "project" && slug.current == $slug][0]{title, excerpt, mainImage}`, { slug: params.slug });
   if (!project) {
     return { title: 'Project Not Found' }
   }
   return {
-    title: project.title,
+    title: `${project.title} | Gannon CodeX`,
     description: project.excerpt,
     openGraph: {
       title: project.title,
@@ -57,8 +58,9 @@ export async function generateMetadata({ params: { slug } }) {
   }
 }
 
-export default async function ProjectPage({ params: { slug } }) {
-  const project = await getProject(slug)
+export default async function ProjectPage({ params: paramsPromise }) {
+  const params = await paramsPromise; // Await the params promise
+  const project = await getProject(params.slug)
 
   if (!project) {
     return <div>Project not found</div>

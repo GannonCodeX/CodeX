@@ -3,6 +3,11 @@ import Link from 'next/link';
 import styles from './links.module.css';
 import LinksVectors from '../components/LinksVectors';
 
+export const metadata = {
+  title: 'Links | Gannon CodeX',
+  description: 'Your one-stop hub for all official Gannon CodeX links. Find our Discord, GitHub, social media, and more.',
+};
+
 const links = [
   { title: 'Official Website', url: '/' },
   { title: 'Join Our Discord', url: '#' },
