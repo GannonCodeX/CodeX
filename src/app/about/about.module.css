@@ -1,0 +1,21 @@
+.aboutHeader {
+  text-align: center;
+  padding: 6rem 2rem;
+}
+
+.title {
+  font-size: 4.5rem;
+  line-height: 1.1;
+  font-weight: 700;
+  letter-spacing: -3px;
+  margin-bottom: 2rem;
+}
+
+.subtitle {
+  font-family: var(--sans);
+  font-size: 1.5rem;
+  color: var(--subtle-gray);
+  line-height: 1.6;
+  max-width: 800px;
+  margin: 0 auto;
+}

@@ -1,0 +1,32 @@
+.about {
+  padding: 6rem 4rem;
+  background-color: var(--bg);
+  border-top: 2px solid var(--border-color);
+}
+
+.heading {
+  font-family: var(--mono);
+  font-size: 1.5rem;
+  color: var(--subtle-gray);
+  margin-bottom: 2rem;
+}
+
+.content {
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.content p {
+  font-family: var(--sans);
+  font-size: 1.5rem;
+  line-height: 1.7;
+  color: var(--fg);
+  margin-bottom: 2rem;
+}
+
+.highlight {
+  color: var(--fg);
+  background-color: var(--accent);
+  padding: 0.1em 0.4em;
+}

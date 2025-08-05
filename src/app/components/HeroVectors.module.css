@@ -1,0 +1,56 @@
+.vectorWrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.vector {
+  position: absolute;
+  opacity: 0.8;
+  animation: float 10s ease-in-out infinite;
+}
+
+.plusGrid {
+  top: -20px;
+  left: -20px;
+  animation-delay: -2s;
+}
+
+.circle {
+  bottom: -50px;
+  right: -50px;
+  animation-delay: 0s;
+}
+
+.zigzag {
+  top: 40%;
+  right: -30px;
+  transform: rotate(90deg);
+  animation-delay: -5s;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0) translateX(0) rotate(0deg);
+  }
+  25% {
+    transform: translateY(-10px) translateX(5px) rotate(5deg);
+  }
+  50% {
+    transform: translateY(0) translateX(0) rotate(0deg);
+  }
+  75% {
+    transform: translateY(10px) translateX(-5px) rotate(-5deg);
+  }
+}
+
+@media (max-width: 960px) {
+  .vectorWrapper {
+    display: none; /* Hide complex vectors on mobile for clarity */
+  }
+}

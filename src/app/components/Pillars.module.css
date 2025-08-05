@@ -1,0 +1,70 @@
+.wrapper {
+  padding: 6rem 4rem;
+  background-color: var(--bg); /* Add a background to prevent content from showing through */
+  position: relative; /* Needed for z-index stacking */
+  z-index: 5;
+}
+
+.heading {
+  font-family: var(--mono);
+  font-size: 1.5rem;
+  color: var(--subtle-gray);
+  margin-bottom: 4rem;
+  text-align: center;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 2rem;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.pillarCard {
+  background-color: var(--bg);
+  padding: 2rem;
+  border: 2px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  
+  /* Animation */
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeInUp 0.5s ease forwards;
+  animation-delay: calc(var(--i) * 0.1s);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.icon {
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.title {
+  font-family: var(--mono);
+  font-size: 1.8rem;
+  color: var(--fg);
+  margin: 0;
+}
+
+.description {
+  font-family: var(--sans);
+  font-size: 1.1rem;
+  color: var(--subtle-gray);
+  line-height: 1.6;
+  margin: 0;
+}
+
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

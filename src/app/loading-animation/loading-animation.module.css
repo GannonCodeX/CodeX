@@ -1,0 +1,9 @@
+/* app/loading-animation/loading-animation.module.css */
+
+.wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background-color: var(--bg);
+}

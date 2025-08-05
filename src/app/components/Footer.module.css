@@ -1,0 +1,29 @@
+.footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2rem 4rem;
+  border-top: 2px solid var(--border-color);
+  font-family: var(--mono);
+  color: var(--subtle-gray);
+  font-size: 0.9rem;
+}
+
+.copyright {
+  flex: 1;
+}
+
+.links {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.links a {
+  color: var(--subtle-gray);
+  text-decoration: none;
+}
+
+.links a:hover {
+  color: var(--accent);
+  text-decoration: underline;
+}

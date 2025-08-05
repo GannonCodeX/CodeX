@@ -1,0 +1,51 @@
+.wrapper {
+  padding: 2rem 0;
+  border-top: 2px solid var(--border-color);
+  border-bottom: 2px solid var(--border-color);
+  overflow: hidden;
+  background-color: var(--accent);
+  margin: -4rem 0; /* Negative margin to create overlap */
+  transform: rotate(-1deg); /* Slight rotation for more dynamic feel */
+  z-index: 10; /* Ensure it sits on top of other content */
+  position: relative;
+}
+
+.marquee {
+  width: 100%;
+  display: flex;
+}
+
+.marqueeContent {
+  display: flex;
+  flex-shrink: 0;
+  animation: scroll 60s linear infinite;
+  gap: 2rem;
+  font-family: var(--mono);
+  font-size: 3rem;
+  font-weight: 700;
+  color: var(--fg);
+}
+
+.word {
+  animation: wave 4s ease-in-out infinite;
+  animation-delay: calc(var(--i, 0) * 0.2s);
+  display: inline-block;
+}
+
+@keyframes scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes wave {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}

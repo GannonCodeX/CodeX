@@ -1,0 +1,12 @@
+/* app/components/PortableTextRenderer.module.css */
+
+.portableImageWrapper {
+  margin: 2rem 0;
+  border: 2px solid var(--border-color);
+}
+
+.portableImage {
+  width: 100%;
+  height: auto;
+  display: block;
+}
