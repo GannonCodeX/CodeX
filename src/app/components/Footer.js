@@ -7,9 +7,9 @@ const Footer = () => {
         © {new Date().getFullYear()} Gannon Codex
       </div>
       <div className={styles.links}>
-        <a href="https://github.com/gannon-codex" target="_blank" rel="noopener noreferrer">GitHub</a>
-        <a href="https://discord.gg/your-invite" target="_blank" rel="noopener noreferrer">Discord</a>
-        <a href="mailto:contact@gannoncodex.com">Contact</a>
+        <a href="https://github.com/gannoncodex" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://discord.gg/3qEnhQYtp3" target="_blank" rel="noopener noreferrer">Discord</a>
+        <a href="mailto:gannoncodex@gmail.com">Contact</a>
       </div>
     </footer>
   );

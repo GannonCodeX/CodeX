@@ -27,7 +27,14 @@ const Hero = () => {
           , break, and learn together.
         </p>
         <div className={styles.ctaContainer}>
-          <button className="button">Join The Community</button>
+          <a
+            href="https://engageu.gannon.edu/organization/guprogramming"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="button"
+          >
+            Join The Community
+          </a>
           <a href="#events" className={styles.secondaryCta}>
             // See our events
           </a>

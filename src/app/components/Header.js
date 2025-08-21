@@ -7,7 +7,7 @@ const Header = () => {
     <header className={styles.header}>
       <Link href="/" className={styles.logo}>
         <Image
-          src="/assets/images/{GCX}.svg" // Using the new SVG
+          src="/assets/images/X_.svg" // Using the new SVG
           alt="Gannon CodeX Logo"
           fill // Use fill to allow the parent container to control the size
           style={{ objectFit: 'contain' }} // Ensures the aspect ratio is maintained
@@ -18,6 +18,7 @@ const Header = () => {
         <Link href="/about">/about</Link>
         <Link href="/events">/events</Link>
         <Link href="/projects">/projects</Link>
+        <Link href="/gallery">/gallery</Link>
         <a
           href="https://engageu.gannon.edu/organization/guprogramming"
           target="_blank"

@@ -28,42 +28,46 @@
 
 .projectsGrid {
   display: grid;
-  grid-template-columns: 1fr; /* Default to a single column on mobile */
-  gap: 2.5rem; /* Increased gap for better spacing */
-  max-width: 1200px;
+  /* A responsive grid that automatically adjusts the number of columns */
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 2.5rem;
+  max-width: 1400px; /* Allow a slightly wider grid */
   margin: 0 auto;
 }
 
-/* Two columns for tablets and medium screens */
+/* Remove the rigid, breakpoint-based column counts */
+/*
 @media (min-width: 768px) {
   .projectsGrid {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
-/* Three columns for desktops */
 @media (min-width: 1024px) {
   .projectsGrid {
     grid-template-columns: repeat(3, 1fr);
   }
 }
+*/
 
 .projectCard {
-  display: flex; /* Use flexbox for better internal alignment */
+  display: flex;
   flex-direction: column;
   text-decoration: none;
   background-color: var(--bg);
   border: 2px solid var(--border-color);
+  box-shadow: 6px 6px 0px var(--border-color); /* Add a default shadow */
   transition: all 0.2s ease;
 }
 
 .projectCard:hover {
-  transform: translateY(-8px) scale(1.02); /* Enhanced hover effect */
-  box-shadow: 8px 8px 0px var(--accent);
+  transform: translateY(-4px); /* A more subtle lift */
+  box-shadow: 10px 10px 0px var(--accent);
+  border-color: var(--accent); /* Add border color change */
 }
 
 .cardImageWrapper {
-  height: 220px; /* Slightly reduced height for better proportion */
+  height: 220px;
   overflow: hidden;
   border-bottom: 2px solid var(--border-color);
 }
@@ -83,7 +87,7 @@
   padding: 1.5rem;
   display: flex;
   flex-direction: column;
-  flex-grow: 1; /* Allows the content to fill the card height */
+  flex-grow: 1;
 }
 
 .cardTitle {
@@ -98,15 +102,24 @@
   font-size: 1.1rem;
   color: var(--subtle-gray);
   line-height: 1.6;
-  flex-grow: 1; /* Pushes the link to the bottom */
+  flex-grow: 1;
 }
 
 .cardLink {
   font-family: var(--mono);
-  color: var(--accent);
+  color: var(--fg);
+  background-color: var(--accent);
+  padding: 8px 12px;
   display: inline-block;
-  margin-top: 1.5rem; /* Increased margin for spacing */
-  align-self: flex-start; /* Aligns the link to the left */
+  margin-top: 1.5rem;
+  align-self: flex-start;
+  border: 1px solid var(--fg);
+  transition: all 0.2s ease;
+}
+
+.projectCard:hover .cardLink {
+  background-color: var(--fg);
+  color: var(--bg);
 }
 
 @media (max-width: 768px) {
