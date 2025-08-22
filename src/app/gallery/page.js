@@ -15,7 +15,7 @@ async function getGalleryImages() {
     "imageUrl": image.asset->url,
     "metadata": image.asset->metadata
   }`;
-  const images = await client.fetch(query);
+  const images = await client.fetch(query, { next: { revalidate: 60 } }); // Revalidate every 60 seconds
   return images;
 }
 

@@ -20,7 +20,7 @@ async function getEvents() {
     description,
     status
   }`;
-  const events = await client.fetch(query);
+  const events = await client.fetch(query, { next: { revalidate: 60 } }); // Revalidate every 60 seconds
   return events;
 }
 

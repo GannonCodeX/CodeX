@@ -1,7 +1,7 @@
 import Header from './components/Header';
 import Hero from './components/Hero';
 import About from './components/About';
-import MembersMarquee from './components/MembersMarquee';
+import MembersSection from './components/MembersSection'; // Import the new Server Component
 import WhatWeDo from './components/WhatWeDo';
 import Gallery from './components/Gallery';
 import Footer from './components/Footer';
@@ -18,7 +18,7 @@ export default function Home() {
       <main>
         <Hero />
         <About />
-        <MembersMarquee />
+        <MembersSection /> {/* Render the new Server Component */}
         <WhatWeDo />
         <Gallery />
       </main>
