@@ -5,6 +5,8 @@ import Image from 'next/image'
 import Link from 'next/link'
 import styles from './Gallery.module.css'
 
+export const revalidate = 0;
+
 const builder = imageUrlBuilder(client)
 
 function urlFor(source) {

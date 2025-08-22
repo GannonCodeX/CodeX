@@ -4,6 +4,8 @@ import Footer from '@/app/components/Footer';
 import EventsClient from './EventsClient'; // Import the new client component
 import styles from './events.module.css';
 
+export const dynamic = 'force-dynamic';
+
 // Metadata can stay here because this is now a Server Component
 export const metadata = {
   title: 'Events | Gannon CodeX',
@@ -20,7 +22,7 @@ async function getEvents() {
     description,
     status
   }`;
-  const events = await client.fetch(query, { next: { revalidate: 60 } }); // Revalidate every 60 seconds
+  const events = await client.fetch(query, { next: { revalidate: 0 } }); // Revalidate every 60 seconds
   return events;
 }
 
