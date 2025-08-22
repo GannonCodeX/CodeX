@@ -11,7 +11,7 @@ function urlFor(source) {
 async function getMembers() {
   const query = `*[_type == "member"]{ name, role, avatar }`;
   // Add revalidate option here for server-side caching
-  const sanityMembers = await client.fetch(query, { next: { revalidate: 60 } });
+  const sanityMembers = await client.fetch(query, { next: { revalidate: 0 } });
   if (sanityMembers && sanityMembers.length > 0) {
     return sanityMembers.map(member => ({
       ...member,

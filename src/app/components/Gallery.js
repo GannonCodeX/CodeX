@@ -28,8 +28,8 @@ async function getLatestHappenings() {
     date
   }`
 
-  const projects = await client.fetch(projectQuery)
-  const events = await client.fetch(eventQuery)
+  const projects = await client.fetch(projectQuery, { next: { revalidate: 0 } })
+  const events = await client.fetch(eventQuery, { next: { revalidate: 0 } })
 
   // Format and combine the data
   const formattedProjects = projects.map(p => ({ ...p, type: 'Project', subtitle: p.excerpt, href: `/projects/${p.slug}` }))
