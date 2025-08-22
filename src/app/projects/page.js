@@ -4,6 +4,9 @@ import Header from '@/app/components/Header'
 import Footer from '@/app/components/Footer'
 import styles from './projects.module.css'
 import ProjectsClient from './ProjectsClient'
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 
 export const metadata = {
   title: 'Projects | Gannon CodeX',
@@ -17,7 +20,7 @@ async function getProjects() {
     mainImage,
     excerpt
   }`
-  const projects = await client.fetch(query, { next: { revalidate: 0 } })
+  const projects = await client.fetch(query)
   return projects
 }
 

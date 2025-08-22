@@ -4,10 +4,15 @@ import styles from './gallery.module.css';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import { client } from '@/sanity/lib/client';
-import GalleryClient from './GalleryClient'; // Import the new client component
+import GalleryClient from './GalleryClient';
+import { unstable_noStore as noStore } from 'next/cache';
+
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 async function getGalleryImages() {
-  // Fetch the first 9 images for the curated grid
+  noStore(); // 🔒 disable caching for this fetch path
+
   const query = `*[_type == "galleryImage"] | order(_createdAt desc)[0...9]{
     _id,
     title,
@@ -15,11 +20,13 @@ async function getGalleryImages() {
     "imageUrl": image.asset->url,
     "metadata": image.asset->metadata
   }`;
-  const images = await client.fetch(query, { next: { revalidate: 0 } }); // Revalidate every 0 seconds
-  return images;
+
+  return client.fetch(query); // no { next:{...} } here
 }
 
-const GalleryPage = async () => {
+export default async function GalleryPage() {
+  noStore();
+
   const images = await getGalleryImages();
 
   return (
@@ -29,11 +36,12 @@ const GalleryPage = async () => {
         <header className={styles.header}>
           <h1 className={styles.title}>Gallery</h1>
           <p className={styles.subtitle}>
-            Raw moments from the workshops, competitions, and late-night coding sessions that define the CodeX experience.
+            Raw moments from the workshops, competitions, and late-night coding
+            sessions that define the CodeX experience.
           </p>
         </header>
 
-        {images && images.length > 0 ? (
+        {images?.length > 0 ? (
           <GalleryClient images={images} />
         ) : (
           <div className={styles.emptyState}>
@@ -44,6 +52,4 @@ const GalleryPage = async () => {
       <Footer />
     </>
   );
-};
-
-export default GalleryPage;
+}

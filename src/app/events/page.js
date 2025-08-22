@@ -3,8 +3,11 @@ import Header from '@/app/components/Header';
 import Footer from '@/app/components/Footer';
 import EventsClient from './EventsClient'; // Import the new client component
 import styles from './events.module.css';
+import { unstable_noStore as noStore } from 'next/cache';
+
 
 export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 // Metadata can stay here because this is now a Server Component
 export const metadata = {
@@ -14,6 +17,7 @@ export const metadata = {
 
 // Data fetching happens on the server
 async function getEvents() {
+  noStore();
   const query = `*[_type == "event"] | order(date desc){
     title,
     "slug": slug.current,
@@ -22,12 +26,13 @@ async function getEvents() {
     description,
     status
   }`;
-  const events = await client.fetch(query, { next: { revalidate: 0 } }); // Revalidate every 60 seconds
+  const events = await client.fetch(query); // Revalidate every 60 seconds
   return events;
 }
 
 // The page is now an async Server Component
 export default async function EventsPage() {
+  noStore();
   const events = await getEvents();
 
   return (
