@@ -25,7 +25,7 @@ async function getProjects() {
     mainImage,
     excerpt
   }`
-  const projects = await client.fetch(query, { next: { revalidate: 60 } }) // Revalidate every 60 seconds
+  const projects = await client.fetch(query, { next: { revalidate: 0 } }) // Revalidate every 0 seconds
   return projects
 }
 

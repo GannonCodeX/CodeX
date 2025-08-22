@@ -7,6 +7,7 @@ import Header from '@/app/components/Header'
 import Footer from '@/app/components/Footer'
 import PortableTextRenderer from '@/app/components/PortableTextRenderer'
 import styles from './slug.module.css'
+export const dynamic = 'force-dynamic';
 
 const builder = imageUrlBuilder(client)
 
