@@ -6,6 +6,8 @@ import WhatWeDo from './components/WhatWeDo';
 import Gallery from './components/Gallery';
 import Footer from './components/Footer';
 
+export const dynamic = 'force-dynamic';
+
 export const metadata = {
   title: 'Home | Gannon CodeX',
   description: 'Welcome to Gannon CodeX, the heart of coding culture at Gannon University. Discover our projects, events, and how to join our community of innovators.',
