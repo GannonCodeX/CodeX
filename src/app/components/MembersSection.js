@@ -27,9 +27,5 @@ export default async function MembersSection() {
     return null;
   }
 
-  return (
-    <div style={{ width: '100%', overflow: 'hidden' }}>
-      <MembersMarquee initialMembers={members} />
-    </div>
-  );
+  return <MembersMarquee initialMembers={members} />;
 }

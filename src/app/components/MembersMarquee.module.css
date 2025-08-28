@@ -2,13 +2,15 @@
   padding: 8rem 0;
   border-top: 2px solid var(--border-color);
   overflow: hidden;
-  transform: rotate(-2deg);
   background-color: var(--accent);
   margin: 4rem 0;
-  /* Ensure wrapper has a consistent height during load */
   min-height: 450px;
   display: flex;
   align-items: center;
+  width: 100vw;
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%) rotate(-2deg) scale(1.1);
 }
 
 .marquee {
@@ -118,130 +120,6 @@
   margin: 0 auto;
 }
 
-/* Shimmer Animation */
-.wrapper {
-  padding: 8rem 0;
-  border-top: 2px solid var(--border-color);
-  overflow: hidden;
-  transform: rotate(-2deg);
-  background-color: var(--accent);
-  margin: 4rem 0;
-  min-height: 450px;
-  display: flex;
-  align-items: center;
-  width: 100vw;
-  left: 50%;
-  right: 50%;
-  margin-left: -50vw;
-  margin-right: -50vw;
-}
-
-.marquee {
-  width: 100%;
-  display: flex;
-}
-
-.marqueeContent {
-  display: flex;
-  flex-shrink: 0;
-  animation: scroll 40s linear infinite;
-  gap: 4rem;
-}
-
-.card {
-  position: relative;
-  background-color: var(--bg);
-  border: 2px solid var(--border-color);
-  width: 300px;
-  height: 300px;
-  box-shadow: 8px 8px 0px var(--border-color);
-  transition: box-shadow 0.2s ease, border-color 0.2s ease;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  padding: 1.5rem;
-}
-
-.card:hover {
-  box-shadow: 12px 12px 0px var(--code-green);
-  border-color: var(--code-green);
-}
-
-.avatar {
-  position: absolute;
-  top: -50px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 160px;
-  height: 160px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 2px solid var(--border-color);
-  transition: transform 0.3s ease;
-}
-
-.card:hover .avatar {
-  transform: translateX(-50%) translateY(-8px) scale(1.04);
-}
-
-.info {
-  display: flex;
-  flex-direction: column;
-  text-align: center;
-  width: 100%;
-}
-
-.name {
-  font-family: var(--mono);
-  font-size: 1.3rem;
-  font-weight: 700;
-  color: var(--fg);
-  margin-bottom: 0.5rem;
-}
-
-.role {
-  font-family: var(--sans);
-  font-size: 1rem;
-  color: var(--subtle-gray);
-  margin: 0;
-}
-
-.skeletonCard {
-  position: relative;
-  background-color: var(--bg);
-  border: 2px solid var(--border-color);
-  width: 300px;
-  height: 300px;
-  box-shadow: 8px 8px 0px var(--border-color);
-  padding: 1.5rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-}
-
-.skeletonAvatar {
-  position: absolute;
-  top: -50px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 160px;
-  height: 160px;
-  border-radius: 50%;
-  background-color: #e0e0e0;
-}
-
-.skeletonText {
-  height: 20px;
-  background-color: #e0e0e0;
-  border-radius: 4px;
-  margin-bottom: 0.5rem;
-}
-
-.skeletonText.short {
-  width: 60%;
-  margin: 0 auto;
-}
-
 .skeletonCard::after {
   content: '';
   position: absolute;
@@ -278,6 +156,7 @@
   .wrapper {
     padding: 6rem 0;
     margin: 3rem 0;
+    transform: translateX(-50%) rotate(-4deg);
   }
 
   .marqueeContent {
@@ -301,22 +180,5 @@
 
   .role {
     font-size: 0.9rem;
-  }
-}
-
-
-@keyframes shimmer {
-  100% {
-    transform: translateX(100%);
-  }
-}
-
-
-@keyframes scroll {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(-50%);
   }
 }
