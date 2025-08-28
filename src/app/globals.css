@@ -50,7 +50,7 @@ a:hover {
 
 .button:hover {
   background-color: var(--code-green);
-  color: #000; /* Explicitly set text color to black on hover */
+  color: var(--fg);
   box-shadow: 2px 2px 0px var(--fg);
   transform: translate(2px, 2px);
 }

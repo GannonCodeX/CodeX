@@ -4,10 +4,13 @@
   border-bottom: 2px solid var(--border-color);
   overflow: hidden;
   background-color: var(--accent);
-  margin: -4rem 0; /* Negative margin to create overlap */
-  transform: rotate(-1deg); /* Slight rotation for more dynamic feel */
-  z-index: 10; /* Ensure it sits on top of other content */
+  transform: rotate(-1deg);
   position: relative;
+  width: 100vw; /* Force full viewport width */
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
 }
 
 .marquee {
@@ -27,8 +30,6 @@
 }
 
 .word {
-  animation: wave 4s ease-in-out infinite;
-  animation-delay: calc(var(--i, 0) * 0.2s);
   display: inline-block;
 }
 
@@ -41,11 +42,17 @@
   }
 }
 
-@keyframes wave {
-  0%, 100% {
-    transform: translateY(0);
+/* Responsive Styles */
+@media (max-width: 768px) {
+  .marqueeContent {
+    font-size: 2rem;
+    gap: 1.5rem;
   }
-  50% {
-    transform: translateY(-20px);
+}
+
+@media (max-width: 480px) {
+  .marqueeContent {
+    font-size: 1.5rem;
+    gap: 1rem;
   }
 }

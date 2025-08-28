@@ -4,17 +4,20 @@
   align-items: center;
   padding: 1.5rem 4rem;
   border-bottom: 2px solid var(--border-color);
+  position: relative;
+  z-index: 1000;
 }
 
 .logo {
-  position: relative; /* Required for next/image with fill */
-  width: 120px; /* Set a width for the logo */
-  height: 50px; /* Set a height for the logo */
+  position: relative;
+  width: 120px;
+  height: 50px;
   transition: transform 0.3s ease-in-out;
+  z-index: 1001;
 }
 
 .logo:hover {
-  transform: scale(1.05); /* A more engaging hover effect */
+  transform: scale(1.05);
 }
 
 .nav {
@@ -39,7 +42,7 @@
 .joinButton {
   padding: 0.75rem 1.5rem;
   background-color: var(--accent);
-  color: var(--fg) !important;
+  color: var(--fg);
   font-family: var(--mono);
   border: 2px solid var(--border-color);
   box-shadow: 4px 4px 0px var(--fg);
@@ -48,8 +51,63 @@
 
 .joinButton:hover {
   background-color: var(--code-green);
-  color: var(--fg) !important;
+  color: var(--fg);
   border-color: var(--border-color);
   box-shadow: 2px 2px 0px var(--fg);
   transform: translate(2px, 2px);
+}
+
+.hamburger {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  z-index: 1001;
+  color: var(--fg);
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  .header {
+    padding: 1rem 2rem;
+  }
+
+  .nav {
+    display: none;
+    flex-direction: column;
+    position: fixed; /* Use fixed positioning */
+    top: 0;
+    left: 0;
+    width: 100vw; /* Use viewport width */
+    height: 100vh;
+    background-color: var(--bg);
+    justify-content: center;
+    align-items: center;
+    gap: 2.5rem;
+    transition: transform 0.3s ease-in-out;
+    transform: translateX(100%);
+  }
+
+  .navOpen {
+    display: flex;
+    transform: translateX(0);
+  }
+
+  .navLink {
+    font-size: 1.5rem;
+  }
+
+  .hamburger {
+    display: block;
+  }
+}
+
+@media (max-width: 480px) {
+  .header {
+    padding: 1rem 1.5rem;
+  }
+
+  .logo {
+    width: 100px;
+  }
 }

@@ -1,7 +1,7 @@
 .wrapper {
   padding: 6rem 4rem;
-  background-color: var(--bg); /* Add a background to prevent content from showing through */
-  position: relative; /* Needed for z-index stacking */
+  background-color: var(--bg);
+  position: relative;
   z-index: 5;
 }
 
@@ -28,8 +28,6 @@
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
-  
-  /* Animation */
   opacity: 0;
   transform: translateY(20px);
   animation: fadeInUp 0.5s ease forwards;
@@ -66,5 +64,51 @@
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+/* Responsive Styles */
+@media (max-width: 992px) {
+  .grid {
+    grid-template-columns: 1fr;
+    max-width: 600px;
+  }
+}
+
+@media (max-width: 768px) {
+  .wrapper {
+    padding: 4rem 1.5rem;
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .pillarCard {
+    padding: 1.5rem;
+  }
+
+  .title {
+    font-size: 1.5rem;
+  }
+
+  .description {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .wrapper {
+    padding: 3rem 1rem;
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .heading {
+    font-size: 1.25rem;
+    margin-bottom: 3rem;
   }
 }
