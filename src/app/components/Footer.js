@@ -9,6 +9,8 @@ const Footer = () => {
       <div className={styles.links}>
         <a href="https://github.com/gannoncodex" target="_blank" rel="noopener noreferrer">GitHub</a>
         <a href="https://discord.gg/3qEnhQYtp3" target="_blank" rel="noopener noreferrer">Discord</a>
+        <a href="/partner">Partner</a>
+        <a href="/propose-a-project">Propose a Project</a>
         <a href="mailto:gannoncodex@gmail.com">Contact</a>
       </div>
     </footer>

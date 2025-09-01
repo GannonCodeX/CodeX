@@ -1,0 +1,308 @@
+.wrapper {
+  width: 100%;
+  min-height: 100vh;
+  padding: 4rem 1rem;
+  background-color: var(--bg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--sans);
+  overflow: hidden;
+  position: relative;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 3rem;
+  max-width: 900px;
+  z-index: 1;
+}
+
+.title {
+  font-family: var(--mono);
+  font-size: clamp(2.5rem, 8vw, 4.5rem);
+  font-weight: 700;
+  color: var(--fg);
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.05em;
+  text-transform: uppercase;
+  animation: fadeInDown 0.8s both;
+}
+
+.subtitle {
+  font-size: clamp(1rem, 4vw, 1.25rem);
+  color: var(--subtle-gray);
+  animation: fadeIn 1.2s both;
+}
+
+.formContainer {
+  width: 100%;
+  max-width: 900px; /* Adjusted max-width */
+  background-color: var(--bg);
+  border: 2px solid var(--border-color);
+  padding: clamp(1.5rem, 5vw, 3rem);
+  box-shadow: 8px 8px 0 var(--border-color);
+  transition: box-shadow 0.3s ease-out;
+  z-index: 1;
+  animation: fadeInUp 1s both;
+}
+
+.formContainer:focus-within {
+  box-shadow: 12px 12px 0 var(--accent);
+}
+
+.form {
+  display: grid;
+  gap: 3rem; /* Vertical gap between sections */
+}
+
+.formSection {
+  border: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 1.5rem;
+}
+
+/* Use a two-column grid for fields WITHIN each section on wider screens */
+@media (min-width: 768px) {
+  .formSection {
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem 2rem;
+  }
+}
+
+.legend {
+  font-family: var(--mono);
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--fg);
+  padding-bottom: 1rem;
+  margin-bottom: 1rem;
+  border-bottom: 2px solid var(--border-color);
+  width: 100%;
+  grid-column: 1 / -1; /* Legend spans full width */
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Make certain fields span both columns */
+.formGroup.fullWidth {
+  grid-column: 1 / -1;
+}
+
+.label {
+  font-family: var(--mono);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--fg);
+  margin-bottom: 0.75rem;
+}
+
+.input,
+.textarea,
+.select {
+  width: 100%;
+  padding: 0.8rem 1.2rem; /* Increased horizontal padding */
+  font-size: 1rem;
+  font-family: var(--sans);
+  border: 2px solid var(--border-color);
+  background-color: var(--bg);
+  caret-color: var(--accent);
+  transition: all 0.2s ease-in-out;
+}
+
+.input:focus,
+.textarea:focus,
+.select:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.radioGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 1rem;
+  grid-column: 1 / -1;
+}
+
+.radioItem {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.radioItem label {
+  font-family: var(--sans);
+  cursor: pointer;
+}
+
+.radioItem input[type="radio"] {
+  all: unset;
+  width: 1.25em;
+  height: 1.25em;
+  border: 2px solid var(--border-color);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease-in-out;
+  border-radius: 50%;
+}
+
+.radioItem input[type="radio"]:checked {
+  background-color: var(--accent);
+  border-color: var(--accent);
+}
+
+.radioItem input[type="radio"]:checked::after {
+  content: '';
+  display: block;
+  width: 0.6em;
+  height: 0.6em;
+  border-radius: 50%;
+  background-color: var(--fg);
+}
+
+.fileInput {
+  font-family: var(--sans);
+  font-size: 1rem;
+  padding: 0.5rem;
+  border: 2px solid var(--border-color);
+  transition: all 0.2s ease-in-out;
+}
+
+.fileInput::file-selector-button {
+  font-family: var(--mono);
+  background-color: var(--bg);
+  border: none;
+  border-right: 2px solid var(--border-color);
+  padding: 0.6rem 1rem;
+  margin-right: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.fileInput:hover::file-selector-button {
+  background-color: #f0f0f0;
+}
+
+.fieldDescription {
+  font-size: 0.85rem;
+  color: var(--subtle-gray);
+  margin-top: 0.5rem;
+}
+
+.submitButton {
+  padding: 1rem 2rem;
+  font-size: 1.2rem;
+  font-family: var(--mono);
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--fg);
+  background-color: var(--accent);
+  border: 2px solid var(--border-color);
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  box-shadow: 5px 5px 0 var(--border-color);
+  grid-column: 1 / -1;
+  justify-self: start;
+}
+
+.submitButton:hover {
+  background-color: var(--code-green);
+  box-shadow: 8px 8px 0 var(--border-color);
+  transform: translate(-3px, -3px);
+}
+
+.submitButton:active {
+  box-shadow: 0 0 0 var(--border-color);
+  transform: translate(2px, 2px);
+}
+
+.submissionStatus {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.successMessage {
+  color: #008000;
+  font-family: var(--mono);
+  font-weight: 700;
+}
+
+.errorMessage {
+  color: #ff0000;
+  font-family: var(--mono);
+  font-weight: 700;
+}
+
+.successContainer {
+  text-align: center;
+}
+
+.successTitle {
+  font-family: var(--mono);
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  color: var(--fg);
+}
+
+.importantText {
+  font-weight: 700;
+  color: var(--fg);
+  margin: 1.5rem 0;
+}
+
+.linkContainer {
+  background-color: #f0f0f0;
+  border: 2px solid var(--border-color);
+  padding: 1rem;
+  margin-bottom: 2rem;
+  word-wrap: break-word;
+}
+
+.linkContainer a {
+  color: var(--accent);
+  font-weight: 700;
+  text-decoration: underline;
+}
+
+/* Keyframe Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

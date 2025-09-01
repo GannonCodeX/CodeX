@@ -1,0 +1,127 @@
+.wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.selectContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  font-family: var(--sans);
+  border: 2px solid var(--border-color);
+  background-color: var(--bg);
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  min-height: 50px;
+}
+
+.selectContainer:hover {
+  border-color: var(--accent);
+}
+
+.selectedMembers {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.memberPill {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: #f0f0f0;
+  padding: 0.25rem 0.5rem;
+  border: 1px solid var(--border-color);
+  font-size: 0.9rem;
+}
+
+.avatar {
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.removeButton {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 0 0.25rem;
+  color: var(--subtle-gray);
+}
+
+.removeButton:hover {
+  color: var(--fg);
+}
+
+.placeholder {
+  color: var(--subtle-gray);
+}
+
+.arrow {
+  font-size: 0.8rem;
+  color: var(--fg);
+  transition: transform 0.2s ease;
+}
+
+.wrapper[data-is-open="true"] .arrow {
+  transform: rotate(180deg);
+}
+
+.dropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  width: 100%;
+  background-color: var(--bg);
+  border: 2px solid var(--border-color);
+  z-index: 10;
+  max-height: 300px;
+  overflow-y: auto;
+  box-shadow: 5px 5px 0 var(--border-color);
+}
+
+.searchInput {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  font-size: 1rem;
+  font-family: var(--sans);
+  border: none;
+  border-bottom: 2px solid var(--border-color);
+  background-color: var(--bg);
+}
+
+.searchInput:focus {
+  outline: none;
+  border-bottom-color: var(--accent);
+}
+
+.memberList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.memberList li {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.memberList li:hover {
+  background-color: #f0f0f0;
+}
+
+.noResults {
+  padding: 1rem;
+  text-align: center;
+  color: var(--subtle-gray);
+  cursor: default !important;
+  background-color: var(--bg) !important;
+}

@@ -42,9 +42,6 @@ const Header = () => {
         <Link href="/gallery" className={styles.navLink}>
           /gallery
         </Link>
-        <Link href="/partner" className={styles.navLink}>
-          /partner
-        </Link>
         <a
           href="https://engageu.gannon.edu/organization/guprogramming"
           target="_blank"
