@@ -2,14 +2,8 @@
 export default {
   name: 'galleryImage',
   title: 'Gallery Image',
-  type: 'document',
+  type: 'object',
   fields: [
-    {
-      name: 'title',
-      title: 'Title',
-      type: 'string',
-      description: 'A descriptive title for the image.',
-    },
     {
       name: 'image',
       title: 'Image',
@@ -20,11 +14,18 @@ export default {
       validation: (Rule) => Rule.required(),
     },
     {
+      name: 'caption',
+      title: 'Caption',
+      type: 'string',
+      options: {
+        isHighlighted: true,
+      },
+    },
+    {
       name: 'alt',
       title: 'Alternative Text',
       type: 'string',
       description: 'Important for accessibility. Describe the image for screen readers.',
-      validation: (Rule) => Rule.required(),
     },
   ],
 }

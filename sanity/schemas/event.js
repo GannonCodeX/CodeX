@@ -46,6 +46,29 @@ export default {
       title: 'RSVP Link',
       type: 'url',
     },
+    {
+      name: 'gallery',
+      title: 'Event Gallery',
+      type: 'array',
+      of: [
+        {
+          type: 'image',
+          fields: [
+            {
+              name: 'caption',
+              title: 'Caption',
+              type: 'string',
+              options: {
+                isHighlighted: true,
+              },
+            },
+          ],
+          options: {
+            hotspot: true,
+          },
+        },
+      ],
+    },
   ],
   preview: {
     select: {

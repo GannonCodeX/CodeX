@@ -23,7 +23,7 @@ export const structure = (S) =>
         .title('Projects')
         .child(S.documentList().title('Projects').filter('_type == "project"')),
       S.listItem()
-        .title('Gallery Images')
-        .child(S.documentList().title('Gallery Images').filter('_type == "galleryImage"')),
+        .title('Galleries')
+        .child(S.documentList().title('Galleries').filter('_type == "gallery"')),
     ])
 

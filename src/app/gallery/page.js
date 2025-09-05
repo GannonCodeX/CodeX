@@ -13,15 +13,18 @@ export const revalidate = 0;
 async function getGalleryImages() {
   noStore(); // 🔒 disable caching for this fetch path
 
-  const query = `*[_type == "galleryImage"] | order(_createdAt desc)[0...9]{
-    _id,
-    title,
-    alt,
-    "imageUrl": image.asset->url,
-    "metadata": image.asset->metadata
-  }`;
+  const query = `*[_type == "gallery"] | order(_createdAt desc) {
+    "images": images[]{
+      _key,
+      alt,
+      caption,
+      "imageUrl": image.asset->url,
+      "metadata": image.asset->metadata
+    }
+  }.images`;
 
-  return client.fetch(query); // no { next:{...} } here
+  const result = await client.fetch(query);
+  return result ? result.flat().slice(0, 9) : [];
 }
 
 export default async function GalleryPage() {
