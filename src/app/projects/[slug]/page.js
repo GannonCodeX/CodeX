@@ -7,7 +7,31 @@ import Header from '@/app/components/Header'
 import Footer from '@/app/components/Footer'
 import PortableTextRenderer from '@/app/components/PortableTextRenderer'
 import styles from './slug.module.css'
+import { generateMetadata as createMetadata } from '@/lib/metadata'
+
 export const dynamic = 'force-dynamic';
+
+export async function generateMetadata({ params: paramsPromise }) {
+  const params = await paramsPromise;
+  const project = await getProject(params.slug);
+  
+  if (!project) {
+    return createMetadata({
+      title: 'Project Not Found',
+      description: 'The requested project could not be found.',
+      url: `/projects/${params.slug}`
+    });
+  }
+
+  return createMetadata({
+    title: project.title,
+    description: project.excerpt || `Explore ${project.title}, a project by ${project.leadClub?.title || 'Gannon CodeX'}.`,
+    keywords: ['Project', project.title, project.leadClub?.title, 'Software Development', 'Portfolio'],
+    image: project.mainImage ? imageUrlBuilder(client).image(project.mainImage).width(1200).height(630).url() : '/assets/images/2x Logo Header.png',
+    url: `/projects/${params.slug}`,
+    type: 'article'
+  });
+}
 
 const builder = imageUrlBuilder(client)
 
@@ -27,6 +51,8 @@ async function getProject(slug) {
       }
     },
     projectLink,
+    leadClub->{title, "slug": slug.current},
+    collaborators[]->{title, "slug": slug.current},
     "contributors": contributors[]->{
       name,
       avatar
@@ -36,31 +62,6 @@ async function getProject(slug) {
   return project
 }
 
-export async function generateMetadata({ params: paramsPromise }) {
-  const params = await paramsPromise; // Await the params promise
-  const project = await client.fetch(`*[_type == "project" && slug.current == $slug][0]{title, excerpt, mainImage}`, { slug: params.slug });
-  if (!project) {
-    return { title: 'Project Not Found' }
-  }
-
-  const imageUrl = project.mainImage ? urlFor(project.mainImage).width(1200).height(630).url() : '/assets/images/logo.png';
-
-  return {
-    title: `${project.title} | Gannon CodeX`,
-    description: project.excerpt,
-    openGraph: {
-      title: project.title,
-      description: project.excerpt,
-      images: [{ url: imageUrl, width: 1200, height: 630 }],
-    },
-    twitter: {
-      card: 'summary_large_image',
-      title: project.title,
-      description: project.excerpt,
-      images: [imageUrl],
-    },
-  }
-}
 
 export default async function ProjectPage({ params: paramsPromise }) {
   const params = await paramsPromise; // Await the params promise
@@ -93,6 +94,23 @@ export default async function ProjectPage({ params: paramsPromise }) {
 
           <div className={styles.contentGrid}>
             <aside className={styles.sidebar}>
+              {(project.leadClub || (project.collaborators && project.collaborators.length)) && (
+                <div className={styles.infoBox}>
+                  <h2 className={styles.sidebarTitle}>// Clubs</h2>
+                  <div className={styles.clubList}>
+                    {project.leadClub && (
+                      <a href={`/clubs/${project.leadClub.slug}`} className={styles.clubTag}>
+                        {project.leadClub.title}
+                      </a>
+                    )}
+                    {project.collaborators?.map((c, idx) => (
+                      <a key={idx} href={`/clubs/${c.slug}`} className={styles.clubTag}>
+                        {c.title}
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              )}
               {project.contributors && project.contributors.length > 0 && (
                 <div className={styles.infoBox}>
                   <h2 className={styles.sidebarTitle}>// Contributors</h2>

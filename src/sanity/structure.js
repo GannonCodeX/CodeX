@@ -4,8 +4,16 @@ export const structure = (S) =>
     .title('Content')
     .items([
       S.listItem()
+        .title('Clubs')
+        .child(
+          S.documentList()
+            .title('Clubs')
+            .filter('_type == "club"')
+        ),
+      S.divider(),
+      S.listItem()
         .title('Project Proposals')
-        .icon(() => '📄')
+        .icon(() => 'dY",')
         .child(
           S.documentList()
             .title('Project Proposals')

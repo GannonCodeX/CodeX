@@ -9,22 +9,21 @@ const Hero = () => {
     <main className={styles.hero}>
       <div className={styles.content}>
         <h1 className={styles.title}>
-          Welcome to the Gannon{' '}
+          Gannon University's Premier{' '}
           <Highlight type="underline" color="var(--accent)">
-            Codex
+            Coding Community
           </Highlight>
-          !
         </h1>
         <p className={styles.description}>
-          GCX is a student-led{' '}
+          Join Gannon CodeX, the leading{' '}
           <Highlight type="circle" color="var(--blush-purple)">
-            community
+            student organization
           </Highlight>{' '}
-          for technology, computer science, and design at Gannon University. We{' '}
+          for computer science, software development, and technology innovation at Gannon University. We{' '}
           <Highlight type="underline" color="var(--code-green)">
-            build
+            build projects
           </Highlight>
-          , break, and learn together.
+          , host workshops, and connect aspiring developers in Erie, PA.
         </p>
         <div className={styles.ctaContainer}>
           <a
@@ -35,8 +34,8 @@ const Hero = () => {
           >
             Join The Community
           </a>
-          <a href="#events" className={styles.secondaryCta}>
-            // See our events
+          <a href="/events" className={styles.secondaryCta}>
+            // Explore Events & Workshops
           </a>
         </div>
       </div>
@@ -44,7 +43,7 @@ const Hero = () => {
         <HeroVectors />
         <Image
           src="/assets/images/Neo-brutalist Poster Aug 5 2025.png"
-          alt="Gannon University Main Building in a neo-brutalist style"
+          alt="Gannon University coding community - students learning programming and software development in Erie PA"
           width={600}
           height={600}
           className={styles.heroImage}

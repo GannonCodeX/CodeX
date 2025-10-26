@@ -121,6 +121,19 @@ export default {
       type: 'datetime',
       readOnly: true,
     },
+    {
+      name: 'convertedToActiveProject',
+      title: 'Converted to Active Project',
+      type: 'reference',
+      to: [{ type: 'activeProject' }],
+      description: 'Reference to the active project created from this proposal.',
+    },
+    {
+      name: 'conversionDate',
+      title: 'Conversion Date',
+      type: 'datetime',
+      description: 'When this proposal was converted to an active project.',
+    },
   ],
   preview: {
     select: {

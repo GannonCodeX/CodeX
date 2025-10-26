@@ -19,6 +19,22 @@ export default {
       validation: Rule => Rule.required(),
     },
     {
+      name: 'affiliations',
+      title: 'Club Affiliations',
+      type: 'array',
+      description: 'Assign this member to one or more clubs and optionally mark e-board roles.',
+      of: [
+        {
+          type: 'object',
+          fields: [
+            { name: 'club', title: 'Club', type: 'reference', to: [{ type: 'club' }], validation: Rule => Rule.required() },
+            { name: 'clubRole', title: 'Role in Club', type: 'string', description: 'e.g., President, Treasurer' },
+            { name: 'isEboard', title: 'E-Board Member', type: 'boolean', initialValue: false },
+          ],
+        },
+      ],
+    },
+    {
       name: 'avatar',
       title: 'Avatar',
       type: 'image',

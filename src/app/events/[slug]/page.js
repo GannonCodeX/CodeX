@@ -7,7 +7,33 @@ import Header from '@/app/components/Header'
 import Footer from '@/app/components/Footer'
 import PortableTextRenderer from '@/app/components/PortableTextRenderer'
 import styles from './slug.module.css'
+import { generateMetadata as createMetadata } from '@/lib/metadata'
+
 export const dynamic = 'force-dynamic';
+
+export async function generateMetadata({ params: paramsPromise }) {
+  const params = await paramsPromise;
+  const event = await getEvent(params.slug);
+  
+  if (!event) {
+    return createMetadata({
+      title: 'Event Not Found',
+      description: 'The requested event could not be found.',
+      url: `/events/${params.slug}`
+    });
+  }
+
+  const eventDate = new Date(event.date).toLocaleDateString();
+  
+  return createMetadata({
+    title: event.title,
+    description: event.description || `Join us for ${event.title} on ${eventDate} at ${event.location}. Hosted by ${event.leadClub?.title || 'Gannon CodeX'}.`,
+    keywords: ['Event', event.title, 'Workshop', 'Tech Event', event.leadClub?.title, 'Gannon University'],
+    image: event.mainImage ? imageUrlBuilder(client).image(event.mainImage).width(1200).height(630).url() : '/assets/images/2x Logo Header.png',
+    url: `/events/${params.slug}`,
+    type: 'article'
+  });
+}
 
 const builder = imageUrlBuilder(client)
 
@@ -29,37 +55,14 @@ async function getEvent(slug) {
         "asset": asset
       }
     },
-    rsvpLink
+    rsvpLink,
+    leadClub->{title, "slug": slug.current},
+    coHosts[]->{title, "slug": slug.current}
   }`
   const event = await client.fetch(query, { slug })
   return event
 }
 
-export async function generateMetadata({ params: paramsPromise }) {
-  const params = await paramsPromise; // Await the params promise
-  const event = await client.fetch(`*[_type == "event" && slug.current == $slug][0]{title, description, mainImage}`, { slug: params.slug });
-  if (!event) {
-    return { title: 'Event Not Found' }
-  }
-
-  const imageUrl = event.mainImage ? urlFor(event.mainImage).width(1200).height(630).url() : '/assets/images/logo.png';
-
-  return {
-    title: `${event.title} | Gannon CodeX`,
-    description: event.description,
-    openGraph: {
-      title: event.title,
-      description: event.description,
-      images: [{ url: imageUrl, width: 1200, height: 630 }],
-    },
-    twitter: {
-      card: 'summary_large_image',
-      title: event.title,
-      description: event.description,
-      images: [imageUrl],
-    },
-  }
-}
 
 export default async function EventPage({ params: paramsPromise }) {
   const params = await paramsPromise; // Await the params promise
@@ -108,6 +111,23 @@ export default async function EventPage({ params: paramsPromise }) {
                 <p><strong>Time:</strong> {eventTime}</p>
                 <p><strong>Location:</strong> {event.location}</p>
               </div>
+              {(event.leadClub || (event.coHosts && event.coHosts.length)) && (
+                <div className={styles.infoBox}>
+                  <h2 className={styles.sidebarTitle}>// Clubs</h2>
+                  <div className={styles.clubList}>
+                    {event.leadClub && (
+                      <a href={`/clubs/${event.leadClub.slug}`} className={styles.clubTag}>
+                        {event.leadClub.title}
+                      </a>
+                    )}
+                    {event.coHosts?.map((c, idx) => (
+                      <a key={idx} href={`/clubs/${c.slug}`} className={styles.clubTag}>
+                        {c.title}
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              )}
               {event.rsvpLink && (
                 <a href={event.rsvpLink} target="_blank" rel="noopener noreferrer" className={styles.rsvpButton}>
                   RSVP Now

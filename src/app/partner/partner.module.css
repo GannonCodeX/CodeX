@@ -147,8 +147,8 @@
 }
 
 .contactButton:hover {
-  background-color: var(--code-green);
-  color: var(--fg);
+  background-color: var(--accent);
+  color: #000;
   border-color: var(--border-color);
   box-shadow: 2px 2px 0px var(--fg);
   transform: translate(2px, 2px);

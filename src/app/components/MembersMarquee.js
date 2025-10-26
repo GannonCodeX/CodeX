@@ -16,6 +16,17 @@ const MemberCard = ({ member }) => (
     <div className={styles.info}>
       <p className={styles.name}>{member.name}</p>
       <p className={styles.role}>{member.role}</p>
+      {member.affiliations?.length ? (
+        <div className={styles.affiliations}>
+          {member.affiliations.map((a, i) => (
+            <span key={i} className={styles.affiliationTag}>
+              {(a.clubShort || a.clubTitle) || 'Club'}
+              {a.clubRole ? ` — ${a.clubRole}` : ''}
+              {a.isEboard ? ' • E-Board' : ''}
+            </span>
+          ))}
+        </div>
+      ) : null}
     </div>
   </div>
 );

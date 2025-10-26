@@ -19,6 +19,20 @@ const EventCard = ({ event }) => {
         <p><strong>Date:</strong> {eventDate}</p>
         <p><strong>Location:</strong> {event.location}</p>
       </div>
+      {(event.leadClub || (event.coHosts && event.coHosts.length)) && (
+        <div className={styles.clubsRow}>
+          {event.leadClub && (
+            <a href={`/clubs/${event.leadClub.slug}`} className={styles.clubTag}>
+              {event.leadClub.title}
+            </a>
+          )}
+          {event.coHosts?.map((c, idx) => (
+            <a key={idx} href={`/clubs/${c.slug}`} className={styles.clubTag}>
+              {c.title}
+            </a>
+          ))}
+        </div>
+      )}
       <p className={styles.description}>{event.description}</p>
       <Link href={`/events/${event.slug}`} className={styles.button}>
         Learn More

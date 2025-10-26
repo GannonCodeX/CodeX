@@ -10,10 +10,14 @@ export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
 // Metadata can stay here because this is now a Server Component
-export const metadata = {
-  title: 'Events | Gannon CodeX',
+import { generateMetadata as createMetadata } from '@/lib/metadata';
+
+export const metadata = createMetadata({
+  title: 'Events',
   description: 'Explore upcoming and past events, workshops, and hackathons hosted by Gannon CodeX. Join us to learn, build, and connect with the tech community.',
-};
+  keywords: ['Events', 'Workshops', 'Hackathons', 'Tech Events', 'Networking', 'Learning'],
+  url: '/events'
+});
 
 // Data fetching happens on the server
 async function getEvents() {
@@ -24,7 +28,9 @@ async function getEvents() {
     date,
     location,
     description,
-    status
+    status,
+    leadClub->{title, "slug": slug.current},
+    coHosts[]->{title, "slug": slug.current}
   }`;
   const events = await client.fetch(query); // Revalidate every 60 seconds
   return events;
@@ -40,9 +46,9 @@ export default async function EventsPage() {
       <Header />
       <main className={styles.wrapper}>
         <div className={styles.header}>
-          <h1 className={styles.title}>Events & Workshops</h1>
+          <h1 className={styles.title}>Tech Events & Programming Workshops at Gannon University</h1>
           <p className={styles.subtitle}>
-            Join us to learn, build, and connect. Here’s what’s happening at the Codex.
+            Discover upcoming coding workshops, hackathons, tech talks, and networking events hosted by Gannon CodeX in Erie, Pennsylvania. Join our community of student developers and enhance your programming skills through hands-on learning experiences.
           </p>
         </div>
 

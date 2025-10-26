@@ -29,6 +29,16 @@ export default function ProjectsClient({ projects }) {
             </div>
             <div className={styles.cardContent}>
               <h2 className={styles.cardTitle}>{project.title}</h2>
+              {(project.leadClub || (project.collaborators && project.collaborators.length)) && (
+                <div className={styles.clubTags}>
+                  {project.leadClub && (
+                    <span className={styles.clubTag}>{project.leadClub.title}</span>
+                  )}
+                  {project.collaborators?.map((c, i) => (
+                    <span key={i} className={styles.clubTag}>{c.title}</span>
+                  ))}
+                </div>
+              )}
               <p className={styles.cardExcerpt}>{project.excerpt}</p>
               <span className={styles.cardLink}>View Project &rarr;</span>
             </div>

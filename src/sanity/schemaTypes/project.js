@@ -22,6 +22,21 @@ export default {
       validation: Rule => Rule.required(),
     },
     {
+      name: 'leadClub',
+      title: 'Lead Club',
+      type: 'reference',
+      to: [{ type: 'club' }],
+      description: 'Primary owner of this project.',
+      validation: Rule => Rule.required(),
+    },
+    {
+      name: 'collaborators',
+      title: 'Collaborating Clubs',
+      type: 'array',
+      of: [{ type: 'reference', to: { type: 'club' } }],
+      description: 'Other clubs collaborating on this project.',
+    },
+    {
       name: 'mainImage',
       title: 'Main Image',
       type: 'image',
@@ -61,6 +76,15 @@ export default {
     select: {
       title: 'title',
       media: 'mainImage',
+      leadClub: 'leadClub.title',
+      excerpt: 'excerpt',
+    },
+    prepare({ title, media, leadClub, excerpt }) {
+      return {
+        title,
+        subtitle: leadClub ? `${leadClub}${excerpt ? ' — ' + excerpt : ''}` : excerpt,
+        media,
+      }
     },
   },
 };

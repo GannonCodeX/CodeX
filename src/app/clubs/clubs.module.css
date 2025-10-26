@@ -1,0 +1,30 @@
+/* src/app/clubs/clubs.module.css */
+.wrapper { max-width: 1200px; margin: 0 auto; padding: 56px 16px; }
+
+.hero { border: 2px solid var(--fg); padding: 24px; margin-bottom: 28px; background: linear-gradient(135deg, #fff 0%, #f5f9ff 100%); box-shadow: 6px 6px 0 var(--fg); }
+.title { font-size: 2.8rem; margin: 0 0 10px; letter-spacing: -1px; }
+.subtitle { color: var(--subtle-gray); max-width: 720px; margin: 0; }
+
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(320px, 100%), 1fr)); gap: 18px; }
+.card { display: flex; flex-direction: column; gap: 12px; padding: 18px; border: 2px solid var(--fg); text-decoration: none; color: inherit; background: #fff; box-shadow: 6px 6px 0 var(--fg); transition: transform .18s ease, box-shadow .18s ease; }
+.card:hover { transform: translate(-2px, -2px); box-shadow: 10px 10px 0 var(--fg); border-color: var(--fg); }
+
+.cardHeader { display: flex; align-items: center; gap: 14px; }
+.logoWrap { width: 64px; height: 64px; display: grid; place-items: center; background: #fafafa; border: 2px solid var(--fg); overflow: hidden; }
+.cardTitle { margin: 0; font-family: var(--mono); font-size: 1.25rem; }
+.badge { display: inline-block; margin-top: 4px; font-family: var(--mono); font-size: .7rem; border: 1px solid var(--fg); padding: 2px 6px; }
+.cardText { margin: 0; color: var(--subtle-gray); display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; min-height: 3.6em; }
+.cardCta { margin-top: auto; font-family: var(--mono); background: var(--accent); border: 1px solid var(--fg); padding: 6px 10px; align-self: flex-start; }
+
+@media (max-width: 768px) {
+  .wrapper { padding: 2rem 1rem; }
+  .title { font-size: 2.2rem; }
+  .grid { gap: 1rem; }
+}
+
+@media (max-width: 480px) {
+  .wrapper { padding: 1.5rem 0.75rem; }
+  .title { font-size: 1.8rem; }
+  .hero { padding: 1rem; }
+  .grid { gap: 0.75rem; }
+}

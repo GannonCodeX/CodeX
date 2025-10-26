@@ -6,6 +6,21 @@ export default {
   type: 'document',
   fields: [
     {
+      name: 'leadClub',
+      title: 'Lead Club',
+      type: 'reference',
+      to: [{ type: 'club' }],
+      description: 'Primary host of this event.',
+      validation: Rule => Rule.required(),
+    },
+    {
+      name: 'coHosts',
+      title: 'Co-hosting Clubs',
+      type: 'array',
+      of: [{ type: 'reference', to: { type: 'club' } }],
+      description: 'Other clubs co-hosting this event.',
+    },
+    {
       name: 'title',
       title: 'Event Title',
       type: 'string',
@@ -83,13 +98,14 @@ export default {
       title: 'title',
       date: 'date',
       status: 'status',
+      leadClub: 'leadClub.title',
       media: 'mainImage',
     },
-    prepare({ title, date, status, media }) {
+    prepare({ title, date, status, leadClub, media }) {
       const dateString = new Date(date).toLocaleDateString();
       return {
         title: title,
-        subtitle: `${dateString} - ${status}`,
+        subtitle: `${dateString} - ${status}${leadClub ? ' — ' + leadClub : ''}`,
         media,
       };
     },

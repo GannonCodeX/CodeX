@@ -6,9 +6,17 @@ import Footer from '../components/Footer';
 import { client } from '@/sanity/lib/client';
 import GalleryClient from './GalleryClient';
 import { unstable_noStore as noStore } from 'next/cache';
+import { generateMetadata as createMetadata } from '@/lib/metadata';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
+
+export const metadata = createMetadata({
+  title: 'Gallery',
+  description: 'Explore photos from Gannon CodeX events, workshops, hackathons, and team moments. See our community in action and the memories we\'ve made together.',
+  keywords: ['Gallery', 'Photos', 'Events', 'Community', 'Memories', 'Team Photos'],
+  url: '/gallery'
+});
 
 async function getGalleryImages() {
   noStore(); // 🔒 disable caching for this fetch path

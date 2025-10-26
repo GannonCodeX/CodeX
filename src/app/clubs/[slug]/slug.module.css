@@ -1,0 +1,25 @@
+/* src/app/clubs/[slug]/slug.module.css */
+.wrapper { max-width: 1200px; margin: 0 auto; padding: 0 16px 56px; }
+
+.hero { margin: 56px 0 24px; border: 2px solid var(--fg); background: linear-gradient(135deg, var(--club-accent, #00FFFF) 0%, #fff 100%); box-shadow: 8px 8px 0 var(--fg); }
+.heroInner { display: flex; gap: 24px; align-items: center; padding: 24px; }
+.logoWrap { width: 96px; height: 96px; display: grid; place-items: center; background: #fff; border: 2px solid var(--fg); overflow: hidden; }
+.title { font-size: 2.4rem; margin: 0; letter-spacing: -1px; }
+.description { color: var(--subtle-gray); margin: 8px 0 12px; max-width: 700px; }
+.links { display: flex; gap: 10px; flex-wrap: wrap; }
+.linkBtn { border: 1px solid var(--fg); background: #fff; padding: 6px 10px; font-family: var(--mono); text-decoration: none; color: inherit; }
+
+.section { margin-top: 32px; }
+.sectionTitle { font-family: var(--mono); margin: 0 0 12px; }
+.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
+.card { padding: 0; border: 2px solid var(--fg); background: #fff; color: inherit; text-decoration: none; box-shadow: 6px 6px 0 var(--fg); display: block; transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease; }
+.card:hover { transform: translate(-2px, -2px); box-shadow: 10px 10px 0 var(--fg); border-color: var(--fg); }
+.cardImgWrap { position: relative; aspect-ratio: 16/9; overflow: hidden; border-bottom: 2px solid var(--fg); background: #f7f7f7; }
+.cardImg { width: 100%; height: 100%; object-fit: cover; display: block; }
+.card h3 { margin: 10px 12px 6px; }
+.card p { margin: 0 12px 12px; color: var(--subtle-gray); display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; min-height: 3.6em; }
+.list { display: grid; gap: 8px; }
+.eventRow { display: grid; grid-template-columns: auto 1fr auto; gap: 12px; align-items: center; padding: 10px 12px; border: 2px solid var(--fg); color: inherit; text-decoration: none; background: #fff; box-shadow: 4px 4px 0 var(--fg); }
+.badge { font-size: 0.75rem; font-family: var(--mono); border: 1px solid var(--fg); padding: 2px 6px; }
+.eventTitle { font-weight: 600; }
+.eventMeta { color: var(--subtle-gray); font-size: 0.9rem; }
