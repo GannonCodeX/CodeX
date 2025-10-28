@@ -221,6 +221,26 @@ export default {
       readOnly: true,
     },
     {
+      name: 'resumeFile',
+      title: 'Resume/CV',
+      type: 'file',
+      readOnly: true,
+      description: 'Resume or CV uploaded by the applicant.',
+    },
+    {
+      name: 'portfolioImages',
+      title: 'Portfolio Screenshots',
+      type: 'array',
+      of: [
+        {
+          type: 'image',
+          options: { hotspot: true },
+        },
+      ],
+      readOnly: true,
+      description: 'Screenshots of previous work or projects.',
+    },
+    {
       name: 'applicationDate',
       title: 'Application Date',
       type: 'datetime',

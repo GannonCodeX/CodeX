@@ -32,6 +32,14 @@ export default {
       title: 'Logo',
       type: 'image',
       options: { hotspot: true },
+      description: 'Club logo/avatar image',
+    },
+    {
+      name: 'bannerImage',
+      title: 'Banner Image',
+      type: 'image',
+      options: { hotspot: true },
+      description: 'Large banner image for club page header',
     },
     {
       name: 'description',
