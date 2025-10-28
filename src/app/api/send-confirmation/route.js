@@ -3,7 +3,8 @@ import { NextResponse } from 'next/server';
 import { Resend } from 'resend';
 import { ConfirmationEmail } from '../../components/emails/ConfirmationEmail';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+// Only initialize Resend if API key exists
+const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
 
 export async function POST(request) {
   try {
@@ -12,6 +13,15 @@ export async function POST(request) {
 
     if (!to || !proposerName || !projectName || !trackingId) {
       return NextResponse.json({ message: 'Missing required fields for email.' }, { status: 400 });
+    }
+
+    // Check if Resend is configured
+    if (!resend) {
+      console.warn('Resend API key not configured. Skipping email notification.');
+      return NextResponse.json({ 
+        message: 'Email service not configured, but proposal was processed successfully.',
+        warning: 'No confirmation email sent'
+      }, { status: 200 });
     }
 
     const { data, error } = await resend.emails.send({
