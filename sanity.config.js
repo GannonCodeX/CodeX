@@ -13,6 +13,11 @@ import { codeInput } from '@sanity/code-input'
 import { apiVersion, dataset, projectId } from './src/sanity/env'
 import { schemaTypes } from './src/sanity/schemaTypes'
 import { structure } from './src/sanity/structure'
+import { 
+  ConvertToActiveProjectAction, 
+  AcceptApplicationAction, 
+  RejectApplicationAction 
+} from './src/sanity/lib/documentActions'
 
 export default defineConfig({
   basePath: '/admin',
@@ -29,4 +34,23 @@ export default defineConfig({
     visionTool({ defaultApiVersion: apiVersion }),
     codeInput(),
   ],
+  // Add custom document actions
+  document: {
+    actions: (prev, context) => {
+      const customActions = []
+      
+      // Add convert action for project proposals
+      if (context.schemaType === 'projectProposal') {
+        customActions.push(ConvertToActiveProjectAction)
+      }
+      
+      // Add accept/reject actions for project applications
+      if (context.schemaType === 'projectApplication') {
+        customActions.push(AcceptApplicationAction)
+        customActions.push(RejectApplicationAction)
+      }
+      
+      return [...prev, ...customActions]
+    }
+  }
 })

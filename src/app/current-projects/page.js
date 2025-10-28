@@ -16,21 +16,13 @@ export const metadata = createMetadata({
 });
 
 async function getCurrentProjects() {
-  const query = `*[_type == "activeProject" && status in ["seeking-contributors", "in-progress"]] | order(featured desc, title asc) {
+  const query = `*[_type == "projectProposal" && status in ["active-seeking", "active-progress"]] | order(presentationTime desc, projectName asc) {
     _id,
-    title,
-    slug,
+    "title": projectName,
+    "slug": { "current": lower(replace(projectName, " ", "-")) },
     status,
-    leadClub->{
-      title,
-      _id
-    },
-    projectManager->{
-      name,
-      _id
-    },
-    shortDescription,
-    techStack,
+    "shortDescription": description[0..200] + "...",
+    "techStack": defined(techStack) => split(techStack, ","),
     skillsNeeded,
     difficultyLevel,
     timeline,
@@ -41,9 +33,9 @@ async function getCurrentProjects() {
       _id
     },
     projectImage,
-    featured,
-    applicationDeadline,
-    startDate
+    proposerName,
+    proposerEmail,
+    trackingId
   }`;
   
   try {

@@ -8,13 +8,15 @@ export default {
   fields: [
     {
       name: 'status',
-      title: 'Status',
+      title: 'Project Status',
       type: 'string',
       options: {
         list: [
-          { title: 'Pending', value: 'pending' },
+          { title: 'Pending Review', value: 'pending' },
           { title: 'In Review', value: 'in-review' },
-          { title: 'Approved', value: 'approved' },
+          { title: 'Active - Seeking Contributors', value: 'active-seeking' },
+          { title: 'Active - In Progress', value: 'active-progress' },
+          { title: 'Completed', value: 'completed' },
           { title: 'Rejected', value: 'rejected' },
         ],
         layout: 'radio',
@@ -134,6 +136,77 @@ export default {
       type: 'datetime',
       description: 'When this proposal was converted to an active project.',
     },
+    // Active project fields - only relevant when status is active-*
+    {
+      name: 'maxContributors',
+      title: 'Maximum Contributors',
+      type: 'number',
+      description: 'Maximum number of people who can join this project.',
+      initialValue: 5,
+      hidden: ({ document }) => !document?.status?.startsWith('active'),
+    },
+    {
+      name: 'currentContributors',
+      title: 'Current Contributors',
+      type: 'array',
+      of: [{ type: 'reference', to: { type: 'member' } }],
+      description: 'People currently working on this project.',
+      hidden: ({ document }) => !document?.status?.startsWith('active'),
+    },
+    {
+      name: 'skillsNeeded',
+      title: 'Skills Needed',
+      type: 'array',
+      of: [{ type: 'string' }],
+      description: 'What skills are we looking for in contributors?',
+      hidden: ({ document }) => !document?.status?.startsWith('active'),
+    },
+    {
+      name: 'difficultyLevel',
+      title: 'Difficulty Level',
+      type: 'string',
+      options: {
+        list: [
+          { title: 'Beginner Friendly', value: 'beginner' },
+          { title: 'Intermediate', value: 'intermediate' },
+          { title: 'Advanced', value: 'advanced' },
+          { title: 'Mixed Levels', value: 'mixed' },
+        ],
+        layout: 'radio',
+      },
+      initialValue: 'intermediate',
+      hidden: ({ document }) => !document?.status?.startsWith('active'),
+    },
+    {
+      name: 'timeCommitment',
+      title: 'Time Commitment',
+      type: 'string',
+      description: 'Expected hours per week (e.g., "3-5 hours/week")',
+      initialValue: '3-5 hours/week',
+      hidden: ({ document }) => !document?.status?.startsWith('active'),
+    },
+    {
+      name: 'meetingSchedule',
+      title: 'Meeting Schedule',
+      type: 'string',
+      description: 'When does the team meet? (e.g., "Weekly Fridays 6PM")',
+      hidden: ({ document }) => !document?.status?.startsWith('active'),
+    },
+    {
+      name: 'communicationChannel',
+      title: 'Communication Channel',
+      type: 'string',
+      description: 'Where does the team communicate? (e.g., "Discord #project-name")',
+      hidden: ({ document }) => !document?.status?.startsWith('active'),
+    },
+    {
+      name: 'projectImage',
+      title: 'Project Image',
+      type: 'image',
+      options: { hotspot: true },
+      description: 'Main image for the project (mockups, diagrams, etc.)',
+      hidden: ({ document }) => !document?.status?.startsWith('active'),
+    },
   ],
   preview: {
     select: {
@@ -145,7 +218,9 @@ export default {
       const statusEmoji = {
         pending: '⏳',
         'in-review': '👀',
-        approved: '✅',
+        'active-seeking': '🔍',
+        'active-progress': '🚀',
+        completed: '✅',
         rejected: '❌',
       };
       return {
