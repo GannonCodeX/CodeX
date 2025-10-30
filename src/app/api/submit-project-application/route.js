@@ -29,13 +29,14 @@ export async function POST(request) {
 
     // Verify the project exists and is accepting applications
     const project = await client.fetch(
-      `*[_type == "activeProject" && _id == $projectId][0] {
+      `*[_type == "project" && _id == $projectId][0] {
         _id,
         title,
         status,
         maxContributors,
         currentContributors[]->{_id},
-        applicationDeadline
+        applicationDeadline,
+        proposerEmail
       }`,
       { projectId }
     );
@@ -51,7 +52,7 @@ export async function POST(request) {
     const isPastDeadline = project.applicationDeadline && 
       new Date(project.applicationDeadline) < new Date();
 
-    if (project.status !== 'seeking-contributors' || spotsLeft <= 0 || isPastDeadline) {
+    if (project.status !== 'active-seeking' || spotsLeft <= 0 || isPastDeadline) {
       return NextResponse.json({ 
         message: 'This project is no longer accepting applications.' 
       }, { status: 400 });
@@ -105,7 +106,7 @@ export async function POST(request) {
     // Create the application in Sanity
     const result = await client.create(applicationDoc);
 
-    // Send confirmation email (fire-and-forget)
+    // Send confirmation email to applicant (fire-and-forget)
     fetch(`${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/api/send-application-confirmation`, {
       method: 'POST',
       headers: {
@@ -120,6 +121,26 @@ export async function POST(request) {
     }).catch(emailError => {
       console.error('Failed to trigger application confirmation email:', emailError);
     });
+
+    // Notify project proposer (fire-and-forget)
+    if (project.proposerEmail) {
+      fetch(`${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/api/send-confirmation`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          to: project.proposerEmail,
+          proposerName: 'Project Proposer',
+          projectName: project.title,
+          trackingId: `new-application-${trackingId}`,
+          subject: `New Application for ${project.title}`,
+          customMessage: `You have received a new application for your project "${project.title}" from ${applicantName}.`
+        }),
+      }).catch(emailError => {
+        console.error('Failed to notify proposer:', emailError);
+      });
+    }
 
     return NextResponse.json({
       message: 'Application submitted successfully!',

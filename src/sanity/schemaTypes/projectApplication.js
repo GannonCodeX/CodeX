@@ -11,7 +11,7 @@ export default {
       name: 'project',
       title: 'Project',
       type: 'reference',
-      to: [{ type: 'activeProject' }],
+      to: [{ type: 'project' }],
       description: 'The project this application is for.',
       validation: Rule => Rule.required(),
     },

@@ -151,3 +151,167 @@
     gap: 1rem;
   }
 }
+
+/* Filter tabs */
+.filterTabs {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  border-bottom: 2px solid var(--border-color);
+  justify-content: center;
+}
+
+.filterTab {
+  font-family: var(--mono);
+  font-size: 1rem;
+  padding: 1rem 1.5rem;
+  background: none;
+  border: none;
+  color: var(--subtle-gray);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border-bottom: 3px solid transparent;
+}
+
+.filterTab:hover {
+  color: var(--fg);
+}
+
+.filterTab.active {
+  color: var(--fg);
+  border-bottom-color: var(--accent);
+}
+
+/* Status badges */
+.statusBadge {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  font-weight: bold;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0;
+  text-transform: uppercase;
+  z-index: 2;
+}
+
+.statusBadge.seeking {
+  background-color: var(--accent);
+  color: var(--fg);
+}
+
+.statusBadge.progress {
+  background-color: #0066cc;
+  color: white;
+}
+
+.statusBadge.completed {
+  background-color: var(--code-green);
+  color: var(--fg);
+}
+
+.cardImageWrapper {
+  position: relative;
+}
+
+.placeholderImage {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--accent) 0%, var(--border-color) 100%);
+  color: var(--fg);
+  font-family: var(--mono);
+  border: 2px dashed var(--border-color);
+}
+
+.placeholderImage span {
+  font-size: 3rem;
+  margin-bottom: 0.5rem;
+  filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.3));
+}
+
+.placeholderImage p {
+  font-size: 0.9rem;
+  margin: 0;
+  font-weight: bold;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+}
+
+/* Project meta for unified projects */
+.projectMeta {
+  margin-bottom: 1rem;
+  font-family: var(--mono);
+  font-size: 0.8rem;
+}
+
+.proposer {
+  color: var(--subtle-gray);
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.techStack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.techTag {
+  background-color: var(--accent);
+  color: var(--fg);
+  padding: 0.125rem 0.375rem;
+  font-size: 0.7rem;
+  border: 1px solid var(--fg);
+  font-weight: bold;
+}
+
+.skillsStack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  margin-top: 0.5rem;
+  align-items: center;
+}
+
+.skillsLabel {
+  font-size: 0.7rem;
+  color: var(--subtle-gray);
+  margin-right: 0.25rem;
+}
+
+.skillTag {
+  background-color: var(--code-green);
+  color: var(--fg);
+  padding: 0.125rem 0.375rem;
+  font-size: 0.7rem;
+  border: 1px solid var(--fg);
+  font-weight: bold;
+}
+
+.contributors {
+  color: var(--subtle-gray);
+  font-size: 0.7rem;
+}
+
+@media (max-width: 768px) {
+  .filterTabs {
+    flex-direction: column;
+    gap: 0;
+    margin-bottom: 1.5rem;
+  }
+  
+  .filterTab {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--border-color);
+    border-right: none;
+  }
+  
+  .filterTab.active {
+    border-bottom-color: var(--accent);
+  }
+}

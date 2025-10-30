@@ -1,0 +1,379 @@
+/* app/projects/[slug]/apply/apply.module.css */
+
+.wrapper {
+  padding: 4rem;
+  min-height: 100vh;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.backLink {
+  font-family: var(--mono);
+  color: var(--subtle-gray);
+  text-decoration: none;
+  display: inline-block;
+  margin-bottom: 2rem;
+  transition: color 0.2s ease;
+}
+
+.backLink:hover {
+  color: var(--fg);
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.title {
+  font-size: 3rem;
+  line-height: 1.1;
+  font-weight: 700;
+  letter-spacing: -2px;
+  margin-bottom: 0.5rem;
+  color: var(--fg);
+}
+
+.projectTitle {
+  font-family: var(--mono);
+  font-size: 1.5rem;
+  color: var(--accent);
+  margin-bottom: 2rem;
+}
+
+.imageWrapper {
+  margin: 0 auto;
+  max-width: 800px;
+  border: 2px solid var(--border-color);
+  overflow: hidden;
+  aspect-ratio: 2/1;
+  margin-bottom: 2rem;
+}
+
+.projectImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.contentGrid {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 3rem;
+  align-items: start;
+}
+
+.sidebar {
+  position: sticky;
+  top: 2rem;
+}
+
+.infoBox {
+  background-color: var(--bg);
+  border: 2px solid var(--border-color);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.sidebarTitle {
+  font-family: var(--mono);
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  color: var(--fg);
+}
+
+.projectDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.detail {
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  padding: 0.5rem;
+  background-color: var(--bg);
+  border: 1px solid var(--border-color);
+  color: var(--fg);
+}
+
+.detail strong {
+  color: var(--accent);
+  margin-right: 0.5rem;
+}
+
+.techTags, .skillTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.techTag {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  background-color: var(--accent);
+  color: var(--fg);
+  padding: 0.25rem 0.5rem;
+  border: 1px solid var(--fg);
+  font-weight: bold;
+}
+
+.skillTag {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  background-color: var(--code-green);
+  color: var(--fg);
+  padding: 0.25rem 0.5rem;
+  border: 1px solid var(--fg);
+  font-weight: bold;
+}
+
+.mainContent {
+  background-color: var(--bg);
+  border: 2px solid var(--border-color);
+  padding: 2rem;
+}
+
+.description {
+  margin-bottom: 2rem;
+  padding-bottom: 2rem;
+  border-bottom: 2px solid var(--border-color);
+}
+
+.description h3 {
+  font-family: var(--mono);
+  color: var(--accent);
+  margin-bottom: 1rem;
+}
+
+.closedNotice {
+  text-align: center;
+  padding: 3rem;
+  background-color: var(--bg);
+  border: 2px solid var(--border-color);
+}
+
+.closedNotice h3 {
+  font-family: var(--mono);
+  color: var(--fg);
+  margin-bottom: 1rem;
+}
+
+.button {
+  font-family: var(--mono);
+  background-color: var(--accent);
+  color: var(--fg);
+  padding: 1rem 2rem;
+  text-decoration: none;
+  border: 2px solid var(--fg);
+  font-weight: bold;
+  display: inline-block;
+  margin-top: 1rem;
+  transition: all 0.2s ease;
+}
+
+.button:hover {
+  background-color: var(--fg);
+  color: var(--accent);
+}
+
+/* Form Styles */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.formSection {
+  background-color: var(--bg);
+  padding: 1.5rem;
+  border: 2px solid var(--border-color);
+}
+
+.sectionTitle {
+  font-family: var(--mono);
+  font-size: 1.2rem;
+  color: var(--fg);
+  margin-bottom: 1.5rem;
+  border-bottom: 2px solid var(--subtle-gray);
+  padding-bottom: 0.5rem;
+}
+
+.formRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.formGroup {
+  margin-bottom: 1.5rem;
+}
+
+.label {
+  font-family: var(--mono);
+  font-size: 0.9rem;
+  color: var(--fg);
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+}
+
+.input, .textarea {
+  font-family: var(--sans);
+  width: 100%;
+  padding: 0.75rem;
+  border: 2px solid var(--subtle-gray);
+  background-color: var(--bg);
+  color: var(--fg);
+  font-size: 1rem;
+  transition: border-color 0.2s ease;
+}
+
+.input:focus, .textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.helpText {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: var(--subtle-gray);
+  margin-top: 0.25rem;
+  display: block;
+}
+
+.submitSection {
+  text-align: center;
+  padding: 2rem;
+  background-color: var(--bg);
+  border: 2px solid var(--border-color);
+}
+
+.submitButton {
+  font-family: var(--mono);
+  background-color: var(--accent);
+  color: var(--fg);
+  padding: 1rem 3rem;
+  border: 2px solid var(--fg);
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.submitButton:hover:not(:disabled) {
+  background-color: var(--fg);
+  color: var(--accent);
+}
+
+.submitButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.errorMessage {
+  color: var(--error, #ff4444);
+  font-family: var(--mono);
+  margin-top: 1rem;
+  padding: 1rem;
+  background-color: rgba(255, 68, 68, 0.1);
+  border: 1px solid var(--error, #ff4444);
+}
+
+/* Success Styles */
+.successContainer {
+  text-align: center;
+  padding: 3rem;
+  background-color: var(--bg);
+  border: 2px solid var(--code-green);
+}
+
+.successTitle {
+  font-family: var(--mono);
+  font-size: 2rem;
+  color: var(--code-green);
+  margin-bottom: 1rem;
+}
+
+.trackingInfo {
+  background-color: var(--bg);
+  padding: 1.5rem;
+  margin: 2rem 0;
+  border: 2px solid var(--border-color);
+}
+
+.trackingLabel {
+  font-family: var(--mono);
+  font-weight: bold;
+  margin-bottom: 1rem;
+  color: var(--fg);
+}
+
+.linkContainer {
+  background-color: var(--bg);
+  padding: 1rem;
+  border: 1px solid var(--border-color);
+  margin: 1rem 0;
+  word-break: break-all;
+  color: var(--fg);
+}
+
+.trackingLink {
+  font-family: var(--mono);
+  color: var(--accent);
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+
+.trackingLink:hover {
+  text-decoration: underline;
+}
+
+.saveNote {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  color: var(--subtle-gray);
+  margin-top: 0.5rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .wrapper {
+    padding: 2rem 1rem;
+  }
+  
+  .contentGrid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  
+  .sidebar {
+    position: static;
+    order: 1;
+  }
+  
+  .mainContent {
+    order: 2;
+  }
+  
+  .formRow {
+    grid-template-columns: 1fr;
+  }
+  
+  .title {
+    font-size: 2rem;
+  }
+  
+  .projectTitle {
+    font-size: 1.2rem;
+  }
+}

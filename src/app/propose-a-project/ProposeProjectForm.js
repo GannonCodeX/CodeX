@@ -70,6 +70,39 @@ const ProposeProjectForm = ({ members }) => {
           <label htmlFor="timeline" className={styles.label}>Estimated Timeline</label>
           <input type="text" id="timeline" name="timeline" className={styles.input} placeholder="e.g., 1-2 months, Semester-long" />
         </div>
+        <div className={styles.formGroup}>
+          <label htmlFor="difficultyLevel" className={styles.label}>Difficulty Level</label>
+          <select id="difficultyLevel" name="difficultyLevel" className={styles.input}>
+            <option value="">Select difficulty</option>
+            <option value="beginner">Beginner Friendly</option>
+            <option value="intermediate">Intermediate</option>
+            <option value="advanced">Advanced</option>
+            <option value="expert">Expert</option>
+          </select>
+        </div>
+        <div className={styles.formGroup}>
+          <label htmlFor="timeCommitment" className={styles.label}>Time Commitment</label>
+          <select id="timeCommitment" name="timeCommitment" className={styles.input}>
+            <option value="">Select time commitment</option>
+            <option value="1-3">1-3 hours/week</option>
+            <option value="4-6">4-6 hours/week</option>
+            <option value="7-10">7-10 hours/week</option>
+            <option value="10+">10+ hours/week</option>
+            <option value="flexible">Flexible</option>
+          </select>
+        </div>
+        <div className={styles.formGroup}>
+          <label htmlFor="maxContributors" className={styles.label}>Maximum Contributors</label>
+          <input type="number" id="maxContributors" name="maxContributors" className={styles.input} placeholder="e.g., 5" min="1" max="20" />
+        </div>
+        <div className={`${styles.formGroup} ${styles.fullWidth}`}>
+          <label htmlFor="skillsNeeded" className={styles.label}>Skills Needed</label>
+          <input type="text" id="skillsNeeded" name="skillsNeeded" className={styles.input} placeholder="e.g., JavaScript, UI Design, Database" />
+        </div>
+        <div className={styles.formGroup}>
+          <label htmlFor="mainImage" className={styles.label}>Project Image</label>
+          <input type="file" id="mainImage" name="mainImage" className={styles.fileInput} accept="image/*" />
+        </div>
         <div className={`${styles.formGroup} ${styles.fullWidth}`}>
           <label htmlFor="goals" className={styles.label}>Project Goals & Success Metrics</label>
           <textarea id="goals" name="goals" className={styles.textarea} placeholder="How will you measure success?"></textarea>

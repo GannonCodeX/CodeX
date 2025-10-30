@@ -12,24 +12,6 @@ export const structure = (S) =>
         ),
       S.divider(),
       S.listItem()
-        .title('Project Proposals')
-        .icon(() => '📝')
-        .child(
-          S.documentList()
-            .title('Project Proposals')
-            .filter('_type == "projectProposal"')
-            .defaultOrdering([{ field: 'presentationTime', direction: 'desc' }])
-        ),
-      S.listItem()
-        .title('Active Projects')
-        .icon(() => '🚀')
-        .child(
-          S.documentList()
-            .title('Active Projects')
-            .filter('_type == "activeProject"')
-            .defaultOrdering([{ field: 'featured', direction: 'desc' }, { field: 'title', direction: 'asc' }])
-        ),
-      S.listItem()
         .title('Project Applications')
         .icon(() => '📋')
         .child(
@@ -83,7 +65,49 @@ export const structure = (S) =>
         .child(S.documentList().title('Events').filter('_type == "event"')),
       S.listItem()
         .title('Projects')
-        .child(S.documentList().title('Projects').filter('_type == "project"')),
+        .icon(() => '🚀')
+        .child(
+          S.list()
+            .title('Project Management')
+            .items([
+              S.listItem()
+                .title('Active Projects')
+                .icon(() => '⚡')
+                .child(
+                  S.documentList()
+                    .title('Active Projects')
+                    .filter('_type == "project" && status in ["active-seeking", "active-progress"]')
+                    .defaultOrdering([{ field: 'status', direction: 'asc' }, { field: 'createdAt', direction: 'desc' }])
+                ),
+              S.listItem()
+                .title('Proposed Projects')
+                .icon(() => '📝')
+                .child(
+                  S.documentList()
+                    .title('Proposed Projects')
+                    .filter('_type == "project" && status == "proposed"')
+                    .defaultOrdering([{ field: 'createdAt', direction: 'desc' }])
+                ),
+              S.listItem()
+                .title('Completed Projects')
+                .icon(() => '✅')
+                .child(
+                  S.documentList()
+                    .title('Completed Projects')
+                    .filter('_type == "project" && status == "completed"')
+                    .defaultOrdering([{ field: 'createdAt', direction: 'desc' }])
+                ),
+              S.listItem()
+                .title('All Projects')
+                .icon(() => '📋')
+                .child(
+                  S.documentList()
+                    .title('All Projects')
+                    .filter('_type == "project"')
+                    .defaultOrdering([{ field: 'createdAt', direction: 'desc' }])
+                ),
+            ])
+        ),
       S.listItem()
         .title('Galleries')
         .child(S.documentList().title('Galleries').filter('_type == "gallery"')),

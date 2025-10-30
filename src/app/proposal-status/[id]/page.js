@@ -4,7 +4,7 @@ import { PortableText } from '@portabletext/react';
 import styles from './status.module.css';
 
 async function getProposal(id) {
-  const query = `*[_type == "projectProposal" && trackingId == $id][0]`;
+  const query = `*[_type == "project" && trackingId == $id][0]`;
   const proposal = await client.fetch(query, { id });
   return proposal;
 }
@@ -25,10 +25,12 @@ export default async function ProposalStatusPage({ params }) {
   }
 
   const statusInfo = {
-    pending: { text: 'Pending Review', color: '#ffa500' },
-    'in-review': { text: 'In Review', color: '#0070f3' },
-    approved: { text: 'Approved', color: '#008000' },
-    rejected: { text: 'Rejected', color: '#ff0000' },
+    draft: { text: 'Draft', color: '#888' },
+    proposed: { text: 'Pending Review', color: '#ffa500' },
+    'active-seeking': { text: 'Approved - Seeking Contributors', color: '#008000' },
+    'active-progress': { text: 'Approved - In Progress', color: '#0070f3' },
+    completed: { text: 'Completed', color: '#008000' },
+    archived: { text: 'Archived', color: '#666' },
   };
 
   return (
@@ -36,7 +38,7 @@ export default async function ProposalStatusPage({ params }) {
       <div className={styles.container}>
         <header className={styles.header}>
           <p>Status for proposal:</p>
-          <h1 className={styles.title}>{proposal.projectName}</h1>
+          <h1 className={styles.title}>{proposal.title}</h1>
           <div className={styles.statusBadge} style={{ backgroundColor: statusInfo[proposal.status]?.color || '#888' }}>
             {statusInfo[proposal.status]?.text || 'Unknown'}
           </div>

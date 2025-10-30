@@ -1,0 +1,493 @@
+/* app/projects/[slug]/applications/applications.module.css */
+
+.wrapper {
+  padding: 4rem;
+  min-height: 100vh;
+  background-color: var(--bg);
+}
+
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 3rem;
+  padding-bottom: 2rem;
+  border-bottom: 2px solid var(--border-color);
+}
+
+.title {
+  font-size: 2.5rem;
+  line-height: 1.1;
+  font-weight: 700;
+  letter-spacing: -2px;
+  margin-bottom: 0.5rem;
+  color: var(--fg);
+}
+
+.subtitle {
+  font-family: var(--mono);
+  font-size: 1rem;
+  color: var(--subtle-gray);
+}
+
+.backLink {
+  font-family: var(--mono);
+  color: var(--subtle-gray);
+  text-decoration: none;
+  padding: 0.75rem 1.5rem;
+  border: 1px solid var(--border-color);
+  transition: all 0.2s ease;
+}
+
+.backLink:hover {
+  color: var(--fg);
+  border-color: var(--accent);
+}
+
+/* Auth Form */
+.authForm {
+  text-align: center;
+  padding: 3rem;
+  background-color: var(--bg);
+  border: 2px solid var(--border-color);
+  max-width: 500px;
+  margin: 2rem auto;
+}
+
+.emailForm {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin: 2rem 0;
+}
+
+.emailInput {
+  font-family: var(--sans);
+  padding: 1rem;
+  border: 2px solid var(--subtle-gray);
+  background-color: var(--bg);
+  color: var(--fg);
+  font-size: 1rem;
+}
+
+.emailInput:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.submitButton {
+  font-family: var(--mono);
+  background-color: var(--accent);
+  color: var(--fg);
+  padding: 1rem 2rem;
+  border: 2px solid var(--fg);
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.submitButton:hover {
+  background-color: var(--fg);
+  color: var(--accent);
+}
+
+.note {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  color: var(--subtle-gray);
+  margin-top: 1rem;
+}
+
+.errorMessage {
+  background-color: rgba(220, 53, 69, 0.1);
+  border: 1px solid #dc3545;
+  color: #dc3545;
+  padding: 1rem;
+  margin: 1rem 0;
+  font-family: var(--mono);
+  font-size: 0.9rem;
+  border-radius: 4px;
+}
+
+/* Applications Container */
+.applicationsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* Filter Tabs */
+.filterTabs {
+  display: flex;
+  gap: 0;
+  border-bottom: 2px solid var(--border-color);
+  margin-bottom: 2rem;
+}
+
+.filterTab {
+  font-family: var(--mono);
+  font-size: 0.9rem;
+  padding: 1rem 1.5rem;
+  background: none;
+  border: none;
+  color: var(--subtle-gray);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border-bottom: 3px solid transparent;
+  border-right: 1px solid var(--border-color);
+}
+
+.filterTab:hover {
+  color: var(--fg);
+  background-color: var(--border-color);
+}
+
+.filterTab.active {
+  color: var(--fg);
+  border-bottom-color: var(--accent);
+  background-color: var(--border-color);
+}
+
+.filterTab:last-child {
+  border-right: none;
+}
+
+/* Empty State */
+.emptyState {
+  text-align: center;
+  padding: 4rem 2rem;
+  background-color: var(--bg);
+  border: 2px solid var(--border-color);
+}
+
+.emptyState h3 {
+  font-family: var(--mono);
+  color: var(--fg);
+  margin-bottom: 1rem;
+}
+
+.emptyState p {
+  color: var(--subtle-gray);
+}
+
+/* Applications List */
+.applicationsList {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.applicationCard {
+  background-color: var(--bg);
+  border: 2px solid var(--border-color);
+  padding: 1.5rem;
+  transition: border-color 0.2s ease;
+}
+
+.applicationCard:hover {
+  border-color: var(--accent);
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.applicantInfo {
+  flex: 1;
+}
+
+.applicantName {
+  font-family: var(--mono);
+  font-size: 1.2rem;
+  color: var(--fg);
+  margin-bottom: 0.25rem;
+}
+
+.applicantEmail {
+  font-family: var(--mono);
+  font-size: 0.9rem;
+  color: var(--accent);
+  margin-bottom: 0.25rem;
+}
+
+.applicationDate {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  color: var(--subtle-gray);
+  margin: 0;
+}
+
+.statusSection {
+  flex-shrink: 0;
+}
+
+.statusBadge {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  font-weight: bold;
+  padding: 0.5rem 1rem;
+  text-transform: uppercase;
+  border: 1px solid;
+}
+
+.statusPending {
+  background-color: #ffa500;
+  color: #000;
+  border-color: #ff8c00;
+}
+
+.statusReviewing {
+  background-color: #0066cc;
+  color: #fff;
+  border-color: #0052a3;
+}
+
+.statusAccepted {
+  background-color: var(--code-green);
+  color: var(--fg);
+  border-color: #28a745;
+}
+
+.statusRejected {
+  background-color: #dc3545;
+  color: #fff;
+  border-color: #c82333;
+}
+
+.statusWaitlisted {
+  background-color: #6c757d;
+  color: #fff;
+  border-color: #5a6268;
+}
+
+.statusDefault {
+  background-color: var(--bg);
+  color: var(--fg);
+  border-color: var(--border-color);
+}
+
+/* Card Content */
+.cardContent {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.applicationDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.detailRow {
+  font-family: var(--mono);
+  font-size: 0.9rem;
+  padding: 0.5rem;
+  background-color: var(--bg);
+  border: 1px solid var(--border-color);
+  color: var(--fg);
+}
+
+.detailRow strong {
+  color: var(--accent);
+  margin-right: 0.5rem;
+}
+
+.experienceSection, .motivationSection {
+  background-color: var(--bg);
+  padding: 1rem;
+  border: 1px solid var(--border-color);
+}
+
+.experienceSection strong, .motivationSection strong {
+  font-family: var(--mono);
+  color: var(--accent);
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.experienceText, .motivationText {
+  font-family: var(--sans);
+  line-height: 1.6;
+  color: var(--fg);
+  margin: 0;
+}
+
+.portfolioSection {
+  background-color: var(--bg);
+  padding: 1rem;
+  border: 1px solid var(--border-color);
+}
+
+.portfolioSection strong {
+  font-family: var(--mono);
+  color: var(--accent);
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.portfolioLinks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.portfolioLink {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  color: var(--fg);
+  background-color: var(--bg);
+  padding: 0.5rem;
+  text-decoration: none;
+  border: 1px solid var(--accent);
+  transition: all 0.2s ease;
+}
+
+.portfolioLink:hover {
+  background-color: var(--accent);
+  color: var(--fg);
+}
+
+/* Action Buttons */
+.actionButtons {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.acceptButton, .reviewButton, .rejectButton {
+  font-family: var(--mono);
+  font-size: 0.9rem;
+  padding: 0.75rem 1.5rem;
+  border: 2px solid;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.acceptButton {
+  background-color: var(--code-green);
+  color: var(--fg);
+  border-color: #28a745;
+}
+
+.acceptButton:hover:not(:disabled) {
+  background-color: #28a745;
+  color: #fff;
+}
+
+.reviewButton {
+  background-color: #0066cc;
+  color: #fff;
+  border-color: #0052a3;
+}
+
+.reviewButton:hover:not(:disabled) {
+  background-color: #0052a3;
+}
+
+.rejectButton {
+  background-color: var(--bg);
+  color: #dc3545;
+  border-color: #dc3545;
+}
+
+.rejectButton:hover:not(:disabled) {
+  background-color: #dc3545;
+  color: #fff;
+}
+
+.acceptButton:disabled, .reviewButton:disabled, .rejectButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Card Footer */
+.cardFooter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border-color);
+  margin-top: 1rem;
+}
+
+.trackingId {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  color: var(--subtle-gray);
+}
+
+.emailButton {
+  font-family: var(--mono);
+  font-size: 0.9rem;
+  color: var(--accent);
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--accent);
+  transition: all 0.2s ease;
+}
+
+.emailButton:hover {
+  background-color: var(--accent);
+  color: var(--fg);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .wrapper {
+    padding: 2rem 1rem;
+  }
+  
+  .header {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: stretch;
+  }
+  
+  .title {
+    font-size: 2rem;
+  }
+  
+  .filterTabs {
+    flex-wrap: wrap;
+  }
+  
+  .filterTab {
+    flex: 1;
+    min-width: 120px;
+  }
+  
+  .cardHeader {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .actionButtons {
+    flex-direction: column;
+  }
+  
+  .acceptButton, .reviewButton, .rejectButton {
+    width: 100%;
+  }
+  
+  .cardFooter {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: stretch;
+  }
+  
+  .emailButton {
+    text-align: center;
+  }
+}

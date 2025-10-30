@@ -39,8 +39,8 @@ const Header = () => {
         <Link href="/projects" className={styles.navLink}>
           /projects
         </Link>
-        <Link href="/current-projects" className={styles.navLink}>
-          /current-projects
+        <Link href="/propose-a-project" className={styles.navLink}>
+          /propose
         </Link>
         <Link href="/clubs" className={styles.navLink}>
           /clubs

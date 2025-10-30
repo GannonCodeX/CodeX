@@ -17,30 +17,50 @@ export const metadata = createMetadata({
   url: '/projects'
 });
 
-async function getProjects() {
-  const query = `*[_type == "project"] | order(_createdAt desc){
+async function getAllProjects() {
+  // Get all projects from the unified project schema
+  const projectsQuery = `*[_type == "project"] | order(createdAt desc) {
+    _id,
     title,
     "slug": slug.current,
     mainImage,
     excerpt,
+    status,
     leadClub->{title, "slug": slug.current},
-    collaborators[]->{title, "slug": slug.current}
-  }`
-  const projects = await client.fetch(query)
-  return projects
+    collaborators[]->{title, "slug": slug.current},
+    techStack,
+    maxContributors,
+    currentContributors[]->{name, _id},
+    proposerName,
+    skillsNeeded,
+    difficultyLevel,
+    timeline,
+    timeCommitment,
+    createdAt
+  }`;
+
+  try {
+    const projects = await client.fetch(projectsQuery);
+    console.log("Fetched projects:", projects);
+    return projects;
+  } catch (error) {
+    console.error("Failed to fetch projects:", error);
+    return [];
+  }
 }
 
 export default async function ProjectsPage() {
-  const projects = await getProjects()
+  const projects = await getAllProjects()
 
   return (
     <>
       <Header />
       <main className={styles.wrapper}>
         <header className={styles.header}>
-          <h1 className={styles.title}>Student Software Development Projects - Gannon University</h1>
+          <h1 className={styles.title}>Projects - Gannon CodeX</h1>
           <p className={styles.subtitle}>
-            Explore innovative software projects, web applications, and open-source tools created by Gannon CodeX student developers. Our portfolio showcases real-world programming experience from computer science students at Gannon University in Erie, Pennsylvania.
+            Explore active projects you can join and completed projects from our community. 
+            Find opportunities to contribute or see what we've built together.
           </p>
         </header>
         <ProjectsClient projects={projects} />

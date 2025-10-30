@@ -44,19 +44,29 @@ async function getProject(slug) {
     title,
     mainImage,
     excerpt,
-    content[]{
-      ...,
-      _type == "image" => {
-        "asset": asset
-      }
-    },
+    status,
+    description,
     projectLink,
     leadClub->{title, "slug": slug.current},
     collaborators[]->{title, "slug": slug.current},
-    "contributors": contributors[]->{
-      name,
-      avatar
-    }
+    currentContributors[]->{name, avatar},
+    proposerName,
+    proposerEmail,
+    techStack,
+    skillsNeeded,
+    difficultyLevel,
+    timeCommitment,
+    timeline,
+    maxContributors,
+    applicationDeadline,
+    customQuestions,
+    goals,
+    estimatedBudget,
+    fundingSource,
+    budgetBreakdown,
+    specialRequests,
+    createdAt,
+    trackingId
   }`
   const project = await client.fetch(query, { slug })
   return project
@@ -94,6 +104,75 @@ export default async function ProjectPage({ params: paramsPromise }) {
 
           <div className={styles.contentGrid}>
             <aside className={styles.sidebar}>
+              {/* Project Status */}
+              <div className={styles.infoBox}>
+                <h2 className={styles.sidebarTitle}>// Status</h2>
+                <div className={`${styles.statusBadge} ${styles[project.status]}`}>
+                  {project.status === 'active-seeking' && '🔍 Seeking Contributors'}
+                  {project.status === 'active-progress' && '⚡ In Progress'}
+                  {project.status === 'completed' && '✅ Completed'}
+                  {project.status === 'proposed' && '📋 Proposed'}
+                  {project.status === 'draft' && '📝 Draft'}
+                </div>
+              </div>
+
+              {/* Project Details */}
+              <div className={styles.infoBox}>
+                <h2 className={styles.sidebarTitle}>// Details</h2>
+                <div className={styles.detailsList}>
+                  {project.proposerName && (
+                    <div className={styles.detailItem}>
+                      <strong>Proposer:</strong> {project.proposerName}
+                    </div>
+                  )}
+                  {project.difficultyLevel && (
+                    <div className={styles.detailItem}>
+                      <strong>Difficulty:</strong> {project.difficultyLevel}
+                    </div>
+                  )}
+                  {project.timeCommitment && (
+                    <div className={styles.detailItem}>
+                      <strong>Time Commitment:</strong> {project.timeCommitment} hours/week
+                    </div>
+                  )}
+                  {project.timeline && (
+                    <div className={styles.detailItem}>
+                      <strong>Timeline:</strong> {project.timeline}
+                    </div>
+                  )}
+                  {project.maxContributors && (
+                    <div className={styles.detailItem}>
+                      <strong>Max Contributors:</strong> {project.currentContributors?.length || 0}/{project.maxContributors}
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Tech Stack */}
+              {project.techStack && (
+                <div className={styles.infoBox}>
+                  <h2 className={styles.sidebarTitle}>// Tech Stack</h2>
+                  <div className={styles.techTags}>
+                    {project.techStack.split(',').map((tech, i) => (
+                      <span key={i} className={styles.techTag}>{tech.trim()}</span>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Skills Needed */}
+              {project.skillsNeeded && project.skillsNeeded.length > 0 && (
+                <div className={styles.infoBox}>
+                  <h2 className={styles.sidebarTitle}>// Skills Needed</h2>
+                  <div className={styles.skillTags}>
+                    {project.skillsNeeded.map((skill, i) => (
+                      <span key={i} className={styles.skillTag}>{skill}</span>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Clubs */}
               {(project.leadClub || (project.collaborators && project.collaborators.length)) && (
                 <div className={styles.infoBox}>
                   <h2 className={styles.sidebarTitle}>// Clubs</h2>
@@ -111,33 +190,97 @@ export default async function ProjectPage({ params: paramsPromise }) {
                   </div>
                 </div>
               )}
-              {project.contributors && project.contributors.length > 0 && (
+
+              {/* Contributors */}
+              {project.currentContributors && project.currentContributors.length > 0 && (
                 <div className={styles.infoBox}>
-                  <h2 className={styles.sidebarTitle}>// Contributors</h2>
+                  <h2 className={styles.sidebarTitle}>// Current Contributors</h2>
                   <ul className={styles.contributorsList}>
-                    {project.contributors.map((contributor, index) => (
+                    {project.currentContributors.map((contributor, index) => (
                       <li key={index} className={styles.contributor}>
-                        <Image
-                          src={urlFor(contributor.avatar).width(50).url()}
-                          alt={contributor.name}
-                          width={40}
-                          height={40}
-                          className={styles.contributorAvatar}
-                        />
+                        {contributor.avatar ? (
+                          <Image
+                            src={urlFor(contributor.avatar).width(50).url()}
+                            alt={contributor.name}
+                            width={40}
+                            height={40}
+                            className={styles.contributorAvatar}
+                          />
+                        ) : (
+                          <div className={styles.avatarPlaceholder}>👤</div>
+                        )}
                         <span>{contributor.name}</span>
                       </li>
                     ))}
                   </ul>
                 </div>
               )}
-              {project.projectLink && (
-                <a href={project.projectLink} target="_blank" rel="noopener noreferrer" className={styles.projectLinkButton}>
-                  View Project
-                </a>
-              )}
+
+              {/* Action Buttons */}
+              <div className={styles.actionButtons}>
+                {project.status === 'active-seeking' && (
+                  <Link href={`/projects/${params.slug}/apply`} className={styles.applyButton}>
+                    Apply to Join
+                  </Link>
+                )}
+                {project.projectLink && (
+                  <a href={project.projectLink} target="_blank" rel="noopener noreferrer" className={styles.projectLinkButton}>
+                    View Project
+                  </a>
+                )}
+                {project.proposerEmail && (
+                  <Link href={`/projects/${params.slug}/manage?key=${Buffer.from(project.proposerEmail).toString('base64')}`} className={styles.manageButton}>
+                    Manage Applications (Proposer)
+                  </Link>
+                )}
+              </div>
             </aside>
+
             <div className={styles.mainContent}>
-              <PortableTextRenderer content={project.content} />
+              {project.description && (
+                <div className={styles.description}>
+                  <PortableTextRenderer content={project.description} />
+                </div>
+              )}
+              
+              {project.goals && (
+                <div className={styles.section}>
+                  <h2>Project Goals</h2>
+                  <p>{project.goals}</p>
+                </div>
+              )}
+
+              {project.budgetBreakdown && (
+                <div className={styles.section}>
+                  <h2>Budget Information</h2>
+                  {project.estimatedBudget > 0 && (
+                    <p><strong>Estimated Budget:</strong> ${project.estimatedBudget}</p>
+                  )}
+                  {project.fundingSource && (
+                    <p><strong>Funding Source:</strong> {project.fundingSource}</p>
+                  )}
+                  <p><strong>Budget Breakdown:</strong></p>
+                  <p>{project.budgetBreakdown}</p>
+                </div>
+              )}
+
+              {project.specialRequests && (
+                <div className={styles.section}>
+                  <h2>Special Requests</h2>
+                  <p>{project.specialRequests}</p>
+                </div>
+              )}
+
+              {project.customQuestions && project.customQuestions.length > 0 && (
+                <div className={styles.section}>
+                  <h2>Application Questions</h2>
+                  <ol>
+                    {project.customQuestions.map((question, i) => (
+                      <li key={i}>{question}</li>
+                    ))}
+                  </ol>
+                </div>
+              )}
             </div>
           </div>
         </article>
