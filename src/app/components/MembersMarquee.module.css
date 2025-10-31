@@ -58,6 +58,30 @@
   transform: translateX(-50%) translateY(-8px) scale(1.04);
 }
 
+.placeholderAvatar {
+  position: absolute;
+  top: -50px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  background-color: var(--accent);
+  border: 2px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--mono);
+  font-size: 3rem;
+  font-weight: 700;
+  color: var(--fg);
+  transition: transform 0.3s ease;
+}
+
+.card:hover .placeholderAvatar {
+  transform: translateX(-50%) translateY(-8px) scale(1.04);
+}
+
 .info {
   display: flex;
   flex-direction: column;

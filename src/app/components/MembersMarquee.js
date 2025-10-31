@@ -6,13 +6,19 @@ import styles from './MembersMarquee.module.css';
 
 const MemberCard = ({ member }) => (
   <div className={styles.card}>
-    <Image
-      src={member.avatar}
-      alt={`Avatar of ${member.name}`}
-      width={180}
-      height={180}
-      className={styles.avatar}
-    />
+    {member.avatar ? (
+      <Image
+        src={member.avatar}
+        alt={`Avatar of ${member.name}`}
+        width={180}
+        height={180}
+        className={styles.avatar}
+      />
+    ) : (
+      <div className={styles.placeholderAvatar}>
+        {member.name?.charAt(0) || '?'}
+      </div>
+    )}
     <div className={styles.info}>
       <p className={styles.name}>{member.name}</p>
       <p className={styles.role}>{member.role}</p>

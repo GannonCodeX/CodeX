@@ -22,10 +22,12 @@ async function getMembers() {
   }`;
   const sanityMembers = await client.fetch(query, { next: { revalidate: 0 } });
   if (sanityMembers && sanityMembers.length > 0) {
-    return sanityMembers.map(member => ({
-      ...member,
-      avatar: urlFor(member.avatar).width(300).height(300).url(),
-    }));
+    return sanityMembers
+      .filter(member => member.name) // Only include members with names
+      .map(member => ({
+        ...member,
+        avatar: member.avatar ? urlFor(member.avatar).width(300).height(300).url() : null,
+      }));
   }
   return [];
 }
