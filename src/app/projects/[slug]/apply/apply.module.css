@@ -238,6 +238,19 @@
   border-color: var(--accent);
 }
 
+.inputError {
+  border-color: #dc3545 !important;
+  background-color: rgba(220, 53, 69, 0.05);
+}
+
+.errorText {
+  display: block;
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: #dc3545;
+  margin-top: 0.25rem;
+}
+
 .textarea {
   resize: vertical;
   min-height: 80px;
@@ -287,6 +300,42 @@
   padding: 1rem;
   background-color: rgba(255, 68, 68, 0.1);
   border: 1px solid var(--error, #ff4444);
+}
+
+/* Loading States */
+.loadingOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.loadingSpinner {
+  font-family: var(--mono);
+  color: var(--accent);
+  font-size: 1.2rem;
+  text-align: center;
+}
+
+.submitButton.loading {
+  position: relative;
+  color: transparent;
+}
+
+.submitButton.loading::after {
+  content: "Submitting...";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: var(--fg);
+  font-size: 1rem;
 }
 
 /* Success Styles */

@@ -4,8 +4,10 @@ import { redirect } from 'next/navigation'
 import Header from '@/app/components/Header'
 import Footer from '@/app/components/Footer'
 import ApplicationsManager from './ApplicationsManager'
+import AccessRequestForm from './AccessRequestForm'
 import styles from './applications.module.css'
 import { generateMetadata as createMetadata } from '@/lib/metadata'
+import { verifySecureToken } from '@/lib/secure-tokens'
 
 export const dynamic = 'force-dynamic';
 
@@ -55,17 +57,36 @@ async function getApplications(projectId) {
   return applications
 }
 
-export default async function ApplicationsPage({ params: paramsPromise, searchParams }) {
+export default async function ApplicationsPage({ params: paramsPromise, searchParams: searchParamsPromise }) {
   const params = await paramsPromise;
+  const searchParams = await searchParamsPromise;
   const project = await getProject(params.slug);
   
   if (!project) {
     redirect('/projects');
   }
 
-  // Simple email verification for proposer access
-  const proposerEmail = searchParams.email;
-  const isAuthorized = proposerEmail === project.proposerEmail;
+  // Check for secure token access
+  const token = searchParams.token;
+  let isAuthorized = false;
+  let authError = null;
+
+  if (token) {
+    const tokenVerification = verifySecureToken(token);
+    if (tokenVerification.valid) {
+      // Verify token matches this project and email
+      const tokenData = tokenVerification.data;
+      if (tokenData.projectSlug === params.slug && 
+          tokenData.email === project.proposerEmail &&
+          tokenData.action === 'manage-applications') {
+        isAuthorized = true;
+      } else {
+        authError = 'Token is not valid for this project';
+      }
+    } else {
+      authError = tokenVerification.error;
+    }
+  }
 
   if (!isAuthorized) {
     return (
@@ -73,25 +94,13 @@ export default async function ApplicationsPage({ params: paramsPromise, searchPa
         <Header />
         <main className={styles.wrapper}>
           <div className={styles.container}>
-            <h1 className={styles.title}>Access Restricted</h1>
-            <div className={styles.authForm}>
-              <p>Enter your email to access applications for this project:</p>
-              <form method="GET" className={styles.emailForm}>
-                <input 
-                  type="email" 
-                  name="email" 
-                  placeholder="Your email address" 
-                  className={styles.emailInput}
-                  required 
-                />
-                <button type="submit" className={styles.submitButton}>
-                  Access Applications
-                </button>
-              </form>
-              <p className={styles.note}>
-                Only the project proposer ({project.proposerEmail}) can access applications.
-              </p>
-            </div>
+            <h1 className={styles.title}>Secure Access Required</h1>
+            {authError && (
+              <div className={styles.errorMessage}>
+                {authError}
+              </div>
+            )}
+            <AccessRequestForm projectSlug={params.slug} project={project} />
           </div>
         </main>
         <Footer />

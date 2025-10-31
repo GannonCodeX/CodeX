@@ -1,0 +1,221 @@
+/* Rich Text Renderer Styles */
+.markdownContent,
+.portableTextContent {
+  line-height: 1.6;
+  color: var(--fg);
+}
+
+.h1 {
+  font-family: var(--mono);
+  font-size: 1.8rem;
+  color: var(--accent);
+  margin: 1.5rem 0 1rem 0;
+  line-height: 1.2;
+  font-weight: 700;
+}
+
+.h2 {
+  font-family: var(--mono);
+  font-size: 1.4rem;
+  color: var(--accent);
+  margin: 1.25rem 0 0.75rem 0;
+  line-height: 1.3;
+  font-weight: 600;
+}
+
+.h3 {
+  font-family: var(--mono);
+  font-size: 1.2rem;
+  color: var(--accent);
+  margin: 1rem 0 0.5rem 0;
+  line-height: 1.4;
+  font-weight: 600;
+}
+
+.paragraph {
+  font-family: var(--sans);
+  margin: 0 0 1rem 0;
+  color: var(--fg);
+}
+
+.list {
+  margin: 0.5rem 0 1rem 1.5rem;
+  padding: 0;
+}
+
+.orderedList {
+  margin: 0.5rem 0 1rem 1.5rem;
+  padding: 0;
+}
+
+.listItem {
+  margin: 0.25rem 0;
+  font-family: var(--sans);
+  color: var(--fg);
+}
+
+.blockquote {
+  border-left: 4px solid var(--accent);
+  background-color: rgba(0, 123, 204, 0.05);
+  margin: 1rem 0;
+  padding: 1rem 1.5rem;
+  font-style: italic;
+  color: var(--fg);
+}
+
+.inlineCode {
+  font-family: var(--mono);
+  background-color: var(--code-green);
+  color: var(--fg);
+  padding: 2px 6px;
+  border-radius: 0;
+  border: 1px solid var(--border-color);
+  font-size: 0.9em;
+}
+
+.codeBlock {
+  font-family: var(--mono);
+  background-color: var(--subtle-gray);
+  color: var(--fg);
+  padding: 1rem;
+  border: 1px solid var(--border-color);
+  border-radius: 0;
+  display: block;
+  overflow-x: auto;
+  white-space: pre;
+  margin: 1rem 0;
+}
+
+.preBlock {
+  margin: 1rem 0;
+  padding: 0;
+  background: transparent;
+  border: none;
+}
+
+.preBlock .codeBlock {
+  margin: 0;
+}
+
+.tableContainer {
+  overflow-x: auto;
+  margin: 1rem 0;
+  border: 2px solid var(--border-color);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--mono);
+  font-size: 0.9rem;
+}
+
+.tableHead {
+  background-color: var(--accent);
+}
+
+.tableBody {
+  background-color: var(--bg);
+}
+
+.tableRow {
+  border-bottom: 1px solid var(--border-color);
+}
+
+.tableHeader {
+  padding: 0.75rem;
+  text-align: left;
+  font-weight: bold;
+  color: var(--fg);
+  border-right: 1px solid var(--border-color);
+}
+
+.tableCell {
+  padding: 0.75rem;
+  color: var(--fg);
+  border-right: 1px solid var(--border-color);
+  vertical-align: top;
+}
+
+.tableHeader:last-child,
+.tableCell:last-child {
+  border-right: none;
+}
+
+.link {
+  color: var(--accent);
+  text-decoration: underline;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.link:hover {
+  color: var(--code-green);
+  text-decoration: none;
+}
+
+.strong {
+  font-weight: bold;
+  color: var(--fg);
+}
+
+.emphasis {
+  font-style: italic;
+  color: var(--fg);
+}
+
+.plainText {
+  font-family: var(--sans);
+  color: var(--fg);
+  white-space: pre-wrap;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .h1 {
+    font-size: 1.5rem;
+  }
+  
+  .h2 {
+    font-size: 1.3rem;
+  }
+  
+  .h3 {
+    font-size: 1.1rem;
+  }
+  
+  .tableContainer {
+    font-size: 0.8rem;
+  }
+  
+  .tableHeader,
+  .tableCell {
+    padding: 0.5rem;
+  }
+  
+  .codeBlock {
+    font-size: 0.8rem;
+    padding: 0.75rem;
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .blockquote {
+    background-color: rgba(0, 123, 204, 0.1);
+  }
+}
+
+/* Print styles */
+@media print {
+  .link {
+    color: #000;
+    text-decoration: none;
+  }
+  
+  .link:after {
+    content: " (" attr(href) ")";
+    font-size: 0.8em;
+    color: #666;
+  }
+}

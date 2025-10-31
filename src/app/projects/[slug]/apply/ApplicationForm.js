@@ -5,12 +5,89 @@ import styles from './apply.module.css';
 
 const ApplicationForm = ({ project, projectSlug }) => {
   const [status, setStatus] = useState({ loading: false, error: null, success: false, trackingId: null });
+  const [formErrors, setFormErrors] = useState({});
+
+  const getFieldError = (fieldName) => {
+    return formErrors[fieldName] ? (
+      <span className={styles.errorText}>{formErrors[fieldName]}</span>
+    ) : null;
+  };
+
+  const getFieldClassName = (fieldName) => {
+    return formErrors[fieldName] ? `${styles.input} ${styles.inputError}` : styles.input;
+  };
+
+  const validateForm = (formData) => {
+    const errors = {};
+    
+    // Required field validation
+    const requiredFields = {
+      'applicantName': 'Full Name',
+      'applicantEmail': 'Email Address',
+      'skillLevel': 'Skill Level',
+      'experience': 'Relevant Experience',
+      'motivation': 'Why do you want to join this project',
+      'hoursPerWeek': 'Available Hours per Week',
+      'startDate': 'When can you start'
+    };
+
+    Object.entries(requiredFields).forEach(([field, label]) => {
+      if (!formData.get(field)?.trim()) {
+        errors[field] = `${label} is required`;
+      }
+    });
+
+    // Email validation
+    const email = formData.get('applicantEmail');
+    if (email) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        errors.applicantEmail = 'Please enter a valid email address';
+      }
+    }
+
+    // URL validation for portfolio links
+    const urlFields = ['githubLink', 'portfolioLink', 'linkedinLink'];
+    urlFields.forEach(field => {
+      const url = formData.get(field);
+      if (url && url.trim()) {
+        try {
+          new URL(url);
+        } catch {
+          errors[field] = 'Please enter a valid URL (including http:// or https://)';
+        }
+      }
+    });
+
+    // Experience length validation
+    const experience = formData.get('experience');
+    if (experience && experience.length < 20) {
+      errors.experience = 'Please provide more detail about your experience (at least 20 characters)';
+    }
+
+    // Motivation length validation
+    const motivation = formData.get('motivation');
+    if (motivation && motivation.length < 20) {
+      errors.motivation = 'Please provide more detail about your motivation (at least 20 characters)';
+    }
+
+    return errors;
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    setFormErrors({});
     setStatus({ loading: true, error: null, success: false, trackingId: null });
 
     const formData = new FormData(event.target);
+    
+    // Client-side validation
+    const errors = validateForm(formData);
+    if (Object.keys(errors).length > 0) {
+      setFormErrors(errors);
+      setStatus({ loading: false, error: 'Please correct the errors below', success: false, trackingId: null });
+      return;
+    }
     
     // Add project ID to form data
     formData.set('projectId', project._id);
@@ -91,10 +168,11 @@ const ApplicationForm = ({ project, projectSlug }) => {
             type="text" 
             id="applicantName" 
             name="applicantName" 
-            className={styles.input} 
+            className={getFieldClassName('applicantName')} 
             placeholder="John Doe"
             required 
           />
+          {getFieldError('applicantName')}
         </div>
 
         <div className={styles.formGroup}>
@@ -105,10 +183,11 @@ const ApplicationForm = ({ project, projectSlug }) => {
             type="email" 
             id="applicantEmail" 
             name="applicantEmail" 
-            className={styles.input} 
+            className={getFieldClassName('applicantEmail')} 
             placeholder="john.doe@example.com"
             required 
           />
+          {getFieldError('applicantEmail')}
         </div>
 
         <div className={styles.formRow}>
@@ -180,12 +259,13 @@ const ApplicationForm = ({ project, projectSlug }) => {
           <label htmlFor="skillLevel" className={styles.label}>
             Overall Skill Level *
           </label>
-          <select id="skillLevel" name="skillLevel" className={styles.input} required>
+          <select id="skillLevel" name="skillLevel" className={getFieldClassName('skillLevel')} required>
             <option value="">Select your level</option>
             <option value="beginner">Beginner</option>
             <option value="intermediate">Intermediate</option>
             <option value="advanced">Advanced</option>
           </select>
+          {getFieldError('skillLevel')}
         </div>
 
         <div className={styles.formGroup}>
@@ -209,11 +289,12 @@ const ApplicationForm = ({ project, projectSlug }) => {
           <textarea 
             id="experience" 
             name="experience" 
-            className={styles.textarea} 
+            className={formErrors.experience ? `${styles.textarea} ${styles.inputError}` : styles.textarea} 
             placeholder="Describe your relevant experience, previous projects, coursework, internships, etc."
             rows="4"
             required
           ></textarea>
+          {getFieldError('experience')}
         </div>
       </div>
 
@@ -227,11 +308,12 @@ const ApplicationForm = ({ project, projectSlug }) => {
           <textarea 
             id="motivation" 
             name="motivation" 
-            className={styles.textarea} 
+            className={formErrors.motivation ? `${styles.textarea} ${styles.inputError}` : styles.textarea} 
             placeholder="What interests you about this project? What do you hope to learn or contribute?"
             rows="4"
             required
           ></textarea>
+          {getFieldError('motivation')}
         </div>
 
         <div className={styles.formRow}>
@@ -239,7 +321,7 @@ const ApplicationForm = ({ project, projectSlug }) => {
             <label htmlFor="hoursPerWeek" className={styles.label}>
               Available Hours per Week *
             </label>
-            <select id="hoursPerWeek" name="hoursPerWeek" className={styles.input} required>
+            <select id="hoursPerWeek" name="hoursPerWeek" className={getFieldClassName('hoursPerWeek')} required>
               <option value="">Select hours</option>
               <option value="1-3 hours">1-3 hours</option>
               <option value="4-6 hours">4-6 hours</option>
@@ -247,6 +329,7 @@ const ApplicationForm = ({ project, projectSlug }) => {
               <option value="10+ hours">10+ hours</option>
               <option value="flexible">Flexible</option>
             </select>
+            {getFieldError('hoursPerWeek')}
           </div>
 
           <div className={styles.formGroup}>
@@ -257,9 +340,10 @@ const ApplicationForm = ({ project, projectSlug }) => {
               type="date" 
               id="startDate" 
               name="startDate" 
-              className={styles.input} 
+              className={getFieldClassName('startDate')} 
               required 
             />
+            {getFieldError('startDate')}
           </div>
         </div>
 
@@ -288,9 +372,10 @@ const ApplicationForm = ({ project, projectSlug }) => {
             type="url" 
             id="githubLink" 
             name="githubLink" 
-            className={styles.input} 
+            className={getFieldClassName('githubLink')} 
             placeholder="https://github.com/yourusername"
           />
+          {getFieldError('githubLink')}
         </div>
 
         <div className={styles.formGroup}>
@@ -301,9 +386,10 @@ const ApplicationForm = ({ project, projectSlug }) => {
             type="url" 
             id="portfolioLink" 
             name="portfolioLink" 
-            className={styles.input} 
+            className={getFieldClassName('portfolioLink')} 
             placeholder="https://yourportfolio.com"
           />
+          {getFieldError('portfolioLink')}
         </div>
 
         <div className={styles.formGroup}>
@@ -314,9 +400,10 @@ const ApplicationForm = ({ project, projectSlug }) => {
             type="url" 
             id="linkedinLink" 
             name="linkedinLink" 
-            className={styles.input} 
+            className={getFieldClassName('linkedinLink')} 
             placeholder="https://linkedin.com/in/yourprofile"
           />
+          {getFieldError('linkedinLink')}
         </div>
       </div>
 
@@ -340,7 +427,11 @@ const ApplicationForm = ({ project, projectSlug }) => {
       )}
       
       <div className={styles.submitSection}>
-        <button type="submit" className={styles.submitButton} disabled={status.loading}>
+        <button 
+          type="submit" 
+          className={`${styles.submitButton} ${status.loading ? styles.loading : ''}`} 
+          disabled={status.loading}
+        >
           {status.loading ? 'Submitting...' : 'Submit Application'}
         </button>
         {status.error && <p className={styles.errorMessage}>{status.error}</p>}

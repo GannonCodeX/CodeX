@@ -13,7 +13,9 @@
     "@react-email/render": "^1.2.1",
     "@sanity/code-input": "^5.2.0",
     "@sanity/image-url": "^1.1.0",
+    "@sanity/table": "^2.0.0",
     "@sanity/vision": "^4.2.0",
+    "@uiw/react-md-editor": "^4.0.8",
     "@vercel/analytics": "^1.5.0",
     "@vercel/speed-insights": "^1.2.0",
     "gsap": "^3.13.0",
@@ -21,6 +23,7 @@
     "next-sanity": "^10.0.7",
     "react": "19.1.0",
     "react-dom": "19.1.0",
+    "react-markdown": "^10.1.0",
     "react-syntax-highlighter": "^15.6.1",
     "resend": "^6.0.2",
     "sanity": "^4.2.0",
@@ -29,6 +32,7 @@
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
     "eslint": "^9.34.0",
+    "eslint-config-next": "^16.0.1",
     "tailwindcss": "^4"
   }
 }

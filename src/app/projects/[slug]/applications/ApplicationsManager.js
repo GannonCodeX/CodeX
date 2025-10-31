@@ -6,6 +6,26 @@ import styles from './applications.module.css';
 const ApplicationsManager = ({ applications, project, projectSlug }) => {
   const [filter, setFilter] = useState('all');
   const [actionLoading, setActionLoading] = useState({});
+  const [expandedCards, setExpandedCards] = useState({});
+
+  const toggleCard = (applicationId) => {
+    setExpandedCards(prev => ({
+      ...prev,
+      [applicationId]: !prev[applicationId]
+    }));
+  };
+
+  const expandAll = () => {
+    const newExpanded = {};
+    filteredApplications.forEach(app => {
+      newExpanded[app._id] = true;
+    });
+    setExpandedCards(newExpanded);
+  };
+
+  const collapseAll = () => {
+    setExpandedCards({});
+  };
 
   const filteredApplications = applications.filter(app => {
     if (filter === 'all') return true;
@@ -111,6 +131,18 @@ const ApplicationsManager = ({ applications, project, projectSlug }) => {
         </button>
       </div>
 
+      {/* Expand/Collapse Controls */}
+      {filteredApplications.length > 0 && (
+        <div className={styles.expandControls}>
+          <button onClick={expandAll} className={styles.expandButton}>
+            📂 Expand All ({filteredApplications.length})
+          </button>
+          <button onClick={collapseAll} className={styles.expandButton}>
+            📁 Collapse All
+          </button>
+        </div>
+      )}
+
       {/* Applications List */}
       {filteredApplications.length === 0 ? (
         <div className={styles.emptyState}>
@@ -124,22 +156,34 @@ const ApplicationsManager = ({ applications, project, projectSlug }) => {
         </div>
       ) : (
         <div className={styles.applicationsList}>
-          {filteredApplications.map((application) => (
-            <div key={application._id} className={styles.applicationCard}>
-              <div className={styles.cardHeader}>
-                <div className={styles.applicantInfo}>
-                  <h3 className={styles.applicantName}>{application.applicantName}</h3>
-                  <p className={styles.applicantEmail}>{application.applicantEmail}</p>
-                  <p className={styles.applicationDate}>
-                    Applied {formatDate(application.applicationDate)}
-                  </p>
+          {filteredApplications.map((application) => {
+            const isExpanded = expandedCards[application._id];
+            return (
+              <div key={application._id} className={styles.applicationCard}>
+                <div 
+                  className={styles.cardHeader} 
+                  onClick={() => toggleCard(application._id)}
+                  style={{ cursor: 'pointer' }}
+                >
+                  <div className={styles.applicantInfo}>
+                    <h3 className={styles.applicantName}>
+                      {isExpanded ? '📂' : '📁'} {application.applicantName}
+                    </h3>
+                    <p className={styles.applicantEmail}>{application.applicantEmail}</p>
+                    <p className={styles.applicationDate}>
+                      Applied {formatDate(application.applicationDate)}
+                    </p>
+                  </div>
+                  <div className={styles.statusSection}>
+                    {getStatusBadge(application.status)}
+                    <div className={styles.expandIcon}>
+                      {isExpanded ? '▼' : '▶'}
+                    </div>
+                  </div>
                 </div>
-                <div className={styles.statusSection}>
-                  {getStatusBadge(application.status)}
-                </div>
-              </div>
 
-              <div className={styles.cardContent}>
+                {isExpanded && (
+                  <div className={styles.cardContent}>
                 <div className={styles.applicationDetails}>
                   <div className={styles.detailRow}>
                     <strong>Skill Level:</strong> {application.skillLevel}
@@ -252,9 +296,11 @@ const ApplicationsManager = ({ applications, project, projectSlug }) => {
                     📧 Email Applicant
                   </a>
                 </div>
+                  </div>
+                )}
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
     </div>

@@ -1,0 +1,145 @@
+/* Markdown Editor Styles */
+.container {
+  position: relative;
+  margin-bottom: 1rem;
+}
+
+.container :global(.w-md-editor) {
+  background-color: var(--bg) !important;
+  border: 2px solid var(--subtle-gray) !important;
+  border-radius: 0 !important;
+  font-family: var(--mono) !important;
+}
+
+.container :global(.w-md-editor.w-md-editor-focus) {
+  border-color: var(--accent) !important;
+}
+
+.container :global(.w-md-editor-text-input),
+.container :global(.w-md-editor-text-textarea),
+.container :global(.w-md-editor-text) {
+  background-color: var(--bg) !important;
+  color: var(--fg) !important;
+  font-family: var(--mono) !important;
+  font-size: 14px !important;
+  line-height: 1.5 !important;
+  border: none !important;
+}
+
+.container :global(.w-md-editor-toolbar) {
+  background-color: var(--bg) !important;
+  border-bottom: 1px solid var(--subtle-gray) !important;
+  padding: 0.5rem !important;
+}
+
+.container :global(.w-md-editor-toolbar-child) {
+  color: var(--fg) !important;
+}
+
+.container :global(.w-md-editor-toolbar button) {
+  background-color: transparent !important;
+  color: var(--fg) !important;
+  border: 1px solid var(--subtle-gray) !important;
+  margin: 0 2px !important;
+  padding: 4px 8px !important;
+  border-radius: 0 !important;
+  font-family: var(--mono) !important;
+  font-size: 12px !important;
+  transition: all 0.2s ease !important;
+}
+
+.container :global(.w-md-editor-toolbar button:hover) {
+  background-color: var(--accent) !important;
+  color: var(--fg) !important;
+  border-color: var(--fg) !important;
+}
+
+.container :global(.w-md-editor-toolbar button.active) {
+  background-color: var(--code-green) !important;
+  color: var(--fg) !important;
+  border-color: var(--fg) !important;
+}
+
+.container :global(.w-md-editor-preview) {
+  background-color: var(--bg) !important;
+  color: var(--fg) !important;
+  padding: 1rem !important;
+  font-family: var(--sans) !important;
+}
+
+.container :global(.w-md-editor-preview h1),
+.container :global(.w-md-editor-preview h2),
+.container :global(.w-md-editor-preview h3) {
+  color: var(--accent) !important;
+  font-family: var(--mono) !important;
+}
+
+.container :global(.w-md-editor-preview code) {
+  background-color: var(--code-green) !important;
+  color: var(--fg) !important;
+  padding: 2px 4px !important;
+  border-radius: 0 !important;
+  font-family: var(--mono) !important;
+}
+
+.container :global(.w-md-editor-preview pre) {
+  background-color: var(--subtle-gray) !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: 0 !important;
+  padding: 1rem !important;
+}
+
+.container :global(.w-md-editor-preview blockquote) {
+  border-left: 4px solid var(--accent) !important;
+  background-color: rgba(0, 123, 204, 0.05) !important;
+  padding: 1rem !important;
+  margin: 1rem 0 !important;
+  font-style: italic !important;
+}
+
+.container :global(.w-md-editor-preview table) {
+  border-collapse: collapse !important;
+  width: 100% !important;
+  margin: 1rem 0 !important;
+}
+
+.container :global(.w-md-editor-preview th),
+.container :global(.w-md-editor-preview td) {
+  border: 1px solid var(--border-color) !important;
+  padding: 0.5rem !important;
+  text-align: left !important;
+}
+
+.container :global(.w-md-editor-preview th) {
+  background-color: var(--accent) !important;
+  color: var(--fg) !important;
+  font-family: var(--mono) !important;
+  font-weight: bold !important;
+}
+
+.helpText {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: var(--subtle-gray);
+  margin-top: 0.5rem;
+  display: block;
+}
+
+/* Dark mode compatibility */
+@media (prefers-color-scheme: dark) {
+  .container :global(.w-md-editor) {
+    background-color: var(--bg) !important;
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .container :global(.w-md-editor-toolbar) {
+    flex-wrap: wrap !important;
+  }
+  
+  .container :global(.w-md-editor-toolbar button) {
+    font-size: 10px !important;
+    padding: 2px 4px !important;
+  }
+}

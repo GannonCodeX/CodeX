@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import styles from './propose.module.css';
 import MemberSelect from '../components/MemberSelect';
+import MarkdownEditor from '../components/MarkdownEditor';
 
 const ProposeProjectForm = ({ members }) => {
   const [status, setStatus] = useState({ loading: false, error: null, success: false, trackingId: null });
@@ -105,7 +106,11 @@ const ProposeProjectForm = ({ members }) => {
         </div>
         <div className={`${styles.formGroup} ${styles.fullWidth}`}>
           <label htmlFor="goals" className={styles.label}>Project Goals & Success Metrics</label>
-          <textarea id="goals" name="goals" className={styles.textarea} placeholder="How will you measure success?"></textarea>
+          <MarkdownEditor 
+            name="goals"
+            placeholder="## Goals\n\n- Define specific objectives\n- List success metrics\n- Include deliverables\n\n**Example:** Create a mobile app with 100+ downloads in first month"
+            height={150}
+          />
         </div>
       </fieldset>
 
@@ -134,11 +139,19 @@ const ProposeProjectForm = ({ members }) => {
         </div>
         <div className={`${styles.formGroup} ${styles.fullWidth}`}>
           <label htmlFor="budgetBreakdown" className={styles.label}>Budget Breakdown</label>
-          <textarea id="budgetBreakdown" name="budgetBreakdown" className={styles.textarea} placeholder="e.g., Server costs, API subscriptions..."></textarea>
+          <MarkdownEditor 
+            name="budgetBreakdown"
+            placeholder="## Budget Breakdown\n\n| Item | Cost | Justification |\n|------|------|---------------|\n| Server hosting | $50/month | For app deployment |\n| API subscriptions | $20/month | Third-party services |\n| **Total** | **$70/month** | |\n\n### Notes\n- Prices are estimates\n- Monthly recurring costs"
+            height={200}
+          />
         </div>
         <div className={`${styles.formGroup} ${styles.fullWidth}`}>
           <label htmlFor="specialRequests" className={styles.label}>Special Requests</label>
-          <textarea id="specialRequests" name="specialRequests" className={styles.textarea} placeholder="e.g., Need access to specific hardware, mentorship..."></textarea>
+          <MarkdownEditor 
+            name="specialRequests"
+            placeholder="## Special Requests\n\n### Hardware/Software Access\n- [ ] Lab equipment\n- [ ] Software licenses\n- [ ] Cloud credits\n\n### Support Needed\n- **Mentorship:** Industry expert in mobile development\n- **Collaboration:** Partnership with CS department\n\n### Timeline Considerations\n*Any specific deadlines or constraints*"
+            height={150}
+          />
         </div>
       </fieldset>
 

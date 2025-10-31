@@ -229,7 +229,7 @@ export default async function ProjectPage({ params: paramsPromise }) {
                   </a>
                 )}
                 {project.proposerEmail && (
-                  <Link href={`/projects/${params.slug}/manage?key=${Buffer.from(project.proposerEmail).toString('base64')}`} className={styles.manageButton}>
+                  <Link href={`/projects/${params.slug}/applications`} className={styles.manageButton}>
                     Manage Applications (Proposer)
                   </Link>
                 )}

@@ -133,7 +133,7 @@
   font-family: var(--mono);
   font-size: 0.9rem;
   padding: 1rem 1.5rem;
-  background: none;
+  background: var(--bg);
   border: none;
   color: var(--subtle-gray);
   cursor: pointer;
@@ -144,17 +144,43 @@
 
 .filterTab:hover {
   color: var(--fg);
-  background-color: var(--border-color);
+  background-color: var(--bg);
+  border-bottom-color: var(--subtle-gray);
 }
 
 .filterTab.active {
   color: var(--fg);
   border-bottom-color: var(--accent);
-  background-color: var(--border-color);
+  background-color: var(--bg);
 }
 
 .filterTab:last-child {
   border-right: none;
+}
+
+/* Expand Controls */
+.expandControls {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  justify-content: flex-end;
+}
+
+.expandButton {
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  padding: 0.5rem 1rem;
+  background-color: var(--bg);
+  color: var(--fg);
+  border: 1px solid var(--border-color);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.expandButton:hover {
+  background-color: var(--accent);
+  color: var(--fg);
+  border-color: var(--accent);
 }
 
 /* Empty State */
@@ -197,9 +223,13 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 1.5rem;
-  padding-bottom: 1rem;
+  padding: 1rem;
   border-bottom: 1px solid var(--border-color);
+  transition: background-color 0.2s ease;
+}
+
+.cardHeader:hover {
+  background-color: var(--bg);
 }
 
 .applicantInfo {
@@ -229,6 +259,17 @@
 
 .statusSection {
   flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.5rem;
+}
+
+.expandIcon {
+  font-family: var(--mono);
+  font-size: 1.2rem;
+  color: var(--accent);
+  user-select: none;
 }
 
 .statusBadge {
@@ -281,6 +322,19 @@
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
+  padding: 0 1rem 1rem 1rem;
+  animation: expandContent 0.3s ease-out;
+}
+
+@keyframes expandContent {
+  from {
+    opacity: 0;
+    max-height: 0;
+  }
+  to {
+    opacity: 1;
+    max-height: 1000px;
+  }
 }
 
 .applicationDetails {

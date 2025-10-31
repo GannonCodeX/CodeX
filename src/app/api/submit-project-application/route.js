@@ -21,9 +21,30 @@ export async function POST(request) {
     const hoursPerWeek = formData.get('hoursPerWeek');
     const startDate = formData.get('startDate');
 
-    if (!projectId || !applicantName || !applicantEmail || !skillLevel || !experience || !motivation || !hoursPerWeek || !startDate) {
+    // Enhanced validation with specific field checks
+    const missingFields = [];
+    if (!projectId) missingFields.push('Project ID');
+    if (!applicantName) missingFields.push('Full Name');
+    if (!applicantEmail) missingFields.push('Email Address');
+    if (!skillLevel) missingFields.push('Skill Level');
+    if (!experience) missingFields.push('Relevant Experience');
+    if (!motivation) missingFields.push('Motivation');
+    if (!hoursPerWeek) missingFields.push('Available Hours per Week');
+    if (!startDate) missingFields.push('Start Date');
+
+    if (missingFields.length > 0) {
       return NextResponse.json({ 
-        message: 'Missing required fields. Please fill out all required information.' 
+        message: `Please fill out the following required fields: ${missingFields.join(', ')}`,
+        missingFields
+      }, { status: 400 });
+    }
+
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(applicantEmail)) {
+      return NextResponse.json({ 
+        message: 'Please enter a valid email address.',
+        field: 'applicantEmail'
       }, { status: 400 });
     }
 
@@ -43,18 +64,47 @@ export async function POST(request) {
 
     if (!project) {
       return NextResponse.json({ 
-        message: 'Project not found.' 
+        message: 'Project not found. The project may have been removed or the link may be invalid.',
+        code: 'PROJECT_NOT_FOUND'
       }, { status: 404 });
     }
 
     // Check if project is still accepting applications
-    const spotsLeft = project.maxContributors - (project.currentContributors?.length || 0);
+    const currentContributorCount = project.currentContributors?.length || 0;
+    const spotsLeft = project.maxContributors - currentContributorCount;
     const isPastDeadline = project.applicationDeadline && 
       new Date(project.applicationDeadline) < new Date();
 
-    if (project.status !== 'active-seeking' || spotsLeft <= 0 || isPastDeadline) {
+    if (project.status !== 'active-seeking') {
+      const statusMessages = {
+        'draft': 'This project is still in draft mode.',
+        'proposed': 'This project is under review and not yet accepting applications.',
+        'active-progress': 'This project is no longer accepting new applications as it is already in progress.',
+        'completed': 'This project has been completed and is no longer accepting applications.',
+        'archived': 'This project has been archived and is no longer accepting applications.'
+      };
+      
       return NextResponse.json({ 
-        message: 'This project is no longer accepting applications.' 
+        message: statusMessages[project.status] || 'This project is not currently accepting applications.',
+        projectStatus: project.status,
+        code: 'NOT_ACCEPTING_APPLICATIONS'
+      }, { status: 400 });
+    }
+
+    if (spotsLeft <= 0) {
+      return NextResponse.json({ 
+        message: `This project has reached its maximum capacity of ${project.maxContributors} contributors.`,
+        maxContributors: project.maxContributors,
+        currentCount: currentContributorCount,
+        code: 'MAX_CONTRIBUTORS_REACHED'
+      }, { status: 400 });
+    }
+
+    if (isPastDeadline) {
+      return NextResponse.json({ 
+        message: `The application deadline for this project was ${new Date(project.applicationDeadline).toLocaleDateString()}.`,
+        deadline: project.applicationDeadline,
+        code: 'DEADLINE_PASSED'
       }, { status: 400 });
     }
 
