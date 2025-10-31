@@ -1,5 +1,6 @@
 'use client';
 
+import React, { useState, useEffect } from 'react';
 import { PortableText } from '@portabletext/react';
 import dynamic from 'next/dynamic';
 import styles from './RichTextRenderer.module.css';
@@ -8,11 +9,26 @@ import styles from './RichTextRenderer.module.css';
 const ReactMarkdown = dynamic(() => import('react-markdown'), { ssr: false });
 
 const RichTextRenderer = ({ content, type = 'portableText' }) => {
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
   // If content is empty or null, don't render anything
   if (!content) return null;
 
   // Handle different content types
   if (type === 'markdown' && typeof content === 'string') {
+    // Show plain text fallback during SSR
+    if (!isMounted) {
+      return (
+        <div className={styles.plainText}>
+          {content}
+        </div>
+      );
+    }
+
     return (
       <div className={styles.markdownContent}>
         <ReactMarkdown

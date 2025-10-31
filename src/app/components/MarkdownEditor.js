@@ -1,7 +1,7 @@
 'use client';
 
+import React, { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
-import { useState } from 'react';
 import styles from './MarkdownEditor.module.css';
 
 // Dynamically import the markdown editor to avoid SSR issues
@@ -19,6 +19,12 @@ const MarkdownEditor = ({
   className = ""
 }) => {
   const [content, setContent] = useState(value);
+  const [isMounted, setIsMounted] = useState(false);
+
+  // Ensure component only renders on client-side
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   const handleChange = (val) => {
     setContent(val || '');
@@ -26,6 +32,35 @@ const MarkdownEditor = ({
       onChange(val || '');
     }
   };
+
+  // Show fallback textarea during SSR or while loading
+  if (!isMounted) {
+    return (
+      <div className={`${styles.container} ${className}`}>
+        <textarea
+          name={name}
+          placeholder={placeholder}
+          value={content}
+          onChange={(e) => handleChange(e.target.value)}
+          style={{
+            width: '100%',
+            height: `${height}px`,
+            padding: '0.75rem',
+            border: '2px solid var(--subtle-gray)',
+            backgroundColor: 'var(--bg)',
+            color: 'var(--fg)',
+            fontFamily: 'var(--mono, "Courier New", monospace)',
+            fontSize: '14px',
+            lineHeight: '1.5',
+            resize: 'vertical'
+          }}
+        />
+        <div className={styles.helpText}>
+          💡 Supports Markdown: **bold**, *italic*, `code`, [links](url), lists, tables, and more
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className={`${styles.container} ${className}`}>
