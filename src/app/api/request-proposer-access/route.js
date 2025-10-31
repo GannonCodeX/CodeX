@@ -53,7 +53,7 @@ export async function POST(request) {
     }
 
     // Generate secure token (expires in 2 hours)
-    const token = generateSecureToken({
+    const token = await generateSecureToken({
       email,
       projectSlug,
       projectId: project._id,

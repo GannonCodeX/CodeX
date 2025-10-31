@@ -1,9 +1,10 @@
 // lib/secure-tokens.js
-import crypto from 'crypto'
 
 const SECRET_KEY = process.env.NEXTAUTH_SECRET || process.env.SECRET_KEY || 'fallback-secret-change-in-production'
 
-export function generateSecureToken(data, expiresInHours = 2) {
+export async function generateSecureToken(data, expiresInHours = 2) {
+  const crypto = await import('crypto')
+  
   const expiresAt = Date.now() + (expiresInHours * 60 * 60 * 1000)
   const tokenPayload = {
     ...data,
@@ -28,8 +29,10 @@ export function generateSecureToken(data, expiresInHours = 2) {
   return Buffer.from(JSON.stringify(fullToken)).toString('base64url')
 }
 
-export function verifySecureToken(token) {
+export async function verifySecureToken(token) {
   try {
+    const crypto = await import('crypto')
+    
     if (!token) {
       return { valid: false, error: 'No token provided' }
     }

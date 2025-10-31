@@ -72,7 +72,7 @@ export default async function ApplicationsPage({ params: paramsPromise, searchPa
   let authError = null;
 
   if (token) {
-    const tokenVerification = verifySecureToken(token);
+    const tokenVerification = await verifySecureToken(token);
     if (tokenVerification.valid) {
       // Verify token matches this project and email
       const tokenData = tokenVerification.data;

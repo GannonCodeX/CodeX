@@ -248,6 +248,14 @@
   font-weight: 700;
 }
 
+.helpText {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: var(--subtle-gray);
+  margin-top: 0.25rem;
+  display: block;
+}
+
 .successContainer {
   text-align: center;
 }
