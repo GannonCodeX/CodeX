@@ -5,8 +5,9 @@ import { PortableText } from '@portabletext/react';
 import dynamic from 'next/dynamic';
 import styles from './RichTextRenderer.module.css';
 
-// Dynamically import react-markdown to avoid SSR issues
+// Dynamically import react-markdown and remark-gfm to avoid SSR issues
 const ReactMarkdown = dynamic(() => import('react-markdown'), { ssr: false });
+const remarkGfm = dynamic(() => import('remark-gfm'), { ssr: false });
 
 const RichTextRenderer = ({ content, type = 'portableText' }) => {
   const [isMounted, setIsMounted] = useState(false);
@@ -75,6 +76,7 @@ const RichTextRenderer = ({ content, type = 'portableText' }) => {
     return (
       <div className={styles.markdownContent}>
         <ReactMarkdown
+          remarkPlugins={[remarkGfm]}
           components={{
             h1: ({ children }) => <h1 className={styles.h1}>{children}</h1>,
             h2: ({ children }) => <h2 className={styles.h2}>{children}</h2>,
@@ -91,7 +93,11 @@ const RichTextRenderer = ({ content, type = 'portableText' }) => {
                 <code className={styles.codeBlock}>{children}</code>
               ),
             pre: ({ children }) => <pre className={styles.preBlock}>{children}</pre>,
-            table: ({ children }) => <table className={styles.table}>{children}</table>,
+            table: ({ children }) => (
+              <div className={styles.tableContainer}>
+                <table className={styles.table}>{children}</table>
+              </div>
+            ),
             thead: ({ children }) => <thead className={styles.tableHead}>{children}</thead>,
             tbody: ({ children }) => <tbody className={styles.tableBody}>{children}</tbody>,
             tr: ({ children }) => <tr className={styles.tableRow}>{children}</tr>,
