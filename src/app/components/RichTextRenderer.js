@@ -22,16 +22,46 @@ const RichTextRenderer = ({ content, type = 'portableText' }) => {
   if (type === 'markdown' && typeof content === 'string') {
     // Process markdown during SSR for better initial rendering
     if (!isMounted) {
-      // Simple markdown processing for SSR fallback
-      const processedContent = content
+      // Enhanced markdown processing for SSR fallback including tables
+      let processedContent = content;
+      
+      // Process tables first
+      const tableRegex = /\|(.+)\|\n\|[-\s|:]+\|\n((?:\|.+\|\n?)*)/g;
+      processedContent = processedContent.replace(tableRegex, (match, header, rows) => {
+        const headerCells = header.split('|').map(cell => cell.trim()).filter(cell => cell);
+        const rowsArray = rows.trim().split('\n').map(row => 
+          row.split('|').map(cell => cell.trim()).filter(cell => cell)
+        );
+        
+        let tableHTML = '<table class="markdown-table">';
+        tableHTML += '<thead><tr>';
+        headerCells.forEach(cell => {
+          tableHTML += `<th>${cell}</th>`;
+        });
+        tableHTML += '</tr></thead><tbody>';
+        
+        rowsArray.forEach(row => {
+          tableHTML += '<tr>';
+          row.forEach(cell => {
+            tableHTML += `<td>${cell}</td>`;
+          });
+          tableHTML += '</tr>';
+        });
+        
+        tableHTML += '</tbody></table>';
+        return tableHTML;
+      });
+      
+      // Process other markdown elements
+      processedContent = processedContent
         .replace(/^### (.*$)/gim, '<h3>$1</h3>')
         .replace(/^## (.*$)/gim, '<h2>$1</h2>')
         .replace(/^# (.*$)/gim, '<h1>$1</h1>')
         .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
         .replace(/\*(.*?)\*/g, '<em>$1</em>')
-        .replace(/\n\n/g, '</p><p>')
         .replace(/^\- (.*$)/gim, '<li>$1</li>')
         .replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>')
+        .replace(/\n\n/g, '</p><p>')
         .replace(/\n/g, '<br/>');
 
       return (

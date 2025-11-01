@@ -103,11 +103,43 @@
   border: 2px solid var(--border-color);
 }
 
-.table {
+.table, 
+.markdownContent table {
   width: 100%;
   border-collapse: collapse;
   font-family: var(--mono);
   font-size: 0.9rem;
+}
+
+.markdownContent .markdown-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--mono);
+  font-size: 0.9rem;
+  margin: 1rem 0;
+  border: 2px solid var(--border-color);
+}
+
+.markdownContent .markdown-table th {
+  padding: 0.75rem;
+  text-align: left;
+  font-weight: bold;
+  color: var(--fg);
+  background-color: var(--accent);
+  border-right: 1px solid var(--border-color);
+}
+
+.markdownContent .markdown-table td {
+  padding: 0.75rem;
+  color: var(--fg);
+  border-right: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
+  vertical-align: top;
+}
+
+.markdownContent .markdown-table th:last-child,
+.markdownContent .markdown-table td:last-child {
+  border-right: none;
 }
 
 .tableHead {
