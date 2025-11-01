@@ -18,8 +18,8 @@ export const metadata = createMetadata({
 });
 
 async function getAllProjects() {
-  // Get all projects from the unified project schema
-  const projectsQuery = `*[_type == "project"] | order(createdAt desc) {
+  // Get only public projects (exclude draft and proposed status)
+  const projectsQuery = `*[_type == "project" && status in ["active-seeking", "active-progress", "completed"]] | order(createdAt desc) {
     _id,
     title,
     "slug": slug.current,

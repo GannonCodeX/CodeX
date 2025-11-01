@@ -6,6 +6,7 @@ import Link from 'next/link'
 import Header from '@/app/components/Header'
 import Footer from '@/app/components/Footer'
 import PortableTextRenderer from '@/app/components/PortableTextRenderer'
+import RichTextRenderer from '@/app/components/RichTextRenderer'
 import styles from './slug.module.css'
 import { generateMetadata as createMetadata } from '@/lib/metadata'
 
@@ -246,7 +247,7 @@ export default async function ProjectPage({ params: paramsPromise }) {
               {project.goals && (
                 <div className={styles.section}>
                   <h2>Project Goals</h2>
-                  <p>{project.goals}</p>
+                  <RichTextRenderer content={project.goals} type="markdown" />
                 </div>
               )}
 
@@ -260,14 +261,14 @@ export default async function ProjectPage({ params: paramsPromise }) {
                     <p><strong>Funding Source:</strong> {project.fundingSource}</p>
                   )}
                   <p><strong>Budget Breakdown:</strong></p>
-                  <p>{project.budgetBreakdown}</p>
+                  <RichTextRenderer content={project.budgetBreakdown} type="markdown" />
                 </div>
               )}
 
               {project.specialRequests && (
                 <div className={styles.section}>
                   <h2>Special Requests</h2>
-                  <p>{project.specialRequests}</p>
+                  <RichTextRenderer content={project.specialRequests} type="markdown" />
                 </div>
               )}
 
