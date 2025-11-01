@@ -20,7 +20,7 @@ const RichTextRenderer = ({ content, type = 'portableText' }) => {
 
   // Handle different content types
   if (type === 'markdown' && typeof content === 'string') {
-    // Process markdown during SSR for better initial rendering
+    // Always use ReactMarkdown when mounted, fallback for SSR
     if (!isMounted) {
       // Enhanced markdown processing for SSR fallback including tables
       let processedContent = content;
@@ -70,6 +70,10 @@ const RichTextRenderer = ({ content, type = 'portableText' }) => {
           dangerouslySetInnerHTML={{ __html: `<p>${processedContent}</p>` }}
         />
       );
+    }
+
+    if (!ReactMarkdown) {
+      return <div className={styles.plainText}>Loading markdown...</div>;
     }
 
     return (
