@@ -20,12 +20,25 @@ const RichTextRenderer = ({ content, type = 'portableText' }) => {
 
   // Handle different content types
   if (type === 'markdown' && typeof content === 'string') {
-    // Show plain text fallback during SSR
+    // Process markdown during SSR for better initial rendering
     if (!isMounted) {
+      // Simple markdown processing for SSR fallback
+      const processedContent = content
+        .replace(/^### (.*$)/gim, '<h3>$1</h3>')
+        .replace(/^## (.*$)/gim, '<h2>$1</h2>')
+        .replace(/^# (.*$)/gim, '<h1>$1</h1>')
+        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+        .replace(/\*(.*?)\*/g, '<em>$1</em>')
+        .replace(/\n\n/g, '</p><p>')
+        .replace(/^\- (.*$)/gim, '<li>$1</li>')
+        .replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>')
+        .replace(/\n/g, '<br/>');
+
       return (
-        <div className={styles.plainText}>
-          {content}
-        </div>
+        <div 
+          className={styles.markdownContent}
+          dangerouslySetInnerHTML={{ __html: `<p>${processedContent}</p>` }}
+        />
       );
     }
 
