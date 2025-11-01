@@ -247,11 +247,7 @@ export default async function ProjectPage({ params: paramsPromise }) {
               {project.goals && (
                 <div className={styles.section}>
                   <h2>Project Goals</h2>
-                  {Array.isArray(project.goals) ? (
-                    <PortableTextRenderer content={project.goals} />
-                  ) : (
-                    <RichTextRenderer content={project.goals} type="markdown" />
-                  )}
+                  <RichTextRenderer content={project.goals} type="markdown" />
                 </div>
               )}
 
@@ -265,22 +261,14 @@ export default async function ProjectPage({ params: paramsPromise }) {
                     <p><strong>Funding Source:</strong> {project.fundingSource}</p>
                   )}
                   <p><strong>Budget Breakdown:</strong></p>
-                  {Array.isArray(project.budgetBreakdown) ? (
-                    <PortableTextRenderer content={project.budgetBreakdown} />
-                  ) : (
-                    <RichTextRenderer content={project.budgetBreakdown} type="markdown" />
-                  )}
+                  <RichTextRenderer content={project.budgetBreakdown} type="markdown" />
                 </div>
               )}
 
               {project.specialRequests && (
                 <div className={styles.section}>
                   <h2>Special Requests</h2>
-                  {Array.isArray(project.specialRequests) ? (
-                    <PortableTextRenderer content={project.specialRequests} />
-                  ) : (
-                    <RichTextRenderer content={project.specialRequests} type="markdown" />
-                  )}
+                  <RichTextRenderer content={project.specialRequests} type="markdown" />
                 </div>
               )}
 

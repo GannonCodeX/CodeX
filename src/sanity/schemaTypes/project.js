@@ -237,53 +237,10 @@ export default {
     {
       name: 'goals',
       title: 'Project Goals',
-      type: 'array',
-      of: [
-        {
-          type: 'block',
-          styles: [
-            { title: 'Normal', value: 'normal' },
-            { title: 'H1', value: 'h1' },
-            { title: 'H2', value: 'h2' },
-            { title: 'H3', value: 'h3' },
-            { title: 'Quote', value: 'blockquote' }
-          ],
-          lists: [
-            { title: 'Bullet', value: 'bullet' },
-            { title: 'Numbered', value: 'number' }
-          ],
-          marks: {
-            decorators: [
-              { title: 'Strong', value: 'strong' },
-              { title: 'Emphasis', value: 'em' },
-              { title: 'Code', value: 'code' }
-            ],
-            annotations: [
-              {
-                title: 'URL',
-                name: 'link',
-                type: 'object',
-                fields: [
-                  {
-                    title: 'URL',
-                    name: 'href',
-                    type: 'url'
-                  }
-                ]
-              }
-            ]
-          }
-        },
-        {
-          type: 'code',
-          options: {
-            language: 'markdown',
-            withFilename: false
-          }
-        }
-      ],
+      type: 'text',
+      rows: 10,
       hidden: ({ document }) => !['proposed'].includes(document?.status),
-      description: 'Project goals with rich text formatting support.',
+      description: 'Project goals in markdown format.',
     },
     {
       name: 'estimatedBudget',
@@ -302,107 +259,18 @@ export default {
     {
       name: 'budgetBreakdown',
       title: 'Budget Breakdown',
-      type: 'array',
-      of: [
-        {
-          type: 'block',
-          styles: [
-            { title: 'Normal', value: 'normal' },
-            { title: 'H1', value: 'h1' },
-            { title: 'H2', value: 'h2' },
-            { title: 'H3', value: 'h3' },
-            { title: 'Quote', value: 'blockquote' }
-          ],
-          lists: [
-            { title: 'Bullet', value: 'bullet' },
-            { title: 'Numbered', value: 'number' }
-          ],
-          marks: {
-            decorators: [
-              { title: 'Strong', value: 'strong' },
-              { title: 'Emphasis', value: 'em' },
-              { title: 'Code', value: 'code' }
-            ],
-            annotations: [
-              {
-                title: 'URL',
-                name: 'link',
-                type: 'object',
-                fields: [
-                  {
-                    title: 'URL',
-                    name: 'href',
-                    type: 'url'
-                  }
-                ]
-              }
-            ]
-          }
-        },
-        {
-          type: 'table'
-        },
-        {
-          type: 'code',
-          options: {
-            language: 'markdown',
-            withFilename: false
-          }
-        }
-      ],
+      type: 'text',
+      rows: 15,
       hidden: ({ document }) => !['proposed'].includes(document?.status),
-      description: 'Detailed budget breakdown with rich formatting, tables, and lists.',
+      description: 'Budget breakdown in markdown format (supports tables).',
     },
     {
       name: 'specialRequests',
       title: 'Special Requests',
-      type: 'array',
-      of: [
-        {
-          type: 'block',
-          styles: [
-            { title: 'Normal', value: 'normal' },
-            { title: 'H1', value: 'h1' },
-            { title: 'H2', value: 'h2' },
-            { title: 'H3', value: 'h3' },
-            { title: 'Quote', value: 'blockquote' }
-          ],
-          lists: [
-            { title: 'Bullet', value: 'bullet' },
-            { title: 'Numbered', value: 'number' }
-          ],
-          marks: {
-            decorators: [
-              { title: 'Strong', value: 'strong' },
-              { title: 'Emphasis', value: 'em' },
-              { title: 'Code', value: 'code' }
-            ],
-            annotations: [
-              {
-                title: 'URL',
-                name: 'link',
-                type: 'object',
-                fields: [
-                  {
-                    title: 'URL',
-                    name: 'href',
-                    type: 'url'
-                  }
-                ]
-              }
-            ]
-          }
-        },
-        {
-          type: 'code',
-          options: {
-            language: 'markdown',
-            withFilename: false
-          }
-        }
-      ],
+      type: 'text',
+      rows: 10,
       hidden: ({ document }) => !['proposed'].includes(document?.status),
-      description: 'Special requests with rich text formatting support.',
+      description: 'Special requests in markdown format.',
     },
     {
       name: 'presentation',
