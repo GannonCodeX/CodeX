@@ -44,6 +44,28 @@
   object-fit: cover;
 }
 
+.placeholderAvatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background-color: var(--accent);
+  border: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--fg);
+  flex-shrink: 0;
+}
+
+.memberList .placeholderAvatar {
+  width: 32px;
+  height: 32px;
+  font-size: 0.9rem;
+}
+
 .removeButton {
   background: none;
   border: none;

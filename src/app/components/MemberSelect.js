@@ -48,13 +48,19 @@ const MemberSelect = ({ members }) => {
           {selectedMembers.length > 0 ? (
             selectedMembers.map((member) => (
               <div key={member._id} className={styles.memberPill}>
-                <Image
-                  src={urlFor(member.avatar).width(24).height(24).url()}
-                  alt={member.name}
-                  width={24}
-                  height={24}
-                  className={styles.avatar}
-                />
+                {member.avatar ? (
+                  <Image
+                    src={urlFor(member.avatar).width(24).height(24).url()}
+                    alt={member.name}
+                    width={24}
+                    height={24}
+                    className={styles.avatar}
+                  />
+                ) : (
+                  <div className={styles.placeholderAvatar}>
+                    {member.name?.charAt(0) || '?'}
+                  </div>
+                )}
                 <span>{member.name}</span>
                 <button
                   type="button"
@@ -89,13 +95,19 @@ const MemberSelect = ({ members }) => {
             {filteredMembers.length > 0 ? (
               filteredMembers.map((member) => (
                 <li key={member._id} onClick={() => handleSelectMember(member)}>
-                  <Image
-                    src={urlFor(member.avatar).width(32).height(32).url()}
-                    alt={member.name}
-                    width={32}
-                    height={32}
-                    className={styles.avatar}
-                  />
+                  {member.avatar ? (
+                    <Image
+                      src={urlFor(member.avatar).width(32).height(32).url()}
+                      alt={member.name}
+                      width={32}
+                      height={32}
+                      className={styles.avatar}
+                    />
+                  ) : (
+                    <div className={styles.placeholderAvatar}>
+                      {member.name?.charAt(0) || '?'}
+                    </div>
+                  )}
                   <span>{member.name}</span>
                 </li>
               ))
