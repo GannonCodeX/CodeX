@@ -239,7 +239,10 @@ export default {
       title: 'Project Goals',
       type: 'text',
       rows: 10,
-      description: 'Project goals in markdown format.',
+      description: 'Project goals in markdown format. Use **bold**, *italic*, ### headers, - lists, etc.',
+      options: {
+        language: 'markdown'
+      },
     },
     {
       name: 'estimatedBudget',
@@ -258,14 +261,20 @@ export default {
       title: 'Budget Breakdown',
       type: 'text',
       rows: 15,
-      description: 'Detailed budget breakdown in markdown format.',
+      description: 'Detailed budget breakdown in markdown format. Use **bold**, ### headers, - lists, etc.',
+      options: {
+        language: 'markdown'
+      },
     },
     {
       name: 'specialRequests',
       title: 'Special Requests',
       type: 'text',
       rows: 10,
-      description: 'Special requests and requirements in markdown format.',
+      description: 'Special requests and requirements in markdown format. Use **bold**, *italic*, ### headers, - lists, etc.',
+      options: {
+        language: 'markdown'
+      },
     },
     {
       name: 'presentation',
