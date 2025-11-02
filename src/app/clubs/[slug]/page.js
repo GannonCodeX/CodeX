@@ -94,7 +94,12 @@ export default async function ClubPage({ params: paramsPromise }) {
           <div className={styles.heroInner}>
             <div className={styles.logoWrap}>
               {club.logo && (
-                <Image src={urlFor(club.logo).width(200).height(200).url()} alt={club.title} width={96} height={96} />
+                <Image 
+                  src={urlFor(club.logo).width(200).height(200).url()} 
+                  alt={club.title} 
+                  width={96} 
+                  height={96} 
+                />
               )}
             </div>
             <div>
@@ -117,7 +122,13 @@ export default async function ClubPage({ params: paramsPromise }) {
                 <Link key={p.slug} href={`/projects/${p.slug}`} className={styles.card}>
                   {p.mainImage && (
                     <div className={styles.cardImgWrap}>
-                      <Image src={urlFor(p.mainImage).width(800).height(450).url()} alt={p.title} width={800} height={450} className={styles.cardImg} />
+                      <Image 
+                        src={urlFor(p.mainImage).width(800).height(450).url()} 
+                        alt={p.title} 
+                        width={800} 
+                        height={450} 
+                        className={styles.cardImg} 
+                      />
                     </div>
                   )}
                   <h3>{p.title}</h3>
@@ -138,7 +149,9 @@ export default async function ClubPage({ params: paramsPromise }) {
                 <Link key={e.slug} href={`/events/${e.slug}`} className={styles.eventRow}>
                   <span className={styles.badge}>{e.status}</span>
                   <span className={styles.eventTitle}>{e.title}</span>
-                  <span className={styles.eventMeta}>{new Date(e.date).toLocaleDateString()} — {e.location}</span>
+                  <span className={styles.eventMeta}>
+                    {e.date ? new Date(e.date).toLocaleDateString() : 'TBD'} — {e.location || 'TBD'}
+                  </span>
                 </Link>
               ))
             ) : (
