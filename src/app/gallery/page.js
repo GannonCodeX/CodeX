@@ -4,7 +4,7 @@ import styles from './gallery.module.css';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import { client } from '@/sanity/lib/client';
-import GalleryClient from './GalleryClient';
+import PaginatedGallery from '../components/PaginatedGallery';
 import { unstable_noStore as noStore } from 'next/cache';
 import { generateMetadata as createMetadata } from '@/lib/metadata';
 
@@ -22,7 +22,7 @@ async function getGalleryImages() {
   noStore(); // 🔒 disable caching for this fetch path
 
   const query = `*[_type == "gallery"] | order(_createdAt desc) {
-    "images": images[]{
+    "images": images[0...12]{
       _key,
       alt,
       caption,
@@ -32,7 +32,7 @@ async function getGalleryImages() {
   }.images`;
 
   const result = await client.fetch(query);
-  return result ? result.flat().slice(0, 9) : [];
+  return result ? result.flat() : [];
 }
 
 export default async function GalleryPage() {
@@ -52,13 +52,7 @@ export default async function GalleryPage() {
           </p>
         </header>
 
-        {images?.length > 0 ? (
-          <GalleryClient images={images} />
-        ) : (
-          <div className={styles.emptyState}>
-            <p>The darkroom is empty. Check back soon for new snapshots.</p>
-          </div>
-        )}
+        <PaginatedGallery initialImages={images} />
       </main>
       <Footer />
     </>

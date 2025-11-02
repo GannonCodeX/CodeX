@@ -92,6 +92,13 @@ export default {
       title: 'RSVP Link',
       type: 'url',
     },
+    {
+      name: 'gallery',
+      title: 'Event Gallery',
+      type: 'reference',
+      to: [{ type: 'gallery' }],
+      description: 'Link to the photo gallery for this event.',
+    },
   ],
   preview: {
     select: {

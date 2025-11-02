@@ -6,6 +6,7 @@ import Link from 'next/link'
 import Header from '@/app/components/Header'
 import Footer from '@/app/components/Footer'
 import PortableTextRenderer from '@/app/components/PortableTextRenderer'
+import EventGallery from '@/app/components/EventGallery'
 import styles from './slug.module.css'
 import { generateMetadata as createMetadata } from '@/lib/metadata'
 
@@ -57,7 +58,16 @@ async function getEvent(slug) {
     },
     rsvpLink,
     leadClub->{title, "slug": slug.current},
-    coHosts[]->{title, "slug": slug.current}
+    coHosts[]->{title, "slug": slug.current},
+    gallery->{
+      _id,
+      title,
+      images[0...12]{
+        image,
+        caption,
+        alt
+      }
+    }
   }`
   const event = await client.fetch(query, { slug })
   return event
@@ -136,6 +146,13 @@ export default async function EventPage({ params: paramsPromise }) {
             </aside>
             <div className={styles.mainContent}>
               <PortableTextRenderer content={event.content} />
+              
+              {event.gallery && (
+                <EventGallery 
+                  galleryId={event.gallery._id}
+                  initialImages={event.gallery.images || []}
+                />
+              )}
             </div>
           </div>
         </article>

@@ -37,7 +37,7 @@ const GalleryClient = ({ images }) => {
           >
             <Image
               src={image.imageUrl}
-              alt={image.alt}
+              alt={image.alt || image.caption || 'Gallery image'}
               width={image.metadata.dimensions.width}
               height={image.metadata.dimensions.height}
               className={styles.image}
@@ -61,7 +61,7 @@ const GalleryClient = ({ images }) => {
             </button>
             <Image
               src={selectedImage.imageUrl}
-              alt={selectedImage.alt}
+              alt={selectedImage.alt || selectedImage.caption || 'Gallery image'}
               width={selectedImage.metadata.dimensions.width}
               height={selectedImage.metadata.dimensions.height}
               className={styles.lightboxImage}

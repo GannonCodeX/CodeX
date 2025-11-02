@@ -22,7 +22,25 @@ export default {
       ],
       options: {
         layout: 'grid',
+        sortable: true,
       },
+    },
+    {
+      name: 'bulkImages',
+      title: 'Bulk Upload Images',
+      type: 'array',
+      of: [
+        {
+          type: 'image',
+          options: {
+            hotspot: true,
+          },
+        },
+      ],
+      options: {
+        layout: 'grid',
+      },
+      description: 'Upload multiple images at once. These will be added to the main images array automatically.',
     },
   ],
   preview: {

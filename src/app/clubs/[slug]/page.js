@@ -29,7 +29,7 @@ export async function generateMetadata({ params: paramsPromise }) {
     keywords: ['Club', club.title, club.shortName, 'Student Organization', 'Tech Community', 'Gannon University'],
     image: club.logo ? imageUrlBuilder(client).image(club.logo).width(1200).height(630).url() : '/assets/images/2x Logo Header.png',
     url: `/clubs/${params.slug}`,
-    type: 'organization'
+    type: 'website'
   });
 }
 
