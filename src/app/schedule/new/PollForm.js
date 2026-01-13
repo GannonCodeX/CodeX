@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import styles from './new.module.css'
 
@@ -26,6 +26,7 @@ export default function PollForm({ clubs }) {
     startTime: '09:00',
     endTime: '21:00',
     timeSlotMinutes: 30,
+    visibility: 'public',
   })
 
   const handleInputChange = (e) => {
@@ -88,6 +89,13 @@ export default function PollForm({ clubs }) {
 
       if (!response.ok) {
         throw new Error(result.message || 'Failed to create poll')
+      }
+
+      // Store delete token in localStorage so creator can delete later
+      if (result.deleteToken) {
+        const storedTokens = JSON.parse(localStorage.getItem('pollDeleteTokens') || '{}')
+        storedTokens[result.id] = result.deleteToken
+        localStorage.setItem('pollDeleteTokens', JSON.stringify(storedTokens))
       }
 
       router.push(`/schedule/${result.slug}`)
@@ -183,6 +191,38 @@ export default function PollForm({ clubs }) {
               </option>
             ))}
           </select>
+        </div>
+
+        <div className={styles.formGroup}>
+          <label className={styles.label}>Visibility</label>
+          <div className={styles.radioGroup}>
+            <label className={styles.radioLabel}>
+              <input
+                type="radio"
+                name="visibility"
+                value="public"
+                checked={formData.visibility === 'public'}
+                onChange={handleInputChange}
+                className={styles.radioInput}
+              />
+              <span className={styles.radioText}>
+                <strong>Public</strong> - Listed on /schedule page
+              </span>
+            </label>
+            <label className={styles.radioLabel}>
+              <input
+                type="radio"
+                name="visibility"
+                value="unlisted"
+                checked={formData.visibility === 'unlisted'}
+                onChange={handleInputChange}
+                className={styles.radioInput}
+              />
+              <span className={styles.radioText}>
+                <strong>Unlisted</strong> - Only accessible via direct link (for eboard/private)
+              </span>
+            </label>
+          </div>
         </div>
       </div>
 

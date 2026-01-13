@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useCallback, useRef } from 'react'
+import { useState, useCallback, useRef, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import TimeGrid from './TimeGrid'
 import ResponseForm from './ResponseForm'
@@ -8,12 +8,23 @@ import BestTimesDisplay, { getBestSlotIds } from './BestTimesDisplay'
 import ExportActions from './ExportActions'
 import styles from './poll.module.css'
 
-export default function PollClient({ poll: initialPoll, slug, isExpired }) {
+export default function PollClient({ poll: initialPoll, pollId, slug, isExpired }) {
   const router = useRouter()
   const [poll, setPoll] = useState(initialPoll)
   const [activeTab, setActiveTab] = useState('respond')
   const [copied, setCopied] = useState(false)
   const gridRef = useRef(null)
+  const [canDelete, setCanDelete] = useState(false)
+  const [isDeleting, setIsDeleting] = useState(false)
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
+
+  // Check if current user can delete this poll (has the token in localStorage)
+  useEffect(() => {
+    const storedTokens = JSON.parse(localStorage.getItem('pollDeleteTokens') || '{}')
+    if (storedTokens[pollId]) {
+      setCanDelete(true)
+    }
+  }, [pollId])
 
   // Calculate best slots for highlighting
   const bestSlotIds = getBestSlotIds(poll.responses)
@@ -27,6 +38,36 @@ export default function PollClient({ poll: initialPoll, slug, isExpired }) {
     await navigator.clipboard.writeText(url)
     setCopied(true)
     setTimeout(() => setCopied(false), 2000)
+  }
+
+  const handleDelete = async () => {
+    setIsDeleting(true)
+    try {
+      const storedTokens = JSON.parse(localStorage.getItem('pollDeleteTokens') || '{}')
+      const deleteToken = storedTokens[pollId]
+
+      const response = await fetch('/api/schedule/delete', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ pollId, deleteToken }),
+      })
+
+      if (response.ok) {
+        // Remove token from localStorage
+        delete storedTokens[pollId]
+        localStorage.setItem('pollDeleteTokens', JSON.stringify(storedTokens))
+        // Redirect to schedule page
+        router.push('/schedule')
+      } else {
+        const data = await response.json()
+        alert(data.message || 'Failed to delete poll')
+      }
+    } catch (error) {
+      alert('Failed to delete poll. Please try again.')
+    } finally {
+      setIsDeleting(false)
+      setShowDeleteConfirm(false)
+    }
   }
 
   return (
@@ -45,7 +86,48 @@ export default function PollClient({ poll: initialPoll, slug, isExpired }) {
             {copied ? 'Copied!' : 'Copy'}
           </button>
         </div>
+        {canDelete && (
+          <button
+            onClick={() => setShowDeleteConfirm(true)}
+            className={styles.deleteBtn}
+            title="Delete this poll"
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <polyline points="3 6 5 6 21 6" />
+              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+            </svg>
+            Delete
+          </button>
+        )}
       </div>
+
+      {/* Delete Confirmation Modal */}
+      {showDeleteConfirm && (
+        <div className={styles.deleteModal}>
+          <div className={styles.deleteModalContent}>
+            <h3 className={styles.deleteModalTitle}>Delete Poll?</h3>
+            <p className={styles.deleteModalText}>
+              Are you sure you want to delete &quot;{poll.title}&quot;? This action cannot be undone.
+            </p>
+            <div className={styles.deleteModalActions}>
+              <button
+                onClick={() => setShowDeleteConfirm(false)}
+                className={styles.cancelBtn}
+                disabled={isDeleting}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleDelete}
+                className={styles.confirmDeleteBtn}
+                disabled={isDeleting}
+              >
+                {isDeleting ? 'Deleting...' : 'Yes, Delete'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Tabs */}
       <div className={styles.tabs}>

@@ -153,6 +153,28 @@ export default {
       type: 'datetime',
       description: 'Optional expiration date for this poll',
     },
+    {
+      name: 'visibility',
+      title: 'Visibility',
+      type: 'string',
+      options: {
+        list: [
+          { title: 'Public - Listed on /schedule', value: 'public' },
+          { title: 'Unlisted - Only accessible via direct link', value: 'unlisted' },
+        ],
+        layout: 'radio',
+      },
+      initialValue: 'public',
+      description: 'Unlisted polls won\'t appear in the public listing but can be shared via link',
+    },
+    {
+      name: 'deleteToken',
+      title: 'Delete Token',
+      type: 'string',
+      readOnly: true,
+      hidden: true,
+      description: 'Token for deleting this poll',
+    },
   ],
   preview: {
     select: {
@@ -160,11 +182,13 @@ export default {
       createdBy: 'createdBy',
       club: 'club.shortName',
       responses: 'responses',
+      visibility: 'visibility',
     },
-    prepare({ title, createdBy, club, responses }) {
+    prepare({ title, createdBy, club, responses, visibility }) {
       const responseCount = responses?.length || 0;
+      const visibilityIcon = visibility === 'unlisted' ? '🔒 ' : '';
       return {
-        title,
+        title: `${visibilityIcon}${title}`,
         subtitle: `${club ? club + ' • ' : ''}by ${createdBy} • ${responseCount} response${responseCount !== 1 ? 's' : ''}`,
       };
     },

@@ -218,6 +218,51 @@
   color: #fff;
 }
 
+/* Radio Group for Visibility */
+.radioGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.radioLabel {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 1rem;
+  border: 2px solid var(--border-color);
+  background: #fff;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.radioLabel:hover {
+  border-color: var(--accent);
+}
+
+.radioLabel:has(.radioInput:checked) {
+  border-color: var(--accent);
+  background: #fffef5;
+}
+
+.radioInput {
+  margin-top: 2px;
+  accent-color: var(--fg);
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}
+
+.radioText {
+  font-family: var(--sans);
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+
+.radioText strong {
+  font-family: var(--mono);
+}
+
 /* Submit */
 .submitSection {
   text-align: center;

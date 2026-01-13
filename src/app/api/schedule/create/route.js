@@ -1,6 +1,7 @@
 // src/app/api/schedule/create/route.js
 import { NextResponse } from 'next/server'
 import { client } from '@/sanity/lib/client'
+import crypto from 'crypto'
 
 export async function POST(request) {
   try {
@@ -16,6 +17,7 @@ export async function POST(request) {
       startTime,
       endTime,
       timeSlotMinutes,
+      visibility,
     } = body
 
     // Validation
@@ -51,6 +53,9 @@ export async function POST(request) {
     const randomSuffix = Math.random().toString(36).substring(2, 8)
     const slug = `${baseSlug}-${randomSuffix}`
 
+    // Generate delete token for poll creator
+    const deleteToken = crypto.randomBytes(16).toString('hex')
+
     // Build the document
     const pollDoc = {
       _type: 'availabilityPoll',
@@ -69,6 +74,8 @@ export async function POST(request) {
       timezone: 'America/New_York',
       responses: [],
       createdAt: new Date().toISOString(),
+      visibility: visibility || 'public',
+      deleteToken: deleteToken,
     }
 
     // Add club reference if provided
@@ -86,6 +93,8 @@ export async function POST(request) {
       message: 'Poll created successfully',
       slug: slug,
       id: result._id,
+      deleteToken: deleteToken,
+      visibility: visibility || 'public',
     })
   } catch (error) {
     console.error('Create poll error:', error)

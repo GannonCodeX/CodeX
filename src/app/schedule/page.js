@@ -16,7 +16,8 @@ export const metadata = createMetadata({
 })
 
 async function getPolls() {
-  const query = `*[_type == "availabilityPoll"] | order(createdAt desc) {
+  // Only fetch public polls (not unlisted ones)
+  const query = `*[_type == "availabilityPoll" && (visibility == "public" || !defined(visibility))] | order(createdAt desc) {
     _id,
     title,
     "slug": slug.current,

@@ -124,7 +124,7 @@ export default async function PollPage({ params: paramsPromise }) {
             )}
           </header>
 
-          <PollClient poll={poll} slug={params.slug} isExpired={isExpired} />
+          <PollClient poll={poll} pollId={poll._id} slug={params.slug} isExpired={isExpired} />
         </div>
       </main>
       <Footer />
