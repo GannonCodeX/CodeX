@@ -85,6 +85,16 @@
   background: var(--accent);
 }
 
+.engageBtn {
+  background: var(--accent);
+  font-weight: 600;
+}
+
+.engageBtn:hover {
+  background: var(--fg);
+  color: #fff;
+}
+
 .imageWrapper {
   margin: 0 auto 2rem;
   max-width: 1200px;
@@ -361,6 +371,22 @@
   font-family: var(--mono);
   font-size: 0.9rem;
   color: var(--subtle-gray);
+}
+
+/* Past Events */
+.pastEvent {
+  opacity: 0.6;
+  background-color: #f9f9f9;
+}
+
+.pastEvent:hover {
+  opacity: 0.8;
+  border-color: var(--border-color);
+}
+
+.pastEvent .eventBadge {
+  background: var(--subtle-gray);
+  color: #fff;
 }
 
 /* Empty State */

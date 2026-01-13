@@ -57,6 +57,12 @@ export default {
       type: 'string',
     },
     {
+      name: 'engage',
+      title: 'Engage Link',
+      type: 'url',
+      description: 'Link to the club\'s Gannon Engage page',
+    },
+    {
       name: 'social',
       title: 'Social Links',
       type: 'object',
@@ -65,6 +71,7 @@ export default {
         { name: 'discord', title: 'Discord', type: 'url' },
         { name: 'x', title: 'X/Twitter', type: 'url' },
         { name: 'instagram', title: 'Instagram', type: 'url' },
+        { name: 'linkedin', title: 'LinkedIn', type: 'url' },
       ],
     },
     {

@@ -47,6 +47,7 @@ async function getClub(slug) {
     bannerImage,
     social,
     website,
+    engage,
     theme,
     contactEmail
   }`
@@ -153,6 +154,12 @@ export default async function ClubPage({ params: paramsPromise }) {
             )}
 
             <div className={styles.links}>
+              {club.engage && (
+                <a href={club.engage} target="_blank" rel="noopener noreferrer" className={`${styles.linkBtn} ${styles.engageBtn}`}>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+                  Engage
+                </a>
+              )}
               {club.website && (
                 <a href={club.website} target="_blank" rel="noopener noreferrer" className={styles.linkBtn}>
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
@@ -298,21 +305,28 @@ export default async function ClubPage({ params: paramsPromise }) {
                 <h2 className={styles.sectionTitle}>// Events</h2>
                 {events?.length ? (
                   <div className={styles.eventsList}>
-                    {events.map((e) => (
-                      <Link key={e.slug} href={`/events/${e.slug}`} className={styles.eventItem}>
-                        <span className={styles.eventBadge}>{e.status}</span>
-                        <div className={styles.eventInfo}>
-                          <div className={styles.eventTitle}>{e.title}</div>
-                          <div className={styles.eventMeta}>
-                            {e.date ? new Date(e.date).toLocaleDateString('en-US', {
-                              month: 'long',
-                              day: 'numeric',
-                              year: 'numeric'
-                            }) : 'TBD'} — {e.location || 'TBD'}
+                    {events.map((e) => {
+                      const isPast = e.date && new Date(e.date) < new Date()
+                      return (
+                        <Link
+                          key={e.slug}
+                          href={`/events/${e.slug}`}
+                          className={`${styles.eventItem} ${isPast ? styles.pastEvent : ''}`}
+                        >
+                          <span className={styles.eventBadge}>{e.status}</span>
+                          <div className={styles.eventInfo}>
+                            <div className={styles.eventTitle}>{e.title}</div>
+                            <div className={styles.eventMeta}>
+                              {e.date ? new Date(e.date).toLocaleDateString('en-US', {
+                                month: 'long',
+                                day: 'numeric',
+                                year: 'numeric'
+                              }) : 'TBD'} — {e.location || 'TBD'}
+                            </div>
                           </div>
-                        </div>
-                      </Link>
-                    ))}
+                        </Link>
+                      )
+                    })}
                   </div>
                 ) : (
                   <p className={styles.emptyState}>No events yet.</p>
