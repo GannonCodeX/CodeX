@@ -175,6 +175,37 @@
   color: var(--accent);
 }
 
+/* Meetings */
+.meetingInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.meetingSchedule {
+  font-family: var(--sans);
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0;
+  color: var(--fg);
+}
+
+.meetingLocation {
+  font-family: var(--mono);
+  font-size: 0.95rem;
+  margin: 0;
+  color: var(--fg);
+}
+
+.meetingNotes {
+  font-family: var(--sans);
+  font-size: 0.9rem;
+  margin: 0;
+  color: var(--subtle-gray);
+  font-style: italic;
+  line-height: 1.5;
+}
+
 /* Members */
 .membersList {
   display: flex;
@@ -396,6 +427,150 @@
   font-style: italic;
 }
 
+/* Join Section */
+.joinSection {
+  background: var(--accent);
+  border: 2px solid var(--border-color);
+  padding: 3rem;
+  margin: 0 auto 4rem;
+  max-width: 900px;
+  position: relative;
+  overflow: hidden;
+}
+
+.joinSection::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 200px;
+  height: 200px;
+  background: linear-gradient(135deg, transparent 50%, rgba(0,0,0,0.03) 50%);
+  pointer-events: none;
+}
+
+.joinContent {
+  position: relative;
+  z-index: 1;
+}
+
+.joinTitle {
+  font-family: var(--mono);
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin: 0 0 1.5rem 0;
+  color: var(--fg);
+}
+
+.joinInfo {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.joinRequirements,
+.joinInstructions {
+  background: #fff;
+  border: 2px solid var(--border-color);
+  padding: 1.5rem;
+}
+
+.joinRequirements h3,
+.joinInstructions h3 {
+  font-family: var(--mono);
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  margin: 0 0 0.75rem 0;
+  color: var(--subtle-gray);
+}
+
+.joinRequirements p,
+.joinInstructions p {
+  font-family: var(--sans);
+  font-size: 1.1rem;
+  line-height: 1.6;
+  margin: 0;
+  color: var(--fg);
+}
+
+.joinDefaultText {
+  font-family: var(--sans);
+  font-size: 1.2rem;
+  color: var(--fg);
+  margin: 0 0 1rem 0;
+}
+
+.joinActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+}
+
+.joinBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 28px;
+  font-family: var(--mono);
+  font-size: 1rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: #fff;
+  background: var(--fg);
+  border: 2px solid var(--border-color);
+  box-shadow: 4px 4px 0px var(--border-color);
+  transition: all 0.2s ease;
+}
+
+.joinBtn:hover {
+  box-shadow: 2px 2px 0px var(--border-color);
+  transform: translate(2px, 2px);
+}
+
+.joinEmailBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 28px;
+  font-family: var(--mono);
+  font-size: 1rem;
+  font-weight: 600;
+  text-decoration: none;
+  color: var(--fg);
+  background: #fff;
+  border: 2px solid var(--border-color);
+  box-shadow: 4px 4px 0px var(--border-color);
+  transition: all 0.2s ease;
+}
+
+.joinEmailBtn:hover {
+  box-shadow: 2px 2px 0px var(--border-color);
+  transform: translate(2px, 2px);
+  background: var(--fg);
+  color: #fff;
+}
+
+.notAccepting {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 1.25rem 1.5rem;
+  background: #fff;
+  border: 2px solid var(--border-color);
+  font-family: var(--sans);
+  font-size: 1.1rem;
+  color: var(--subtle-gray);
+}
+
+.notAccepting svg {
+  flex-shrink: 0;
+  color: var(--subtle-gray);
+}
+
 /* Contact Section */
 .contactSection {
   margin-top: 4rem;
@@ -519,6 +694,213 @@
   color: #721c24;
 }
 
+/* Photo Gallery */
+.galleryHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 1.5rem;
+}
+
+.galleryHeader .sectionTitle {
+  margin-bottom: 0;
+}
+
+.galleryCount {
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  color: var(--subtle-gray);
+}
+
+.galleryGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+}
+
+.galleryItem {
+  display: flex;
+  flex-direction: column;
+}
+
+.galleryImageWrapper {
+  position: relative;
+  aspect-ratio: 4/3;
+  border: 2px solid var(--border-color);
+  overflow: hidden;
+  background: #f7f7f7;
+}
+
+.galleryImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.galleryOverlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.galleryOverlay svg {
+  color: #fff;
+}
+
+.galleryImageWrapper:hover .galleryImage {
+  transform: scale(1.05);
+}
+
+.galleryImageWrapper:hover .galleryOverlay {
+  opacity: 1;
+}
+
+.galleryImageWrapper:hover {
+  border-color: var(--accent);
+}
+
+.galleryCaption {
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  color: var(--subtle-gray);
+  margin: 0.5rem 0 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.galleryViewAll {
+  display: flex;
+  justify-content: center;
+  margin-top: 2rem;
+}
+
+.viewAllBtn {
+  padding: 12px 24px;
+  font-family: var(--mono);
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  border: 2px solid var(--border-color);
+  background: #fff;
+  color: var(--fg);
+  cursor: pointer;
+  box-shadow: 4px 4px 0px var(--border-color);
+  transition: all 0.2s ease;
+}
+
+.viewAllBtn:hover {
+  background: var(--accent);
+  box-shadow: 2px 2px 0px var(--border-color);
+  transform: translate(2px, 2px);
+}
+
+/* Announcements */
+.announcementsList {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.announcementCard {
+  border: 2px solid var(--border-color);
+  background: #fff;
+  padding: 1.5rem;
+  transition: all 0.2s ease;
+}
+
+.announcementCard:hover {
+  border-color: var(--accent);
+}
+
+.pinnedAnnouncement {
+  background: linear-gradient(135deg, #fffef0 0%, #fff 100%);
+  border-color: var(--accent);
+}
+
+.announcementHeader {
+  margin-bottom: 0.75rem;
+}
+
+.announcementMeta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.pinnedBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 4px 8px;
+  background: var(--accent);
+  border: 1px solid var(--border-color);
+  color: var(--fg);
+}
+
+.typeBadge {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border: 1px solid var(--border-color);
+  background: #f5f5f5;
+  color: var(--fg);
+}
+
+.typeNews {
+  background: #e8f4fd;
+  border-color: #1976d2;
+  color: #1976d2;
+}
+
+.typeUpdate {
+  background: #e8f5e9;
+  border-color: #388e3c;
+  color: #388e3c;
+}
+
+.typeAlert {
+  background: #fff3e0;
+  border-color: #f57c00;
+  color: #f57c00;
+}
+
+.announcementDate {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  color: var(--subtle-gray);
+}
+
+.announcementTitle {
+  font-family: var(--mono);
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin: 0 0 0.5rem;
+  color: var(--fg);
+}
+
+.announcementExcerpt {
+  font-family: var(--sans);
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--subtle-gray);
+  margin: 0;
+}
+
 /* Responsive */
 @media (max-width: 960px) {
   .wrapper {
@@ -551,6 +933,20 @@
   .formRow {
     grid-template-columns: 1fr;
   }
+
+  .joinSection {
+    padding: 2rem;
+    margin-bottom: 3rem;
+  }
+
+  .joinInfo {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .galleryGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }
 
 @media (max-width: 600px) {
@@ -579,5 +975,38 @@
 
   .formSubmit {
     width: 100%;
+  }
+
+  .joinSection {
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .joinTitle {
+    font-size: 1.4rem;
+  }
+
+  .joinActions {
+    flex-direction: column;
+  }
+
+  .joinBtn,
+  .joinEmailBtn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .joinRequirements,
+  .joinInstructions {
+    padding: 1.25rem;
+  }
+
+  .galleryGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .galleryHeader {
+    flex-direction: column;
+    gap: 0.5rem;
   }
 }

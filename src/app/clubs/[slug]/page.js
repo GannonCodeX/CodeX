@@ -49,7 +49,19 @@ async function getClub(slug) {
     website,
     engage,
     theme,
-    contactEmail
+    contactEmail,
+    acceptingMembers,
+    joinInstructions,
+    joinLink,
+    membershipRequirements,
+    meetingSchedule,
+    meetingLocation,
+    meetingNotes,
+    gallery[]{
+      image,
+      caption,
+      alt
+    }
   }`
   return client.fetch(query, { slug })
 }
@@ -101,6 +113,34 @@ async function getClubMembers(clubId) {
   return client.fetch(membersQuery, { clubId })
 }
 
+async function getClubAnnouncements(clubId) {
+  const announcementsQuery = `*[_type == "announcement" && club._ref == $clubId] | order(pinned desc, publishedAt desc){
+    _id,
+    title,
+    "slug": slug.current,
+    content,
+    publishedAt,
+    pinned,
+    type
+  }`
+  return client.fetch(announcementsQuery, { clubId })
+}
+
+// Helper function to extract plain text from portable text blocks
+function getPlainTextFromBlocks(blocks) {
+  if (!blocks || !Array.isArray(blocks)) return ''
+  return blocks
+    .filter(block => block._type === 'block')
+    .map(block => {
+      if (!block.children) return ''
+      return block.children
+        .filter(child => child._type === 'span')
+        .map(span => span.text)
+        .join('')
+    })
+    .join(' ')
+}
+
 export default async function ClubPage({ params: paramsPromise }) {
   const params = await paramsPromise
   const club = await getClub(params.slug)
@@ -110,6 +150,7 @@ export default async function ClubPage({ params: paramsPromise }) {
   const { projects, events } = await getClubProjectsAndEvents(club._id)
   const stats = await getClubStats(club._id)
   const members = await getClubMembers(club._id)
+  const announcements = await getClubAnnouncements(club._id)
 
   const eboardMembers = members?.filter(m => m.affiliation?.isEboard) || []
   const generalMembers = members?.filter(m => !m.affiliation?.isEboard) || []
@@ -199,6 +240,79 @@ export default async function ClubPage({ params: paramsPromise }) {
             </div>
           </header>
 
+          {/* Join Section */}
+          <section className={styles.joinSection}>
+            <div className={styles.joinContent}>
+              <h2 className={styles.joinTitle}>// Join {club.title}</h2>
+
+              {club.acceptingMembers === false ? (
+                <div className={styles.notAccepting}>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="12" y1="8" x2="12" y2="12"/>
+                    <line x1="12" y1="16" x2="12.01" y2="16"/>
+                  </svg>
+                  <span>Not currently accepting new members</span>
+                </div>
+              ) : (
+                <>
+                  <div className={styles.joinInfo}>
+                    {club.membershipRequirements && (
+                      <div className={styles.joinRequirements}>
+                        <h3>Requirements</h3>
+                        <p>{club.membershipRequirements}</p>
+                      </div>
+                    )}
+
+                    {club.joinInstructions && (
+                      <div className={styles.joinInstructions}>
+                        <h3>How to Join</h3>
+                        <p>{club.joinInstructions}</p>
+                      </div>
+                    )}
+
+                    {!club.joinInstructions && !club.membershipRequirements && (
+                      <p className={styles.joinDefaultText}>
+                        Interested in joining {club.title}? We&apos;d love to have you!
+                      </p>
+                    )}
+                  </div>
+
+                  <div className={styles.joinActions}>
+                    {club.joinLink && (
+                      <a href={club.joinLink} target="_blank" rel="noopener noreferrer" className={styles.joinBtn}>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                          <circle cx="8.5" cy="7" r="4"/>
+                          <line x1="20" y1="8" x2="20" y2="14"/>
+                          <line x1="23" y1="11" x2="17" y2="11"/>
+                        </svg>
+                        Join Now
+                      </a>
+                    )}
+                    {club.engage && !club.joinLink && (
+                      <a href={club.engage} target="_blank" rel="noopener noreferrer" className={styles.joinBtn}>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                        </svg>
+                        Join via Engage
+                      </a>
+                    )}
+                    {club.contactEmail && (
+                      <a href={`mailto:${club.contactEmail}?subject=Interested in joining ${club.title}`} className={styles.joinEmailBtn}>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                          <polyline points="22,6 12,13 2,6"/>
+                        </svg>
+                        Email Us
+                      </a>
+                    )}
+                  </div>
+                </>
+              )}
+            </div>
+          </section>
+
           <div className={styles.contentGrid}>
             <aside className={styles.sidebar}>
               {/* Stats */}
@@ -219,6 +333,30 @@ export default async function ClubPage({ params: paramsPromise }) {
                   </div>
                 </div>
               </div>
+
+              {/* Meetings */}
+              {(club.meetingSchedule?.dayOfWeek || club.meetingLocation) && (
+                <div className={styles.infoBox}>
+                  <h2 className={styles.sidebarTitle}>// Meetings</h2>
+                  <div className={styles.meetingInfo}>
+                    {club.meetingSchedule?.dayOfWeek && (
+                      <p className={styles.meetingSchedule}>
+                        {club.meetingSchedule.frequency === 'weekly' && 'Every '}
+                        {club.meetingSchedule.frequency === 'biweekly' && 'Every other '}
+                        {club.meetingSchedule.frequency === 'monthly' && 'Monthly on '}
+                        {club.meetingSchedule.dayOfWeek}
+                        {club.meetingSchedule.time && ` at ${club.meetingSchedule.time}`}
+                      </p>
+                    )}
+                    {club.meetingLocation && (
+                      <p className={styles.meetingLocation}>{club.meetingLocation}</p>
+                    )}
+                    {club.meetingNotes && (
+                      <p className={styles.meetingNotes}>{club.meetingNotes}</p>
+                    )}
+                  </div>
+                </div>
+              )}
 
               {/* Leadership */}
               {eboardMembers.length > 0 && (
@@ -269,6 +407,56 @@ export default async function ClubPage({ params: paramsPromise }) {
             </aside>
 
             <div className={styles.mainContent}>
+              {/* Announcements */}
+              {announcements?.length > 0 && (
+                <section className={styles.section}>
+                  <h2 className={styles.sectionTitle}>// Announcements</h2>
+                  <div className={styles.announcementsList}>
+                    {announcements.map((announcement) => {
+                      const excerpt = getPlainTextFromBlocks(announcement.content)
+                      const truncatedExcerpt = excerpt.length > 200
+                        ? excerpt.substring(0, 200) + '...'
+                        : excerpt
+                      return (
+                        <div
+                          key={announcement._id}
+                          className={`${styles.announcementCard} ${announcement.pinned ? styles.pinnedAnnouncement : ''} ${styles[`announcement${announcement.type?.charAt(0).toUpperCase()}${announcement.type?.slice(1)}`] || ''}`}
+                        >
+                          <div className={styles.announcementHeader}>
+                            <div className={styles.announcementMeta}>
+                              {announcement.pinned && (
+                                <span className={styles.pinnedBadge}>
+                                  <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M16 12V4h1V2H7v2h1v8l-2 2v2h5.2v6h1.6v-6H18v-2l-2-2z"/>
+                                  </svg>
+                                  Pinned
+                                </span>
+                              )}
+                              <span className={`${styles.typeBadge} ${styles[`type${announcement.type?.charAt(0).toUpperCase()}${announcement.type?.slice(1)}`] || ''}`}>
+                                {announcement.type || 'news'}
+                              </span>
+                              {announcement.publishedAt && (
+                                <span className={styles.announcementDate}>
+                                  {new Date(announcement.publishedAt).toLocaleDateString('en-US', {
+                                    month: 'short',
+                                    day: 'numeric',
+                                    year: 'numeric'
+                                  })}
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                          <h3 className={styles.announcementTitle}>{announcement.title}</h3>
+                          {truncatedExcerpt && (
+                            <p className={styles.announcementExcerpt}>{truncatedExcerpt}</p>
+                          )}
+                        </div>
+                      )
+                    })}
+                  </div>
+                </section>
+              )}
+
               {/* Projects */}
               <section className={styles.section}>
                 <h2 className={styles.sectionTitle}>// Projects</h2>
@@ -332,6 +520,53 @@ export default async function ClubPage({ params: paramsPromise }) {
                   <p className={styles.emptyState}>No events yet.</p>
                 )}
               </section>
+
+              {/* Photo Gallery */}
+              {club.gallery?.length > 0 && (
+                <section className={styles.section}>
+                  <div className={styles.galleryHeader}>
+                    <h2 className={styles.sectionTitle}>// Photo Gallery</h2>
+                    {club.gallery.length > 8 && (
+                      <span className={styles.galleryCount}>
+                        Showing 8 of {club.gallery.length} photos
+                      </span>
+                    )}
+                  </div>
+                  <div className={styles.galleryGrid}>
+                    {club.gallery.slice(0, 8).map((item, index) => (
+                      <div key={index} className={styles.galleryItem}>
+                        <div className={styles.galleryImageWrapper}>
+                          <Image
+                            src={urlFor(item.image).width(400).height(300).url()}
+                            alt={item.alt || item.caption || `${club.title} photo ${index + 1}`}
+                            width={400}
+                            height={300}
+                            className={styles.galleryImage}
+                          />
+                          <div className={styles.galleryOverlay}>
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                              <circle cx="11" cy="11" r="8"/>
+                              <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                              <line x1="11" y1="8" x2="11" y2="14"/>
+                              <line x1="8" y1="11" x2="14" y2="11"/>
+                            </svg>
+                          </div>
+                        </div>
+                        {item.caption && (
+                          <p className={styles.galleryCaption}>{item.caption}</p>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                  {club.gallery.length > 8 && (
+                    <div className={styles.galleryViewAll}>
+                      <button className={styles.viewAllBtn}>
+                        View All {club.gallery.length} Photos
+                      </button>
+                    </div>
+                  )}
+                </section>
+              )}
             </div>
           </div>
 
