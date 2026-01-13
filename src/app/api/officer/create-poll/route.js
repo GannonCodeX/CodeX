@@ -25,7 +25,7 @@ export async function POST(request) {
       )
     }
 
-    const { title, description, dates, timeSlots, visibility } = await request.json()
+    const { title, description, dates, startTime, endTime, timeSlotMinutes, visibility } = await request.json()
 
     if (!title) {
       return Response.json(
@@ -37,13 +37,6 @@ export async function POST(request) {
     if (!dates || dates.length === 0) {
       return Response.json(
         { error: 'At least one date is required', code: 'MISSING_DATES' },
-        { status: 400 }
-      )
-    }
-
-    if (!timeSlots || timeSlots.length === 0) {
-      return Response.json(
-        { error: 'At least one time slot is required', code: 'MISSING_TIMESLOTS' },
         { status: 400 }
       )
     }
@@ -73,10 +66,12 @@ export async function POST(request) {
       slug: { _type: 'slug', current: slug },
       description: description || '',
       dates,
-      timeSlots,
+      startTime: startTime || '09:00',
+      endTime: endTime || '21:00',
+      timeSlotMinutes: timeSlotMinutes || 30,
       createdBy,
       createdAt: new Date().toISOString(),
-      visibility: visibility || 'unlisted', // Default to unlisted for officer-created polls
+      visibility: visibility || 'unlisted',
       deleteToken,
       responses: [],
       club: {

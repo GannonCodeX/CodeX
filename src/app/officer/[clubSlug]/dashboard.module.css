@@ -729,6 +729,24 @@
   gap: 0.75rem;
 }
 
+.timeRangeGroup {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 0.75rem;
+}
+
+.timeField {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.timeLabel {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: var(--subtle-gray);
+}
+
 .dateInputGroup .formInput {
   flex: 1;
 }

@@ -37,7 +37,9 @@ export default function DashboardClient({ club, session, sessionError, dashboard
     title: '',
     description: '',
     dates: [],
-    timeSlots: ['09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00'],
+    startTime: '09:00',
+    endTime: '21:00',
+    timeSlotMinutes: 30,
     visibility: 'unlisted'
   })
   const [newDate, setNewDate] = useState('')
@@ -102,7 +104,9 @@ export default function DashboardClient({ club, session, sessionError, dashboard
       title: '',
       description: '',
       dates: [],
-      timeSlots: ['09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00'],
+      startTime: '09:00',
+      endTime: '21:00',
+      timeSlotMinutes: 30,
       visibility: 'unlisted'
     })
     setResourceData({ title: '', description: '', resourceType: 'link', url: '', categoryId: '' })
@@ -732,6 +736,45 @@ export default function DashboardClient({ club, session, sessionError, dashboard
                     ))}
                   </div>
                 )}
+              </div>
+
+              <div className={styles.formGroup}>
+                <label className={styles.formLabel}>Time Range</label>
+                <div className={styles.timeRangeGroup}>
+                  <div className={styles.timeField}>
+                    <label htmlFor="poll-start-time" className={styles.timeLabel}>Start</label>
+                    <input
+                      type="time"
+                      id="poll-start-time"
+                      value={pollData.startTime}
+                      onChange={(e) => setPollData({ ...pollData, startTime: e.target.value })}
+                      className={styles.formInput}
+                    />
+                  </div>
+                  <div className={styles.timeField}>
+                    <label htmlFor="poll-end-time" className={styles.timeLabel}>End</label>
+                    <input
+                      type="time"
+                      id="poll-end-time"
+                      value={pollData.endTime}
+                      onChange={(e) => setPollData({ ...pollData, endTime: e.target.value })}
+                      className={styles.formInput}
+                    />
+                  </div>
+                  <div className={styles.timeField}>
+                    <label htmlFor="poll-slot-minutes" className={styles.timeLabel}>Slot</label>
+                    <select
+                      id="poll-slot-minutes"
+                      value={pollData.timeSlotMinutes}
+                      onChange={(e) => setPollData({ ...pollData, timeSlotMinutes: parseInt(e.target.value) })}
+                      className={styles.formSelect}
+                    >
+                      <option value="15">15 min</option>
+                      <option value="30">30 min</option>
+                      <option value="60">1 hour</option>
+                    </select>
+                  </div>
+                </div>
               </div>
 
               <div className={styles.formGroup}>
