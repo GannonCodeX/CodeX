@@ -104,11 +104,7 @@ export default async function ClubPage({ params: paramsPromise }) {
   const params = await paramsPromise
   const club = await getClub(params.slug)
   if (!club) {
-    return (
-      <div style={{ padding: 32 }}>
-        <h1>Club not found</h1>
-      </div>
-    )
+    return <div>Club not found</div>
   }
   const { projects, events } = await getClubProjectsAndEvents(club._id)
   const stats = await getClubStats(club._id)
@@ -121,28 +117,28 @@ export default async function ClubPage({ params: paramsPromise }) {
     <>
       <Header />
       <main className={styles.wrapper}>
-        {/* Hero Section */}
-        <section className={styles.hero}>
-          <div className={styles.clubIdentity}>
-            {club.logo && (
-              <div className={styles.logoWrap}>
-                <Image
-                  src={urlFor(club.logo).width(200).height(200).url()}
-                  alt={club.title}
-                  width={100}
-                  height={100}
-                />
-              </div>
-            )}
-            <div className={styles.clubMeta}>
-              {club.shortName && (
-                <span className={styles.shortName}>{club.shortName}</span>
+        <article>
+          <header className={styles.header}>
+            <Link href="/clubs" className={styles.backLink}>&larr; All Clubs</Link>
+
+            <div className={styles.clubHeader}>
+              {club.logo && (
+                <div className={styles.logoWrap}>
+                  <Image
+                    src={urlFor(club.logo).width(160).height(160).url()}
+                    alt={club.title}
+                    width={80}
+                    height={80}
+                  />
+                </div>
               )}
               <h1 className={styles.title}>{club.title}</h1>
-              {club.description && (
-                <p className={styles.description}>{club.description}</p>
-              )}
             </div>
+
+            {club.description && (
+              <p className={styles.description}>{club.description}</p>
+            )}
+
             <div className={styles.links}>
               {club.website && (
                 <a href={club.website} target="_blank" rel="noopener noreferrer" className={styles.linkBtn}>
@@ -181,72 +177,65 @@ export default async function ClubPage({ params: paramsPromise }) {
                 </a>
               )}
             </div>
-          </div>
 
-          <div className={styles.bannerContainer}>
-            {club.bannerImage ? (
-              <Image
-                src={urlFor(club.bannerImage).width(900).height(506).url()}
-                alt={`${club.title} banner`}
-                fill
-                className={styles.bannerImage}
-                priority
-              />
-            ) : (
-              <div className={styles.noBanner}>
-                <span className={styles.noBannerText}>{club.shortName || club.title}</span>
+            {club.bannerImage && (
+              <div className={styles.imageWrapper}>
+                <Image
+                  src={urlFor(club.bannerImage).width(1200).height(675).url()}
+                  alt={`${club.title} banner`}
+                  width={1200}
+                  height={675}
+                  className={styles.bannerImage}
+                  priority
+                />
               </div>
             )}
-          </div>
-        </section>
+          </header>
 
-        {/* Stats Section */}
-        <section className={styles.statsSection}>
-          <div className={styles.statsGrid}>
-            <div className={styles.statBox}>
-              <span className={styles.statNumber}>{stats.memberCount}</span>
-              <span className={styles.statLabel}>Members</span>
-            </div>
-            <div className={styles.statBox}>
-              <span className={styles.statNumber}>{stats.projectCount}</span>
-              <span className={styles.statLabel}>Projects</span>
-            </div>
-            <div className={styles.statBox}>
-              <span className={styles.statNumber}>{stats.eventCount}</span>
-              <span className={styles.statLabel}>Events</span>
-            </div>
-          </div>
-        </section>
-
-        {/* Main Content Grid */}
-        <div className={styles.contentGrid}>
-          {/* Sidebar - Members */}
-          <aside className={styles.sidebar}>
-            {eboardMembers.length > 0 && (
-              <div className={styles.sidebarSection}>
-                <div className={styles.sidebarHeader}>
-                  <h3 className={styles.sidebarTitle}>Leadership</h3>
+          <div className={styles.contentGrid}>
+            <aside className={styles.sidebar}>
+              {/* Stats */}
+              <div className={styles.infoBox}>
+                <h2 className={styles.sidebarTitle}>// Stats</h2>
+                <div className={styles.statsGrid}>
+                  <div className={styles.statItem}>
+                    <span>Members</span>
+                    <span className={styles.statNumber}>{stats.memberCount}</span>
+                  </div>
+                  <div className={styles.statItem}>
+                    <span>Projects</span>
+                    <span className={styles.statNumber}>{stats.projectCount}</span>
+                  </div>
+                  <div className={styles.statItem}>
+                    <span>Events</span>
+                    <span className={styles.statNumber}>{stats.eventCount}</span>
+                  </div>
                 </div>
-                <div className={styles.sidebarContent}>
-                  <div className={styles.eboardList}>
+              </div>
+
+              {/* Leadership */}
+              {eboardMembers.length > 0 && (
+                <div className={styles.infoBox}>
+                  <h2 className={styles.sidebarTitle}>// Leadership</h2>
+                  <div className={styles.membersList}>
                     {eboardMembers.map((member) => (
-                      <div key={member.name} className={styles.eboardMember}>
-                        <div className={styles.memberAvatarMedium}>
+                      <div key={member.name} className={styles.memberItem}>
+                        <div className={styles.memberAvatar}>
                           {member.avatar ? (
                             <Image
-                              src={urlFor(member.avatar).width(96).height(96).url()}
+                              src={urlFor(member.avatar).width(80).height(80).url()}
                               alt={member.name}
-                              width={48}
-                              height={48}
+                              width={40}
+                              height={40}
                             />
                           ) : (
-                            <div className={styles.avatarPlaceholderMedium}>
+                            <div className={styles.avatarPlaceholder}>
                               {member.name?.charAt(0) || '?'}
                             </div>
                           )}
                         </div>
-                        <div className={styles.memberDetails}>
-                          <h4 className={styles.memberName}>{member.name}</h4>
+                        <div className={styles.memberInfo}>
+                          <span className={styles.memberName}>{member.name}</span>
                           <span className={styles.memberRole}>
                             {member.affiliation?.clubRole || 'E-Board'}
                           </span>
@@ -255,50 +244,27 @@ export default async function ClubPage({ params: paramsPromise }) {
                     ))}
                   </div>
                 </div>
-              </div>
-            )}
+              )}
 
-            {generalMembers.length > 0 && (
-              <div className={styles.sidebarSection}>
-                <div className={styles.sidebarHeader}>
-                  <h3 className={styles.sidebarTitle}>Members</h3>
-                </div>
-                <div className={styles.sidebarContent}>
-                  <div className={styles.membersList}>
+              {/* Members */}
+              {generalMembers.length > 0 && (
+                <div className={styles.infoBox}>
+                  <h2 className={styles.sidebarTitle}>// Members</h2>
+                  <div className={styles.membersChips}>
                     {generalMembers.map((member) => (
-                      <div key={member.name} className={styles.memberChip}>
-                        <div className={styles.memberChipAvatar}>
-                          {member.avatar ? (
-                            <Image
-                              src={urlFor(member.avatar).width(48).height(48).url()}
-                              alt={member.name}
-                              width={24}
-                              height={24}
-                            />
-                          ) : (
-                            <div className={styles.avatarPlaceholderChip}>
-                              {member.name?.charAt(0) || '?'}
-                            </div>
-                          )}
-                        </div>
-                        <span>{member.name}</span>
-                      </div>
+                      <span key={member.name} className={styles.memberChip}>
+                        {member.name}
+                      </span>
                     ))}
                   </div>
                 </div>
-              </div>
-            )}
-          </aside>
+              )}
+            </aside>
 
-          {/* Main Content - Projects & Events */}
-          <div className={styles.mainContent}>
-            {/* Projects Section */}
-            <section className={styles.section}>
-              <div className={styles.sectionHeader}>
-                <h2 className={styles.sectionTitle}>Projects</h2>
-                <span className={styles.sectionCount}>{projects?.length || 0}</span>
-              </div>
-              <div className={styles.sectionContent}>
+            <div className={styles.mainContent}>
+              {/* Projects */}
+              <section className={styles.section}>
+                <h2 className={styles.sectionTitle}>// Projects</h2>
                 {projects?.length ? (
                   <div className={styles.projectsGrid}>
                     {projects.map((p) => (
@@ -308,7 +274,8 @@ export default async function ClubPage({ params: paramsPromise }) {
                             <Image
                               src={urlFor(p.mainImage).width(600).height(338).url()}
                               alt={p.title}
-                              fill
+                              width={600}
+                              height={338}
                             />
                           </div>
                         )}
@@ -324,66 +291,50 @@ export default async function ClubPage({ params: paramsPromise }) {
                 ) : (
                   <p className={styles.emptyState}>No projects yet.</p>
                 )}
-              </div>
-            </section>
+              </section>
 
-            {/* Events Section */}
-            <section className={styles.section}>
-              <div className={styles.sectionHeader}>
-                <h2 className={styles.sectionTitle}>Events</h2>
-                <span className={styles.sectionCount}>{events?.length || 0}</span>
-              </div>
-              <div className={styles.sectionContent}>
+              {/* Events */}
+              <section className={styles.section}>
+                <h2 className={styles.sectionTitle}>// Events</h2>
                 {events?.length ? (
                   <div className={styles.eventsList}>
                     {events.map((e) => (
-                      <Link key={e.slug} href={`/events/${e.slug}`} className={styles.eventRow}>
-                        <span className={styles.eventBadge} data-status={e.status?.toLowerCase()}>
-                          {e.status}
-                        </span>
+                      <Link key={e.slug} href={`/events/${e.slug}`} className={styles.eventItem}>
+                        <span className={styles.eventBadge}>{e.status}</span>
                         <div className={styles.eventInfo}>
-                          <span className={styles.eventTitle}>{e.title}</span>
-                          <span className={styles.eventMeta}>
+                          <div className={styles.eventTitle}>{e.title}</div>
+                          <div className={styles.eventMeta}>
                             {e.date ? new Date(e.date).toLocaleDateString('en-US', {
-                              month: 'short',
+                              month: 'long',
                               day: 'numeric',
                               year: 'numeric'
                             }) : 'TBD'} — {e.location || 'TBD'}
-                          </span>
+                          </div>
                         </div>
-                        <span className={styles.eventArrow}>→</span>
                       </Link>
                     ))}
                   </div>
                 ) : (
                   <p className={styles.emptyState}>No events yet.</p>
                 )}
+              </section>
+            </div>
+          </div>
+
+          {/* Contact Section */}
+          {club.contactEmail && (
+            <section className={styles.contactSection}>
+              <h2 className={styles.sectionTitle}>// Get in Touch</h2>
+              <div className={styles.contactGrid}>
+                <div className={styles.contactInfo}>
+                  <p>Have a question or want to get involved with {club.title}? Send us a message.</p>
+                  <p>Or email us at <a href={`mailto:${club.contactEmail}`}>{club.contactEmail}</a></p>
+                </div>
+                <ContactForm contactEmail={club.contactEmail} clubName={club.title} />
               </div>
             </section>
-          </div>
-        </div>
-
-        {/* Contact Section */}
-        {club.contactEmail && (
-          <section className={styles.contactSection}>
-            <div className={styles.contactHeader}>
-              <h2 className={styles.contactTitle}>Get in Touch</h2>
-            </div>
-            <div className={styles.contactContent}>
-              <div className={styles.contactInfo}>
-                <p className={styles.contactIntro}>
-                  Have a question or want to get involved with {club.title}?
-                  Send us a message and we will get back to you.
-                </p>
-                <p className={styles.contactEmail}>
-                  Or email us directly at{' '}
-                  <a href={`mailto:${club.contactEmail}`}>{club.contactEmail}</a>
-                </p>
-              </div>
-              <ContactForm contactEmail={club.contactEmail} clubName={club.title} />
-            </div>
-          </section>
-        )}
+          )}
+        </article>
       </main>
       <Footer />
     </>
