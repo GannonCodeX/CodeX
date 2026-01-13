@@ -22,6 +22,19 @@ export async function POST(request) {
       )
     }
 
+    // Debug: first check if any officer exists with this email
+    const debugQuery = await client.fetch(
+      `*[_type == "clubOfficer" && lower(email) == lower($email)][0]{
+        _id,
+        email,
+        isActive,
+        "hasClub": defined(club),
+        "hasMember": defined(member)
+      }`,
+      { email: email.trim() }
+    )
+    console.log('Debug - Officer lookup:', JSON.stringify(debugQuery, null, 2))
+
     // Check if email exists in clubOfficer with isActive=true
     // Role comes from member.affiliations[] not from clubOfficer
     // Use lower() for case-insensitive email matching
@@ -29,6 +42,7 @@ export async function POST(request) {
       `*[_type == "clubOfficer" && lower(email) == lower($email) && isActive == true][0]{
         _id,
         email,
+        isActive,
         club->{
           _id,
           title,
@@ -36,13 +50,24 @@ export async function POST(request) {
         },
         member->{
           name,
-          "role": affiliations[club._ref == ^.^.club._ref][0].clubRole
+          affiliations
         }
       }`,
       { email: email.trim() }
     )
+    console.log('Debug - Full officer result:', JSON.stringify(officer, null, 2))
 
     if (!officer) {
+      // Provide more helpful error message
+      if (debugQuery && !debugQuery.isActive) {
+        return Response.json(
+          {
+            error: 'Your officer account is inactive. Please contact an admin.',
+            code: 'INACTIVE'
+          },
+          { status: 403 }
+        )
+      }
       return Response.json(
         {
           error: 'No active officer account found with this email address',
@@ -70,7 +95,11 @@ export async function POST(request) {
     const magicLink = `${baseUrl}/officer/${officer.club.slug}?token=${token}`
 
     // Log the magic link (email sending out of scope)
-    const role = officer.member?.role || 'Officer'
+    // Get role from member.affiliations for this club
+    const clubAffiliation = officer.member?.affiliations?.find(
+      (a) => a.club?._ref === officer.club._id
+    )
+    const role = clubAffiliation?.clubRole || 'Officer'
     console.log('=================================================')
     console.log('OFFICER ACCESS MAGIC LINK')
     console.log('=================================================')
