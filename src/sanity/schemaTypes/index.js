@@ -6,6 +6,7 @@ import gallery from './gallery'
 import galleryImage from './galleryImage'
 import club from './club'
 import announcement from './announcement'
+import availabilityPoll from './availabilityPoll'
 
-export const schemaTypes = [club, event, member, project, projectApplication, gallery, galleryImage, announcement]
+export const schemaTypes = [club, event, member, project, projectApplication, gallery, galleryImage, announcement, availabilityPoll]
 
