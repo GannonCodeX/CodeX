@@ -5,8 +5,13 @@ import styles from './poll.module.css'
 
 function generateTimeSlots(startTime, endTime, slotMinutes) {
   const slots = []
-  const [startHour, startMin] = startTime.split(':').map(Number)
-  const [endHour, endMin] = endTime.split(':').map(Number)
+  // Default values if not provided
+  const safeStartTime = startTime || '09:00'
+  const safeEndTime = endTime || '21:00'
+  const safeSlotMinutes = slotMinutes || 30
+
+  const [startHour, startMin] = safeStartTime.split(':').map(Number)
+  const [endHour, endMin] = safeEndTime.split(':').map(Number)
 
   let currentHour = startHour
   let currentMin = startMin
@@ -18,7 +23,7 @@ function generateTimeSlots(startTime, endTime, slotMinutes) {
     const timeStr = `${currentHour.toString().padStart(2, '0')}:${currentMin.toString().padStart(2, '0')}`
     slots.push(timeStr)
 
-    currentMin += slotMinutes
+    currentMin += safeSlotMinutes
     if (currentMin >= 60) {
       currentHour += Math.floor(currentMin / 60)
       currentMin = currentMin % 60
