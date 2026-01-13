@@ -1,8 +1,16 @@
 /* src/app/clubs/[slug]/slug.module.css */
 .wrapper { max-width: 1200px; margin: 0 auto; padding: 0 16px 56px; }
 
-.hero { margin: 56px 0 24px; border: 2px solid var(--fg); background: linear-gradient(135deg, var(--club-accent, #00FFFF) 0%, #fff 100%); box-shadow: 8px 8px 0 var(--fg); }
-.heroInner { display: flex; gap: 24px; align-items: center; padding: 24px; }
+.hero { margin: 56px 0 24px; border: 2px solid var(--fg); background: linear-gradient(135deg, var(--club-accent, #00FFFF) 0%, #fff 100%); box-shadow: 8px 8px 0 var(--fg); position: relative; overflow: hidden; }
+.heroWithBanner { background: transparent; }
+.bannerImageContainer { position: absolute; inset: 0; z-index: 0; }
+.bannerImage { object-fit: cover; width: 100%; height: 100%; }
+.bannerOverlay { position: absolute; inset: 0; z-index: 1; background: linear-gradient(135deg, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.5) 100%); }
+.heroInner { display: flex; gap: 24px; align-items: center; padding: 24px; position: relative; z-index: 2; }
+.heroWithBanner .title { color: #fff; }
+.heroWithBanner .description { color: rgba(255, 255, 255, 0.9); }
+.heroWithBanner .linkBtn { background: rgba(255, 255, 255, 0.95); border-color: #fff; }
+.heroWithBanner .linkBtn:hover { background: #fff; }
 .logoWrap { width: 96px; height: 96px; display: grid; place-items: center; background: #fff; border: 2px solid var(--fg); overflow: hidden; }
 .title { font-size: 2.4rem; margin: 0; letter-spacing: -1px; }
 .description { color: var(--subtle-gray); margin: 8px 0 12px; max-width: 700px; }
@@ -23,3 +31,324 @@
 .badge { font-size: 0.75rem; font-family: var(--mono); border: 1px solid var(--fg); padding: 2px 6px; }
 .eventTitle { font-weight: 600; }
 .eventMeta { color: var(--subtle-gray); font-size: 0.9rem; }
+
+/* Stats Section */
+.statsSection { margin-top: 24px; }
+.statsGrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.statBox {
+  padding: 24px 16px;
+  border: 2px solid var(--fg);
+  background: #fff;
+  box-shadow: 4px 4px 0 var(--fg);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.statNumber {
+  font-family: var(--mono);
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--accent);
+  line-height: 1;
+}
+.statLabel {
+  font-family: var(--sans);
+  font-size: 0.9rem;
+  color: var(--subtle-gray);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Members Section */
+.eboardSection {
+  margin-bottom: 32px;
+  padding: 24px;
+  background: linear-gradient(135deg, var(--accent, #00FFFF) 0%, rgba(0, 255, 255, 0.3) 100%);
+  border: 2px solid var(--fg);
+  box-shadow: 6px 6px 0 var(--fg);
+}
+
+.eboardTitle {
+  font-family: var(--mono);
+  font-size: 1.1rem;
+  margin: 0 0 20px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.eboardGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 20px;
+}
+
+.eboardCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 20px 16px;
+  background: #fff;
+  border: 2px solid var(--fg);
+  box-shadow: 4px 4px 0 var(--fg);
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.eboardCard:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 var(--fg);
+}
+
+.memberAvatarLarge {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  border: 2px solid var(--fg);
+  overflow: hidden;
+  background: #f7f7f7;
+  margin-bottom: 12px;
+}
+
+.memberAvatarLarge img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.avatarPlaceholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--mono);
+  font-size: 2.5rem;
+  font-weight: 700;
+  background: var(--accent, #00FFFF);
+  color: var(--fg);
+}
+
+.eboardBadge {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 4px 10px;
+  background: var(--fg);
+  color: #fff;
+  margin-bottom: 8px;
+}
+
+.memberName {
+  font-family: var(--sans);
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0 0 4px;
+}
+
+.memberRole {
+  font-family: var(--sans);
+  font-size: 0.85rem;
+  color: var(--subtle-gray);
+}
+
+.membersGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 12px;
+}
+
+.memberCard {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: #fff;
+  border: 2px solid var(--fg);
+  box-shadow: 4px 4px 0 var(--fg);
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.memberCard:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 var(--fg);
+}
+
+.memberAvatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  border: 2px solid var(--fg);
+  overflow: hidden;
+  background: #f7f7f7;
+  flex-shrink: 0;
+}
+
+.memberAvatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.avatarPlaceholderSmall {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--mono);
+  font-size: 1.5rem;
+  font-weight: 700;
+  background: #f0f0f0;
+  color: var(--fg);
+}
+
+.memberInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.memberNameSmall {
+  font-family: var(--sans);
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.memberRoleSmall {
+  font-family: var(--sans);
+  font-size: 0.8rem;
+  color: var(--subtle-gray);
+}
+
+/* Contact Form */
+.contactContainer {
+  max-width: 600px;
+}
+
+.contactIntro {
+  color: var(--subtle-gray);
+  margin: 0 0 20px;
+}
+
+.contactForm {
+  padding: 24px;
+  border: 2px solid var(--fg);
+  background: #fff;
+  box-shadow: 6px 6px 0 var(--fg);
+}
+
+.formGroup {
+  margin-bottom: 16px;
+}
+
+.formLabel {
+  display: block;
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.formInput,
+.formTextarea {
+  width: 100%;
+  padding: 12px 14px;
+  font-family: var(--sans);
+  font-size: 1rem;
+  border: 2px solid var(--fg);
+  background: #fff;
+  color: var(--fg);
+  transition: box-shadow 0.18s ease, border-color 0.18s ease;
+}
+
+.formInput:focus,
+.formTextarea:focus {
+  outline: none;
+  box-shadow: 4px 4px 0 var(--fg);
+}
+
+.formInput:disabled,
+.formTextarea:disabled {
+  background: #f5f5f5;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.formTextarea {
+  resize: vertical;
+  min-height: 120px;
+}
+
+.formSubmit {
+  display: inline-block;
+  padding: 12px 24px;
+  font-family: var(--mono);
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border: 2px solid var(--fg);
+  background: var(--accent, #00FFFF);
+  color: var(--fg);
+  cursor: pointer;
+  box-shadow: 4px 4px 0 var(--fg);
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.formSubmit:hover:not(:disabled) {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 var(--fg);
+}
+
+.formSubmit:active:not(:disabled) {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0 var(--fg);
+}
+
+.formSubmit:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.formMessage {
+  padding: 12px 16px;
+  margin-bottom: 16px;
+  border: 2px solid var(--fg);
+  font-family: var(--sans);
+  font-size: 0.95rem;
+}
+
+.formSuccess {
+  background: #d4edda;
+  border-color: #155724;
+  color: #155724;
+}
+
+.formError {
+  background: #f8d7da;
+  border-color: #721c24;
+  color: #721c24;
+}
+
+/* Responsive handling */
+@media (max-width: 768px) {
+  .hero { min-height: auto; }
+  .heroInner { flex-direction: column; text-align: center; padding: 20px 16px; }
+  .bannerOverlay { background: linear-gradient(180deg, rgba(0, 0, 0, 0.75) 0%, rgba(0, 0, 0, 0.6) 100%); }
+  .links { justify-content: center; }
+  .statsGrid { grid-template-columns: 1fr; }
+  .statBox { padding: 20px 16px; }
+  .statNumber { font-size: 2rem; }
+  .eboardGrid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; }
+  .eboardCard { padding: 16px 12px; }
+  .memberAvatarLarge { width: 80px; height: 80px; }
+  .avatarPlaceholder { font-size: 1.8rem; }
+  .membersGrid { grid-template-columns: 1fr; }
+  .contactForm { padding: 16px; }
+  .formSubmit { width: 100%; }
+}
