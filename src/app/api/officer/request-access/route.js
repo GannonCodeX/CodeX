@@ -24,8 +24,9 @@ export async function POST(request) {
 
     // Check if email exists in clubOfficer with isActive=true
     // Role comes from member.affiliations[] not from clubOfficer
+    // Use lower() for case-insensitive email matching
     const officer = await client.fetch(
-      `*[_type == "clubOfficer" && email == $email && isActive == true][0]{
+      `*[_type == "clubOfficer" && lower(email) == lower($email) && isActive == true][0]{
         _id,
         email,
         club->{
@@ -38,7 +39,7 @@ export async function POST(request) {
           "role": affiliations[club._ref == ^.^.club._ref][0].clubRole
         }
       }`,
-      { email: email.toLowerCase() }
+      { email: email.trim() }
     )
 
     if (!officer) {
