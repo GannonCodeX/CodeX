@@ -51,34 +51,42 @@ export default function ContactForm({ contactEmail, clubName }) {
 
   return (
     <form className={styles.contactForm} onSubmit={handleSubmit}>
-      <div className={styles.formGroup}>
-        <label htmlFor="name" className={styles.formLabel}>Name</label>
-        <input
-          type="text"
-          id="name"
-          name="name"
-          value={formData.name}
-          onChange={handleChange}
-          required
-          className={styles.formInput}
-          placeholder="Your name"
-          disabled={isSubmitting}
-        />
-      </div>
+      {status.message && (
+        <div className={`${styles.formMessage} ${status.type === 'success' ? styles.formSuccess : styles.formError}`}>
+          {status.message}
+        </div>
+      )}
 
-      <div className={styles.formGroup}>
-        <label htmlFor="email" className={styles.formLabel}>Email</label>
-        <input
-          type="email"
-          id="email"
-          name="email"
-          value={formData.email}
-          onChange={handleChange}
-          required
-          className={styles.formInput}
-          placeholder="your.email@example.com"
-          disabled={isSubmitting}
-        />
+      <div className={styles.formRow}>
+        <div className={styles.formGroup}>
+          <label htmlFor="name" className={styles.formLabel}>Name</label>
+          <input
+            type="text"
+            id="name"
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
+            required
+            className={styles.formInput}
+            placeholder="Your name"
+            disabled={isSubmitting}
+          />
+        </div>
+
+        <div className={styles.formGroup}>
+          <label htmlFor="email" className={styles.formLabel}>Email</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            required
+            className={styles.formInput}
+            placeholder="your.email@example.com"
+            disabled={isSubmitting}
+          />
+        </div>
       </div>
 
       <div className={styles.formGroup}>
@@ -106,16 +114,10 @@ export default function ContactForm({ contactEmail, clubName }) {
           required
           className={styles.formTextarea}
           placeholder="Your message..."
-          rows={5}
+          rows={4}
           disabled={isSubmitting}
         />
       </div>
-
-      {status.message && (
-        <div className={`${styles.formMessage} ${status.type === 'success' ? styles.formSuccess : styles.formError}`}>
-          {status.message}
-        </div>
-      )}
 
       <button
         type="submit"
