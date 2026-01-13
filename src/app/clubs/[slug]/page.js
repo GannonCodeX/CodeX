@@ -75,9 +75,10 @@ async function getClubProjectsAndEvents(clubId) {
 }
 
 async function getClubStats(clubId) {
-  const memberCountQuery = `count(*[_type == "member" && $clubId in affiliations[].club._ref])`
-  const projectCountQuery = `count(*[_type == "project" && (leadClub->_id == $clubId || $clubId in collaborators[]->_id)])`
-  const eventCountQuery = `count(*[_type == "event" && (leadClub->_id == $clubId || $clubId in coHosts[]->_id)])`
+  // Use references properly - affiliations[].club is a reference object with _ref property
+  const memberCountQuery = `count(*[_type == "member" && references($clubId)])`
+  const projectCountQuery = `count(*[_type == "project" && (leadClub._ref == $clubId || $clubId in collaborators[]._ref)])`
+  const eventCountQuery = `count(*[_type == "event" && (leadClub._ref == $clubId || $clubId in coHosts[]._ref)])`
 
   const [memberCount, projectCount, eventCount] = await Promise.all([
     client.fetch(memberCountQuery, { clubId }),
@@ -89,14 +90,16 @@ async function getClubStats(clubId) {
 }
 
 async function getClubMembers(clubId) {
-  const membersQuery = `*[_type == "member" && $clubId in affiliations[].club._ref]{
+  // Query members who have this club in their affiliations
+  // Then extract the specific affiliation for this club
+  const membersQuery = `*[_type == "member" && references($clubId)]{
     name,
     avatar,
-    affiliations[club._ref == $clubId][0]{
+    "affiliation": affiliations[club._ref == $clubId][0]{
       clubRole,
       isEboard
     }
-  } | order(affiliations[0].isEboard desc)`
+  }`
   return client.fetch(membersQuery, { clubId })
 }
 
@@ -114,8 +117,9 @@ export default async function ClubPage({ params: paramsPromise }) {
   const stats = await getClubStats(club._id)
   const members = await getClubMembers(club._id)
 
-  const eboardMembers = members?.filter(m => m.affiliations?.isEboard) || []
-  const generalMembers = members?.filter(m => !m.affiliations?.isEboard) || []
+  // Filter by affiliation (singular - from our query projection)
+  const eboardMembers = members?.filter(m => m.affiliation?.isEboard) || []
+  const generalMembers = members?.filter(m => !m.affiliation?.isEboard) || []
 
   return (
     <>
@@ -278,7 +282,7 @@ export default async function ClubPage({ params: paramsPromise }) {
                       </div>
                       <span className={styles.eboardBadge}>E-Board</span>
                       <h4 className={styles.memberName}>{member.name}</h4>
-                      <span className={styles.memberRole}>{member.affiliations?.clubRole || 'Member'}</span>
+                      <span className={styles.memberRole}>{member.affiliation?.clubRole || 'Member'}</span>
                     </div>
                   ))}
                 </div>
@@ -305,7 +309,7 @@ export default async function ClubPage({ params: paramsPromise }) {
                     </div>
                     <div className={styles.memberInfo}>
                       <span className={styles.memberNameSmall}>{member.name}</span>
-                      <span className={styles.memberRoleSmall}>{member.affiliations?.clubRole || 'Member'}</span>
+                      <span className={styles.memberRoleSmall}>{member.affiliation?.clubRole || 'Member'}</span>
                     </div>
                   </div>
                 ))}

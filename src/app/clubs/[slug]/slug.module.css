@@ -2,11 +2,11 @@
 .wrapper { max-width: 1200px; margin: 0 auto; padding: 0 16px 56px; }
 
 .hero { margin: 56px 0 24px; border: 2px solid var(--fg); background: linear-gradient(135deg, var(--club-accent, #00FFFF) 0%, #fff 100%); box-shadow: 8px 8px 0 var(--fg); position: relative; overflow: hidden; }
-.heroWithBanner { background: transparent; }
+.heroWithBanner { background: transparent; min-height: 280px; display: flex; align-items: center; }
 .bannerImageContainer { position: absolute; inset: 0; z-index: 0; }
 .bannerImage { object-fit: cover; width: 100%; height: 100%; }
 .bannerOverlay { position: absolute; inset: 0; z-index: 1; background: linear-gradient(135deg, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.5) 100%); }
-.heroInner { display: flex; gap: 24px; align-items: center; padding: 24px; position: relative; z-index: 2; }
+.heroInner { display: flex; gap: 24px; align-items: center; padding: 24px; position: relative; z-index: 2; width: 100%; }
 .heroWithBanner .title { color: #fff; }
 .heroWithBanner .description { color: rgba(255, 255, 255, 0.9); }
 .heroWithBanner .linkBtn { background: rgba(255, 255, 255, 0.95); border-color: #fff; }
@@ -15,7 +15,8 @@
 .title { font-size: 2.4rem; margin: 0; letter-spacing: -1px; }
 .description { color: var(--subtle-gray); margin: 8px 0 12px; max-width: 700px; }
 .links { display: flex; gap: 10px; flex-wrap: wrap; }
-.linkBtn { border: 1px solid var(--fg); background: #fff; padding: 6px 10px; font-family: var(--mono); text-decoration: none; color: inherit; }
+.linkBtn { border: 1px solid var(--fg); background: #fff; padding: 6px 10px; font-family: var(--mono); text-decoration: none; color: inherit; display: inline-flex; align-items: center; gap: 6px; font-size: 0.85rem; transition: transform 0.15s ease, box-shadow 0.15s ease; }
+.linkBtn:hover { transform: translate(-1px, -1px); box-shadow: 2px 2px 0 var(--fg); }
 
 .section { margin-top: 32px; }
 .sectionTitle { font-family: var(--mono); margin: 0 0 12px; }
