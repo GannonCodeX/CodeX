@@ -1,9 +1,11 @@
 'use client'
 
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import TimeGrid from './TimeGrid'
 import ResponseForm from './ResponseForm'
+import BestTimesDisplay, { getBestSlotIds } from './BestTimesDisplay'
+import ExportActions from './ExportActions'
 import styles from './poll.module.css'
 
 export default function PollClient({ poll: initialPoll, slug, isExpired }) {
@@ -11,6 +13,10 @@ export default function PollClient({ poll: initialPoll, slug, isExpired }) {
   const [poll, setPoll] = useState(initialPoll)
   const [activeTab, setActiveTab] = useState('respond')
   const [copied, setCopied] = useState(false)
+  const gridRef = useRef(null)
+
+  // Calculate best slots for highlighting
+  const bestSlotIds = getBestSlotIds(poll.responses)
 
   const refreshPoll = useCallback(() => {
     router.refresh()
@@ -73,13 +79,21 @@ export default function PollClient({ poll: initialPoll, slug, isExpired }) {
       ) : (
         <div className={styles.resultsSection}>
           <div className={styles.resultsHeader}>
-            <h3 className={styles.resultsTitle}>Group Availability</h3>
-            <p className={styles.resultsHint}>
-              Darker green = more people available. Hover to see names.
-            </p>
+            <div className={styles.resultsHeaderTop}>
+              <div>
+                <h3 className={styles.resultsTitle}>Group Availability</h3>
+                <p className={styles.resultsHint}>
+                  Darker green = more people available. Hover to see names.
+                </p>
+              </div>
+              {poll.responses?.length > 0 && (
+                <ExportActions poll={poll} gridRef={gridRef} />
+              )}
+            </div>
           </div>
 
           <TimeGrid
+            ref={gridRef}
             dates={poll.dates}
             startTime={poll.startTime}
             endTime={poll.endTime}
@@ -88,22 +102,31 @@ export default function PollClient({ poll: initialPoll, slug, isExpired }) {
             selectedSlots={[]}
             onSlotsChange={() => {}}
             viewMode="view"
+            bestSlotIds={bestSlotIds}
           />
 
           {poll.responses?.length > 0 && (
-            <div className={styles.respondentsList}>
-              <h4 className={styles.respondentsTitle}>Respondents</h4>
-              <div className={styles.respondents}>
-                {poll.responses.map((response, index) => (
-                  <div key={index} className={styles.respondent}>
-                    <span className={styles.respondentName}>{response.name}</span>
-                    <span className={styles.respondentSlots}>
-                      {response.availability?.length || 0} slots
-                    </span>
-                  </div>
-                ))}
+            <>
+              <BestTimesDisplay
+                responses={poll.responses}
+                dates={poll.dates}
+                timeSlotMinutes={poll.timeSlotMinutes}
+              />
+
+              <div className={styles.respondentsList}>
+                <h4 className={styles.respondentsTitle}>Respondents</h4>
+                <div className={styles.respondents}>
+                  {poll.responses.map((response, index) => (
+                    <div key={index} className={styles.respondent}>
+                      <span className={styles.respondentName}>{response.name}</span>
+                      <span className={styles.respondentSlots}>
+                        {response.availability?.length || 0} slots
+                      </span>
+                    </div>
+                  ))}
+                </div>
               </div>
-            </div>
+            </>
           )}
 
           {(!poll.responses || poll.responses.length === 0) && (

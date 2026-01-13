@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useCallback, useRef } from 'react'
+import { useState, useCallback, useRef, forwardRef } from 'react'
 import styles from './poll.module.css'
 
 function generateTimeSlots(startTime, endTime, slotMinutes) {
@@ -35,7 +35,7 @@ function formatTime(timeStr) {
   return `${hour12}:${min.toString().padStart(2, '0')} ${ampm}`
 }
 
-export default function TimeGrid({
+const TimeGrid = forwardRef(function TimeGrid({
   dates,
   startTime,
   endTime,
@@ -44,10 +44,12 @@ export default function TimeGrid({
   selectedSlots,
   onSlotsChange,
   viewMode = 'edit', // 'edit' or 'view'
-}) {
+  bestSlotIds = new Set(),
+}, ref) {
   const [isDragging, setIsDragging] = useState(false)
   const [dragMode, setDragMode] = useState(null) // 'select' or 'deselect'
-  const gridRef = useRef(null)
+  const internalRef = useRef(null)
+  const gridRef = ref || internalRef
 
   const timeSlots = generateTimeSlots(startTime, endTime, timeSlotMinutes)
 
@@ -150,11 +152,12 @@ export default function TimeGrid({
               const count = availabilityCounts[slotId] || 0
               const availableNames = getAvailableNames(slotId)
               const intensity = count / maxCount
+              const isBestSlot = bestSlotIds.has(slotId)
 
               return (
                 <div
                   key={slotId}
-                  className={`${styles.cell} ${isSelected ? styles.selected : ''} ${viewMode === 'view' ? styles.viewMode : ''}`}
+                  className={`${styles.cell} ${isSelected ? styles.selected : ''} ${viewMode === 'view' ? styles.viewMode : ''} ${isBestSlot ? styles.bestSlot : ''}`}
                   style={
                     viewMode === 'view' && count > 0
                       ? {
@@ -166,12 +169,15 @@ export default function TimeGrid({
                   onMouseEnter={() => handleMouseEnter(date, time)}
                   title={
                     viewMode === 'view' && count > 0
-                      ? `${count} available: ${availableNames.join(', ')}`
+                      ? `${count} available: ${availableNames.join(', ')}${isBestSlot ? ' (Best time!)' : ''}`
                       : undefined
                   }
                 >
                   {viewMode === 'view' && count > 0 && (
                     <span className={styles.countBadge}>{count}</span>
+                  )}
+                  {isBestSlot && (
+                    <span className={styles.bestSlotIndicator}></span>
                   )}
                 </div>
               )
@@ -187,4 +193,6 @@ export default function TimeGrid({
       )}
     </div>
   )
-}
+})
+
+export default TimeGrid

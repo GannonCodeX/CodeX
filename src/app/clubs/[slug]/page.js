@@ -126,6 +126,24 @@ async function getClubAnnouncements(clubId) {
   return client.fetch(announcementsQuery, { clubId })
 }
 
+async function getClubResourcesCount(clubId) {
+  const countQuery = `count(*[_type == "clubResource" && club._ref == $clubId])`
+  return client.fetch(countQuery, { clubId })
+}
+
+async function getClubPolls(clubId) {
+  const pollsQuery = `*[_type == "availabilityPoll" && club._ref == $clubId] | order(createdAt desc){
+    _id,
+    title,
+    "slug": slug.current,
+    description,
+    createdAt,
+    expiresAt,
+    "responseCount": count(responses)
+  }`
+  return client.fetch(pollsQuery, { clubId })
+}
+
 // Helper function to extract plain text from portable text blocks
 function getPlainTextFromBlocks(blocks) {
   if (!blocks || !Array.isArray(blocks)) return ''
@@ -151,6 +169,8 @@ export default async function ClubPage({ params: paramsPromise }) {
   const stats = await getClubStats(club._id)
   const members = await getClubMembers(club._id)
   const announcements = await getClubAnnouncements(club._id)
+  const resourcesCount = await getClubResourcesCount(club._id)
+  const polls = await getClubPolls(club._id)
 
   const eboardMembers = members?.filter(m => m.affiliation?.isEboard) || []
   const generalMembers = members?.filter(m => !m.affiliation?.isEboard) || []
@@ -236,6 +256,12 @@ export default async function ClubPage({ params: paramsPromise }) {
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
                   LinkedIn
                 </a>
+              )}
+              {resourcesCount > 0 && (
+                <Link href={`/clubs/${params.slug}/resources`} className={styles.linkBtn}>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                  Resources
+                </Link>
               )}
             </div>
           </header>
@@ -520,6 +546,48 @@ export default async function ClubPage({ params: paramsPromise }) {
                   <p className={styles.emptyState}>No events yet.</p>
                 )}
               </section>
+
+              {/* Availability Polls */}
+              {polls?.length > 0 && (
+                <section className={styles.section}>
+                  <h2 className={styles.sectionTitle}>// Availability Polls</h2>
+                  <div className={styles.pollsList}>
+                    {polls.map((poll) => {
+                      const isExpired = poll.expiresAt && new Date(poll.expiresAt) < new Date()
+                      return (
+                        <Link
+                          key={poll._id}
+                          href={`/schedule/${poll.slug}`}
+                          className={`${styles.pollItem} ${isExpired ? styles.expiredPoll : ''}`}
+                        >
+                          <div className={styles.pollInfo}>
+                            <div className={styles.pollTitle}>{poll.title}</div>
+                            {poll.description && (
+                              <div className={styles.pollDescription}>
+                                {poll.description.length > 100
+                                  ? poll.description.substring(0, 100) + '...'
+                                  : poll.description}
+                              </div>
+                            )}
+                            <div className={styles.pollMeta}>
+                              {poll.createdAt && new Date(poll.createdAt).toLocaleDateString('en-US', {
+                                month: 'short',
+                                day: 'numeric',
+                                year: 'numeric'
+                              })}
+                              {isExpired && <span className={styles.expiredTag}>Expired</span>}
+                            </div>
+                          </div>
+                          <div className={styles.pollResponses}>
+                            <span className={styles.pollResponseCount}>{poll.responseCount || 0}</span>
+                            <span className={styles.pollResponseLabel}>response{poll.responseCount !== 1 ? 's' : ''}</span>
+                          </div>
+                        </Link>
+                      )
+                    })}
+                  </div>
+                </section>
+              )}
 
               {/* Photo Gallery */}
               {club.gallery?.length > 0 && (
