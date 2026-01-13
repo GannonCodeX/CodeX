@@ -111,5 +111,87 @@ export const structure = (S) =>
       S.listItem()
         .title('Galleries')
         .child(S.documentList().title('Galleries').filter('_type == "gallery"')),
+      S.divider(),
+      S.listItem()
+        .title('Club Officers')
+        .icon(() => '👤')
+        .child(
+          S.documentList()
+            .title('Club Officers')
+            .filter('_type == "clubOfficer"')
+            .defaultOrdering([{ field: 'name', direction: 'asc' }])
+        ),
+      S.listItem()
+        .title('Announcements')
+        .icon(() => '📢')
+        .child(
+          S.documentList()
+            .title('Announcements')
+            .filter('_type == "announcement"')
+            .defaultOrdering([{ field: '_createdAt', direction: 'desc' }])
+        ),
+      S.listItem()
+        .title('Availability Polls')
+        .icon(() => '📅')
+        .child(
+          S.list()
+            .title('Availability Polls')
+            .items([
+              S.listItem()
+                .title('Public Polls')
+                .icon(() => '🌐')
+                .child(
+                  S.documentList()
+                    .title('Public Polls')
+                    .filter('_type == "availabilityPoll" && visibility == "public"')
+                    .defaultOrdering([{ field: 'createdAt', direction: 'desc' }])
+                ),
+              S.listItem()
+                .title('Unlisted Polls')
+                .icon(() => '🔒')
+                .child(
+                  S.documentList()
+                    .title('Unlisted Polls')
+                    .filter('_type == "availabilityPoll" && visibility == "unlisted"')
+                    .defaultOrdering([{ field: 'createdAt', direction: 'desc' }])
+                ),
+              S.listItem()
+                .title('All Polls')
+                .icon(() => '📋')
+                .child(
+                  S.documentList()
+                    .title('All Polls')
+                    .filter('_type == "availabilityPoll"')
+                    .defaultOrdering([{ field: 'createdAt', direction: 'desc' }])
+                ),
+            ])
+        ),
+      S.divider(),
+      S.listItem()
+        .title('Resources')
+        .icon(() => '📚')
+        .child(
+          S.list()
+            .title('Club Resources')
+            .items([
+              S.listItem()
+                .title('Resource Categories')
+                .icon(() => '📁')
+                .child(
+                  S.documentList()
+                    .title('Resource Categories')
+                    .filter('_type == "resourceCategory"')
+                ),
+              S.listItem()
+                .title('All Resources')
+                .icon(() => '📄')
+                .child(
+                  S.documentList()
+                    .title('Club Resources')
+                    .filter('_type == "clubResource"')
+                    .defaultOrdering([{ field: '_createdAt', direction: 'desc' }])
+                ),
+            ])
+        ),
     ])
 
