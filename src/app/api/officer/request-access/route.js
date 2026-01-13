@@ -23,15 +23,19 @@ export async function POST(request) {
     }
 
     // Check if email exists in clubOfficer with isActive=true
+    // Role comes from member.affiliations[] not from clubOfficer
     const officer = await client.fetch(
       `*[_type == "clubOfficer" && email == $email && isActive == true][0]{
         _id,
         email,
-        role,
         club->{
           _id,
           title,
           "slug": slug.current
+        },
+        member->{
+          name,
+          "role": affiliations[club._ref == ^.^.club._ref][0].clubRole
         }
       }`,
       { email: email.toLowerCase() }
@@ -65,12 +69,13 @@ export async function POST(request) {
     const magicLink = `${baseUrl}/officer/${officer.club.slug}?token=${token}`
 
     // Log the magic link (email sending out of scope)
+    const role = officer.member?.role || 'Officer'
     console.log('=================================================')
     console.log('OFFICER ACCESS MAGIC LINK')
     console.log('=================================================')
-    console.log(`Officer: ${officer.email}`)
+    console.log(`Officer: ${officer.member?.name || officer.email}`)
     console.log(`Club: ${officer.club.title}`)
-    console.log(`Role: ${officer.role || 'officer'}`)
+    console.log(`Role: ${role}`)
     console.log(`Link: ${magicLink}`)
     console.log(`Expires: ${tokenExpiry}`)
     console.log('=================================================')

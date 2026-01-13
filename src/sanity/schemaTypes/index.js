@@ -10,6 +10,27 @@ import availabilityPoll from './availabilityPoll'
 import resourceCategory from './resourceCategory'
 import clubResource from './clubResource'
 import clubOfficer from './clubOfficer'
+import siteSettings from './siteSettings'
 
-export const schemaTypes = [club, event, member, project, projectApplication, gallery, galleryImage, announcement, availabilityPoll, resourceCategory, clubResource, clubOfficer]
+export const schemaTypes = [
+  // Singleton
+  siteSettings,
+  // Core
+  club,
+  member,
+  clubOfficer,
+  // Content
+  event,
+  announcement,
+  project,
+  projectApplication,
+  // Media
+  gallery,
+  galleryImage,
+  // Resources
+  resourceCategory,
+  clubResource,
+  // Scheduling
+  availabilityPoll,
+]
 

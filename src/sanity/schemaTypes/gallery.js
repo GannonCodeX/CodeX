@@ -12,6 +12,13 @@ export default {
       validation: (Rule) => Rule.required(),
     },
     {
+      name: 'club',
+      title: 'Club',
+      type: 'reference',
+      to: [{ type: 'club' }],
+      description: 'Optional. Leave empty for shared/cross-club galleries.',
+    },
+    {
       name: 'images',
       title: 'Images',
       type: 'array',
@@ -46,7 +53,15 @@ export default {
   preview: {
     select: {
       title: 'title',
-      media: 'images.0.image.asset'
-    }
-  }
+      club: 'club.title',
+      media: 'images.0.image.asset',
+    },
+    prepare({ title, club, media }) {
+      return {
+        title,
+        subtitle: club || 'Shared Gallery',
+        media,
+      }
+    },
+  },
 }

@@ -14,16 +14,17 @@ export async function POST(request) {
     }
 
     // Find officer with this token
+    // Role comes from member.affiliations[] not from clubOfficer
     const officer = await client.fetch(
       `*[_type == "clubOfficer" && accessToken == $token && isActive == true][0]{
         _id,
         email,
-        role,
         tokenExpiry,
         member->{
           _id,
           name,
-          avatar
+          avatar,
+          affiliations
         },
         club->{
           _id,
@@ -51,13 +52,19 @@ export async function POST(request) {
       )
     }
 
+    // Get role from member.affiliations for this club
+    const clubAffiliation = officer.member?.affiliations?.find(
+      (a) => a.club?._ref === officer.club._id
+    )
+    const role = clubAffiliation?.clubRole || 'Officer'
+
     // Generate a new session token (valid for 8 hours)
     const sessionToken = await generateSecureToken({
       officerId: officer._id,
       email: officer.email,
       clubId: officer.club._id,
       clubSlug: officer.club.slug,
-      role: officer.role || 'officer',
+      role: role,
       action: 'officer-dashboard'
     }, 8)
 
@@ -72,7 +79,7 @@ export async function POST(request) {
       sessionToken,
       officer: {
         email: officer.email,
-        role: officer.role || 'officer',
+        role: role,
         member: officer.member ? {
           name: officer.member.name,
           avatar: officer.member.avatar

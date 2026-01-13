@@ -1,96 +1,159 @@
-// https://www.sanity.io/docs/structure-builder-cheat-sheet
-export const structure = (S) =>
+// src/sanity/structure.js
+// Club-centric content structure
+
+export const structure = (S, context) =>
   S.list()
     .title('Content')
     .items([
+      // Site Settings (Singleton)
+      S.listItem()
+        .title('Site Settings')
+        .child(
+          S.document()
+            .schemaType('siteSettings')
+            .documentId('siteSettings')
+            .title('Site Settings')
+        ),
+
+      S.divider(),
+
+      // Clubs - Main navigation hub
       S.listItem()
         .title('Clubs')
         .child(
-          S.documentList()
-            .title('Clubs')
-            .filter('_type == "club"')
+          S.documentTypeList('club')
+            .title('All Clubs')
+            .child((clubId) =>
+              S.list()
+                .title('Club Content')
+                .items([
+                  // Club document itself
+                  S.listItem()
+                    .title('Club Details')
+                    .child(
+                      S.document()
+                        .schemaType('club')
+                        .documentId(clubId)
+                    ),
+
+                  S.divider(),
+
+                  // Events for this club
+                  S.listItem()
+                    .title('Events')
+                    .child(
+                      S.documentList()
+                        .title('Events')
+                        .filter('_type == "event" && leadClub._ref == $clubId')
+                        .params({ clubId })
+                        .defaultOrdering([{ field: 'date', direction: 'desc' }])
+                    ),
+
+                  // Members affiliated with this club
+                  S.listItem()
+                    .title('Members')
+                    .child(
+                      S.documentList()
+                        .title('Members')
+                        .filter('_type == "member" && $clubId in affiliations[].club._ref')
+                        .params({ clubId })
+                        .defaultOrdering([{ field: 'name', direction: 'asc' }])
+                    ),
+
+                  // Officers for this club
+                  S.listItem()
+                    .title('Officers')
+                    .child(
+                      S.documentList()
+                        .title('Officers')
+                        .filter('_type == "clubOfficer" && club._ref == $clubId')
+                        .params({ clubId })
+                    ),
+
+                  // Announcements for this club
+                  S.listItem()
+                    .title('Announcements')
+                    .child(
+                      S.documentList()
+                        .title('Announcements')
+                        .filter('_type == "announcement" && club._ref == $clubId')
+                        .params({ clubId })
+                        .defaultOrdering([{ field: '_createdAt', direction: 'desc' }])
+                    ),
+
+                  // Resources for this club
+                  S.listItem()
+                    .title('Resources')
+                    .child(
+                      S.documentList()
+                        .title('Resources')
+                        .filter('_type == "clubResource" && club._ref == $clubId')
+                        .params({ clubId })
+                        .defaultOrdering([{ field: '_createdAt', direction: 'desc' }])
+                    ),
+
+                  // Galleries for this club
+                  S.listItem()
+                    .title('Galleries')
+                    .child(
+                      S.documentList()
+                        .title('Galleries')
+                        .filter('_type == "gallery" && club._ref == $clubId')
+                        .params({ clubId })
+                    ),
+
+                  // Polls for this club
+                  S.listItem()
+                    .title('Polls')
+                    .child(
+                      S.documentList()
+                        .title('Polls')
+                        .filter('_type == "availabilityPoll" && club._ref == $clubId')
+                        .params({ clubId })
+                        .defaultOrdering([{ field: 'createdAt', direction: 'desc' }])
+                    ),
+
+                  // Projects led by this club
+                  S.listItem()
+                    .title('Projects')
+                    .child(
+                      S.documentList()
+                        .title('Projects')
+                        .filter('_type == "project" && leadClub._ref == $clubId')
+                        .params({ clubId })
+                        .defaultOrdering([{ field: 'createdAt', direction: 'desc' }])
+                    ),
+                ])
+            )
         ),
+
       S.divider(),
-      S.listItem()
-        .title('Project Applications')
-        .icon(() => '📋')
-        .child(
-          S.list()
-            .title('Application Management')
-            .items([
-              S.listItem()
-                .title('Pending Applications')
-                .icon(() => '⏳')
-                .child(
-                  S.documentList()
-                    .title('Pending Applications')
-                    .filter('_type == "projectApplication" && status == "pending"')
-                    .defaultOrdering([{ field: 'applicationDate', direction: 'desc' }])
-                ),
-              S.listItem()
-                .title('Under Review')
-                .icon(() => '👀')
-                .child(
-                  S.documentList()
-                    .title('Applications Under Review')
-                    .filter('_type == "projectApplication" && status == "reviewing"')
-                    .defaultOrdering([{ field: 'applicationDate', direction: 'desc' }])
-                ),
-              S.listItem()
-                .title('Accepted Applications')
-                .icon(() => '✅')
-                .child(
-                  S.documentList()
-                    .title('Accepted Applications')
-                    .filter('_type == "projectApplication" && status == "accepted"')
-                    .defaultOrdering([{ field: 'reviewDate', direction: 'desc' }])
-                ),
-              S.listItem()
-                .title('All Applications')
-                .icon(() => '📋')
-                .child(
-                  S.documentList()
-                    .title('All Applications')
-                    .filter('_type == "projectApplication"')
-                    .defaultOrdering([{ field: 'applicationDate', direction: 'desc' }])
-                ),
-            ])
-        ),
-      S.divider(),
-      S.listItem()
-        .title('Members')
-        .child(S.documentList().title('Members').filter('_type == "member"')),
-      S.listItem()
-        .title('Events')
-        .child(S.documentList().title('Events').filter('_type == "event"')),
+
+      // Projects section
       S.listItem()
         .title('Projects')
-        .icon(() => '🚀')
         .child(
           S.list()
-            .title('Project Management')
+            .title('Projects')
             .items([
               S.listItem()
-                .title('Active Projects')
-                .icon(() => '⚡')
+                .title('Proposals')
                 .child(
                   S.documentList()
-                    .title('Active Projects')
-                    .filter('_type == "project" && status in ["active-seeking", "active-progress"]')
-                    .defaultOrdering([{ field: 'status', direction: 'asc' }, { field: 'createdAt', direction: 'desc' }])
-                ),
-              S.listItem()
-                .title('Proposed Projects')
-                .icon(() => '📝')
-                .child(
-                  S.documentList()
-                    .title('Proposed Projects')
+                    .title('Proposals')
                     .filter('_type == "project" && status == "proposed"')
                     .defaultOrdering([{ field: 'createdAt', direction: 'desc' }])
                 ),
               S.listItem()
-                .title('Completed Projects')
-                .icon(() => '✅')
+                .title('Active')
+                .child(
+                  S.documentList()
+                    .title('Active Projects')
+                    .filter('_type == "project" && status in ["active-seeking", "active-progress"]')
+                    .defaultOrdering([{ field: 'createdAt', direction: 'desc' }])
+                ),
+              S.listItem()
+                .title('Completed')
                 .child(
                   S.documentList()
                     .title('Completed Projects')
@@ -99,7 +162,6 @@ export const structure = (S) =>
                 ),
               S.listItem()
                 .title('All Projects')
-                .icon(() => '📋')
                 .child(
                   S.documentList()
                     .title('All Projects')
@@ -108,38 +170,60 @@ export const structure = (S) =>
                 ),
             ])
         ),
+
+      // Applications section
       S.listItem()
-        .title('Galleries')
-        .child(S.documentList().title('Galleries').filter('_type == "gallery"')),
+        .title('Applications')
+        .child(
+          S.list()
+            .title('Applications')
+            .items([
+              S.listItem()
+                .title('Pending')
+                .child(
+                  S.documentList()
+                    .title('Pending Applications')
+                    .filter('_type == "projectApplication" && status == "pending"')
+                    .defaultOrdering([{ field: 'applicationDate', direction: 'desc' }])
+                ),
+              S.listItem()
+                .title('Under Review')
+                .child(
+                  S.documentList()
+                    .title('Under Review')
+                    .filter('_type == "projectApplication" && status == "reviewing"')
+                    .defaultOrdering([{ field: 'applicationDate', direction: 'desc' }])
+                ),
+              S.listItem()
+                .title('Accepted')
+                .child(
+                  S.documentList()
+                    .title('Accepted')
+                    .filter('_type == "projectApplication" && status == "accepted"')
+                    .defaultOrdering([{ field: 'reviewDate', direction: 'desc' }])
+                ),
+              S.listItem()
+                .title('All Applications')
+                .child(
+                  S.documentList()
+                    .title('All Applications')
+                    .filter('_type == "projectApplication"')
+                    .defaultOrdering([{ field: 'applicationDate', direction: 'desc' }])
+                ),
+            ])
+        ),
+
       S.divider(),
+
+      // Scheduling (all polls)
       S.listItem()
-        .title('Club Officers')
-        .icon(() => '👤')
-        .child(
-          S.documentList()
-            .title('Club Officers')
-            .filter('_type == "clubOfficer"')
-            .defaultOrdering([{ field: 'name', direction: 'asc' }])
-        ),
-      S.listItem()
-        .title('Announcements')
-        .icon(() => '📢')
-        .child(
-          S.documentList()
-            .title('Announcements')
-            .filter('_type == "announcement"')
-            .defaultOrdering([{ field: '_createdAt', direction: 'desc' }])
-        ),
-      S.listItem()
-        .title('Availability Polls')
-        .icon(() => '📅')
+        .title('Scheduling')
         .child(
           S.list()
             .title('Availability Polls')
             .items([
               S.listItem()
                 .title('Public Polls')
-                .icon(() => '🌐')
                 .child(
                   S.documentList()
                     .title('Public Polls')
@@ -148,7 +232,6 @@ export const structure = (S) =>
                 ),
               S.listItem()
                 .title('Unlisted Polls')
-                .icon(() => '🔒')
                 .child(
                   S.documentList()
                     .title('Unlisted Polls')
@@ -157,7 +240,6 @@ export const structure = (S) =>
                 ),
               S.listItem()
                 .title('All Polls')
-                .icon(() => '📋')
                 .child(
                   S.documentList()
                     .title('All Polls')
@@ -166,17 +248,56 @@ export const structure = (S) =>
                 ),
             ])
         ),
+
       S.divider(),
+
+      // Global content (not club-specific)
       S.listItem()
-        .title('Resources')
-        .icon(() => '📚')
+        .title('Global')
         .child(
           S.list()
-            .title('Club Resources')
+            .title('Global Content')
             .items([
               S.listItem()
+                .title('All Members')
+                .child(
+                  S.documentList()
+                    .title('All Members')
+                    .filter('_type == "member"')
+                    .defaultOrdering([{ field: 'name', direction: 'asc' }])
+                ),
+              S.listItem()
+                .title('All Officers')
+                .child(
+                  S.documentList()
+                    .title('All Officers')
+                    .filter('_type == "clubOfficer"')
+                ),
+              S.listItem()
+                .title('All Events')
+                .child(
+                  S.documentList()
+                    .title('All Events')
+                    .filter('_type == "event"')
+                    .defaultOrdering([{ field: 'date', direction: 'desc' }])
+                ),
+              S.listItem()
+                .title('All Announcements')
+                .child(
+                  S.documentList()
+                    .title('All Announcements')
+                    .filter('_type == "announcement"')
+                    .defaultOrdering([{ field: '_createdAt', direction: 'desc' }])
+                ),
+              S.listItem()
+                .title('All Galleries')
+                .child(
+                  S.documentList()
+                    .title('All Galleries')
+                    .filter('_type == "gallery"')
+                ),
+              S.listItem()
                 .title('Resource Categories')
-                .icon(() => '📁')
                 .child(
                   S.documentList()
                     .title('Resource Categories')
@@ -184,14 +305,12 @@ export const structure = (S) =>
                 ),
               S.listItem()
                 .title('All Resources')
-                .icon(() => '📄')
                 .child(
                   S.documentList()
-                    .title('Club Resources')
+                    .title('All Resources')
                     .filter('_type == "clubResource"')
                     .defaultOrdering([{ field: '_createdAt', direction: 'desc' }])
                 ),
             ])
         ),
     ])
-
