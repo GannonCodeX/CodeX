@@ -86,10 +86,9 @@
 }
 
 .imageWrapper {
-  margin: 0 auto;
+  margin: 0 auto 2rem;
   max-width: 1200px;
   border: 2px solid var(--border-color);
-  margin-bottom: 4rem;
   overflow: hidden;
   border-radius: 8px;
   aspect-ratio: 16/9;

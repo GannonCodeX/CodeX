@@ -121,6 +121,19 @@ export default async function ClubPage({ params: paramsPromise }) {
           <header className={styles.header}>
             <Link href="/clubs" className={styles.backLink}>&larr; All Clubs</Link>
 
+            {club.bannerImage && (
+              <div className={styles.imageWrapper}>
+                <Image
+                  src={urlFor(club.bannerImage).width(1200).height(675).url()}
+                  alt={`${club.title} banner`}
+                  width={1200}
+                  height={675}
+                  className={styles.bannerImage}
+                  priority
+                />
+              </div>
+            )}
+
             <div className={styles.clubHeader}>
               {club.logo && (
                 <div className={styles.logoWrap}>
@@ -177,19 +190,6 @@ export default async function ClubPage({ params: paramsPromise }) {
                 </a>
               )}
             </div>
-
-            {club.bannerImage && (
-              <div className={styles.imageWrapper}>
-                <Image
-                  src={urlFor(club.bannerImage).width(1200).height(675).url()}
-                  alt={`${club.title} banner`}
-                  width={1200}
-                  height={675}
-                  className={styles.bannerImage}
-                  priority
-                />
-              </div>
-            )}
           </header>
 
           <div className={styles.contentGrid}>
