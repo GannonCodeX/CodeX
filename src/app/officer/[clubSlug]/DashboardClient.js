@@ -118,14 +118,13 @@ export default function DashboardClient({ club, session, sessionError, dashboard
   }
 
   const getRoleBadge = (role) => {
-    const roleLabels = {
-      president: 'President',
-      vice_president: 'Vice President',
-      treasurer: 'Treasurer',
-      secretary: 'Secretary',
-      officer: 'Officer'
-    }
-    return roleLabels[role] || 'Officer'
+    // Role now comes from member.affiliations[].clubRole as a string
+    // Could be "President", "Vice President", "president", etc.
+    if (!role) return 'Officer'
+    // Capitalize first letter of each word if lowercase
+    return role.split('_').map(word =>
+      word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+    ).join(' ')
   }
 
   // Login Form View

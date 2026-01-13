@@ -48,6 +48,16 @@
   font-weight: 500;
 }
 
+.clubTag {
+  display: inline-block;
+  margin-top: 0.5rem;
+  padding: 0.2rem 0.5rem;
+  background: var(--accent);
+  color: var(--bg);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
 .loadMoreContainer {
   display: flex;
   justify-content: center;
@@ -118,12 +128,28 @@
   border: 2px solid var(--border-color);
 }
 
+.lightboxInfo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
 .lightboxCaption {
   color: white;
   text-align: center;
-  margin-top: 1rem;
   font-size: 1rem;
-  margin-bottom: 0;
+  margin: 0;
+}
+
+.lightboxClub {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  background: var(--accent);
+  color: var(--bg);
+  font-size: 0.8rem;
+  font-weight: 600;
 }
 
 .closeButton {
