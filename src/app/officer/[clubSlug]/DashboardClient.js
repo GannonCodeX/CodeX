@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import styles from './dashboard.module.css'
 
-export default function DashboardClient({ club, session, sessionError, dashboardData }) {
+export default function DashboardClient({ club, session, sessionError, dashboardData, categories }) {
   const router = useRouter()
   const [view, setView] = useState('overview')
   const [isAuthenticated, setIsAuthenticated] = useState(!!session)
@@ -19,17 +19,42 @@ export default function DashboardClient({ club, session, sessionError, dashboard
   const [loginError, setLoginError] = useState(sessionError || '')
   const [loginSuccess, setLoginSuccess] = useState('')
 
-  // Quick action form states
-  const [showAnnouncementForm, setShowAnnouncementForm] = useState(false)
-  const [announcementData, setAnnouncementData] = useState({ title: '', content: '', type: 'news' })
+  // Modal states
+  const [activeModal, setActiveModal] = useState(null) // 'announcement' | 'poll' | 'resource' | null
   const [actionLoading, setActionLoading] = useState(false)
   const [actionMessage, setActionMessage] = useState({ type: '', text: '' })
+
+  // Announcement form
+  const [announcementData, setAnnouncementData] = useState({
+    title: '',
+    content: '',
+    type: 'news',
+    pinned: false
+  })
+
+  // Poll form
+  const [pollData, setPollData] = useState({
+    title: '',
+    description: '',
+    dates: [],
+    timeSlots: ['09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00'],
+    visibility: 'unlisted'
+  })
+  const [newDate, setNewDate] = useState('')
+
+  // Resource form
+  const [resourceData, setResourceData] = useState({
+    title: '',
+    description: '',
+    resourceType: 'link',
+    url: '',
+    categoryId: ''
+  })
 
   // Store session token in cookie when coming from magic link
   useEffect(() => {
     if (session?.fromMagicLink && session?.sessionToken) {
       document.cookie = `officer_session=${session.sessionToken}; path=/; max-age=${8 * 60 * 60}; samesite=strict`
-      // Clean up URL
       router.replace(`/officer/${club.slug}`, { scroll: false })
     }
   }, [session, club.slug, router])
@@ -67,6 +92,136 @@ export default function DashboardClient({ club, session, sessionError, dashboard
     setIsAuthenticated(false)
     setOfficerData(null)
     router.refresh()
+  }
+
+  const closeModal = () => {
+    setActiveModal(null)
+    setActionMessage({ type: '', text: '' })
+    setAnnouncementData({ title: '', content: '', type: 'news', pinned: false })
+    setPollData({
+      title: '',
+      description: '',
+      dates: [],
+      timeSlots: ['09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00'],
+      visibility: 'unlisted'
+    })
+    setResourceData({ title: '', description: '', resourceType: 'link', url: '', categoryId: '' })
+  }
+
+  // Create Announcement
+  const handleCreateAnnouncement = async (e) => {
+    e.preventDefault()
+    setActionLoading(true)
+    setActionMessage({ type: '', text: '' })
+
+    try {
+      const response = await fetch('/api/officer/create-announcement', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(announcementData)
+      })
+
+      const data = await response.json()
+
+      if (response.ok) {
+        setActionMessage({ type: 'success', text: 'Announcement created successfully!' })
+        setTimeout(() => {
+          closeModal()
+          router.refresh()
+        }, 1500)
+      } else {
+        setActionMessage({ type: 'error', text: data.error || 'Failed to create announcement' })
+      }
+    } catch (error) {
+      setActionMessage({ type: 'error', text: 'Network error. Please try again.' })
+    } finally {
+      setActionLoading(false)
+    }
+  }
+
+  // Create Poll
+  const handleCreatePoll = async (e) => {
+    e.preventDefault()
+    setActionLoading(true)
+    setActionMessage({ type: '', text: '' })
+
+    if (pollData.dates.length === 0) {
+      setActionMessage({ type: 'error', text: 'Please add at least one date' })
+      setActionLoading(false)
+      return
+    }
+
+    try {
+      const response = await fetch('/api/officer/create-poll', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(pollData)
+      })
+
+      const data = await response.json()
+
+      if (response.ok) {
+        setActionMessage({ type: 'success', text: 'Poll created successfully!' })
+        // Store delete token
+        if (data.poll?.deleteToken) {
+          const storedTokens = JSON.parse(localStorage.getItem('pollDeleteTokens') || '{}')
+          storedTokens[data.poll.id] = data.poll.deleteToken
+          localStorage.setItem('pollDeleteTokens', JSON.stringify(storedTokens))
+        }
+        setTimeout(() => {
+          closeModal()
+          router.push(`/schedule/${data.poll.slug}`)
+        }, 1500)
+      } else {
+        setActionMessage({ type: 'error', text: data.error || 'Failed to create poll' })
+      }
+    } catch (error) {
+      setActionMessage({ type: 'error', text: 'Network error. Please try again.' })
+    } finally {
+      setActionLoading(false)
+    }
+  }
+
+  // Create Resource
+  const handleCreateResource = async (e) => {
+    e.preventDefault()
+    setActionLoading(true)
+    setActionMessage({ type: '', text: '' })
+
+    try {
+      const response = await fetch('/api/officer/create-resource', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(resourceData)
+      })
+
+      const data = await response.json()
+
+      if (response.ok) {
+        setActionMessage({ type: 'success', text: 'Resource created successfully!' })
+        setTimeout(() => {
+          closeModal()
+          router.refresh()
+        }, 1500)
+      } else {
+        setActionMessage({ type: 'error', text: data.error || 'Failed to create resource' })
+      }
+    } catch (error) {
+      setActionMessage({ type: 'error', text: 'Network error. Please try again.' })
+    } finally {
+      setActionLoading(false)
+    }
+  }
+
+  const addDate = () => {
+    if (newDate && !pollData.dates.includes(newDate)) {
+      setPollData({ ...pollData, dates: [...pollData.dates, newDate].sort() })
+      setNewDate('')
+    }
+  }
+
+  const removeDate = (dateToRemove) => {
+    setPollData({ ...pollData, dates: pollData.dates.filter(d => d !== dateToRemove) })
   }
 
   const formatDate = (dateString) => {
@@ -118,10 +273,7 @@ export default function DashboardClient({ club, session, sessionError, dashboard
   }
 
   const getRoleBadge = (role) => {
-    // Role now comes from member.affiliations[].clubRole as a string
-    // Could be "President", "Vice President", "president", etc.
     if (!role) return 'Officer'
-    // Capitalize first letter of each word if lowercase
     return role.split('_').map(word =>
       word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
     ).join(' ')
@@ -238,7 +390,6 @@ export default function DashboardClient({ club, session, sessionError, dashboard
       {/* Overview View */}
       {view === 'overview' && (
         <div className={styles.overviewGrid}>
-          {/* Stats Cards */}
           <div className={styles.statsGrid}>
             <div className={styles.statCard}>
               <div className={styles.statIcon}>
@@ -299,7 +450,6 @@ export default function DashboardClient({ club, session, sessionError, dashboard
             </div>
           </div>
 
-          {/* Upcoming Events */}
           <div className={styles.sectionCard}>
             <h2 className={styles.sectionTitle}>// Upcoming Events</h2>
             {stats?.upcomingEvents?.length > 0 ? (
@@ -329,7 +479,6 @@ export default function DashboardClient({ club, session, sessionError, dashboard
             )}
           </div>
 
-          {/* Recent Announcements */}
           <div className={styles.sectionCard}>
             <h2 className={styles.sectionTitle}>// Recent Announcements</h2>
             {stats?.recentAnnouncements?.length > 0 ? (
@@ -358,7 +507,7 @@ export default function DashboardClient({ club, session, sessionError, dashboard
       {/* Quick Actions View */}
       {view === 'actions' && (
         <div className={styles.actionsGrid}>
-          <div className={styles.actionCard} onClick={() => setShowAnnouncementForm(true)}>
+          <div className={styles.actionCard} onClick={() => setActiveModal('announcement')}>
             <div className={styles.actionIcon}>
               <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
@@ -368,7 +517,7 @@ export default function DashboardClient({ club, session, sessionError, dashboard
             <p className={styles.actionDescription}>Post a new update for your club members</p>
           </div>
 
-          <Link href={`/schedule/new?club=${club.slug}`} className={styles.actionCard}>
+          <div className={styles.actionCard} onClick={() => setActiveModal('poll')}>
             <div className={styles.actionIcon}>
               <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <circle cx="12" cy="12" r="10" />
@@ -377,9 +526,9 @@ export default function DashboardClient({ club, session, sessionError, dashboard
             </div>
             <h3 className={styles.actionTitle}>Schedule Meeting</h3>
             <p className={styles.actionDescription}>Create an availability poll for members</p>
-          </Link>
+          </div>
 
-          <Link href="/admin" className={styles.actionCard}>
+          <div className={styles.actionCard} onClick={() => setActiveModal('resource')}>
             <div className={styles.actionIcon}>
               <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
@@ -389,8 +538,8 @@ export default function DashboardClient({ club, session, sessionError, dashboard
               </svg>
             </div>
             <h3 className={styles.actionTitle}>Add Resource</h3>
-            <p className={styles.actionDescription}>Upload files or links for members</p>
-          </Link>
+            <p className={styles.actionDescription}>Add links or documents for members</p>
+          </div>
 
           <Link href="/admin" className={styles.actionCard}>
             <div className={styles.actionIcon}>
@@ -404,7 +553,7 @@ export default function DashboardClient({ club, session, sessionError, dashboard
               </svg>
             </div>
             <h3 className={styles.actionTitle}>Create Event</h3>
-            <p className={styles.actionDescription}>Plan a new club event or meeting</p>
+            <p className={styles.actionDescription}>Full event editor in Sanity Studio</p>
           </Link>
         </div>
       )}
@@ -443,22 +592,17 @@ export default function DashboardClient({ club, session, sessionError, dashboard
       )}
 
       {/* Announcement Modal */}
-      {showAnnouncementForm && (
-        <div className={styles.modalOverlay} onClick={() => setShowAnnouncementForm(false)}>
+      {activeModal === 'announcement' && (
+        <div className={styles.modalOverlay} onClick={closeModal}>
           <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
             <div className={styles.modalHeader}>
               <h2 className={styles.modalTitle}>Create Announcement</h2>
-              <button
-                className={styles.modalClose}
-                onClick={() => setShowAnnouncementForm(false)}
-              >
-                &times;
-              </button>
+              <button className={styles.modalClose} onClick={closeModal}>&times;</button>
             </div>
 
-            <form className={styles.announcementForm}>
+            <form onSubmit={handleCreateAnnouncement} className={styles.modalForm}>
               <div className={styles.formGroup}>
-                <label htmlFor="announcement-title" className={styles.formLabel}>Title</label>
+                <label htmlFor="announcement-title" className={styles.formLabel}>Title *</label>
                 <input
                   type="text"
                   id="announcement-title"
@@ -485,7 +629,7 @@ export default function DashboardClient({ club, session, sessionError, dashboard
               </div>
 
               <div className={styles.formGroup}>
-                <label htmlFor="announcement-content" className={styles.formLabel}>Content</label>
+                <label htmlFor="announcement-content" className={styles.formLabel}>Content *</label>
                 <textarea
                   id="announcement-content"
                   value={announcementData.content}
@@ -493,7 +637,19 @@ export default function DashboardClient({ club, session, sessionError, dashboard
                   className={styles.formTextarea}
                   placeholder="Write your announcement..."
                   rows={5}
+                  required
                 />
+              </div>
+
+              <div className={styles.formGroupInline}>
+                <label className={styles.checkboxLabel}>
+                  <input
+                    type="checkbox"
+                    checked={announcementData.pinned}
+                    onChange={(e) => setAnnouncementData({ ...announcementData, pinned: e.target.checked })}
+                  />
+                  Pin this announcement
+                </label>
               </div>
 
               {actionMessage.text && (
@@ -503,28 +659,207 @@ export default function DashboardClient({ club, session, sessionError, dashboard
               )}
 
               <div className={styles.modalActions}>
-                <button
-                  type="button"
-                  className={styles.cancelButton}
-                  onClick={() => setShowAnnouncementForm(false)}
-                >
+                <button type="button" className={styles.cancelButton} onClick={closeModal}>
                   Cancel
                 </button>
-                <button
-                  type="button"
-                  className={styles.submitButton}
-                  onClick={() => {
-                    setActionMessage({ type: 'info', text: 'Announcements are created via Sanity Studio. Click the link below to open it.' })
-                  }}
-                >
-                  Open Sanity Studio
+                <button type="submit" className={styles.submitButton} disabled={actionLoading}>
+                  {actionLoading ? 'Creating...' : 'Create Announcement'}
                 </button>
               </div>
+            </form>
+          </div>
+        </div>
+      )}
 
-              <p className={styles.formNote}>
-                For full announcement creation with rich text, use{' '}
-                <a href="/admin" target="_blank" rel="noopener noreferrer">Sanity Studio</a>.
-              </p>
+      {/* Poll Modal */}
+      {activeModal === 'poll' && (
+        <div className={styles.modalOverlay} onClick={closeModal}>
+          <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
+            <div className={styles.modalHeader}>
+              <h2 className={styles.modalTitle}>Schedule Meeting</h2>
+              <button className={styles.modalClose} onClick={closeModal}>&times;</button>
+            </div>
+
+            <form onSubmit={handleCreatePoll} className={styles.modalForm}>
+              <div className={styles.formGroup}>
+                <label htmlFor="poll-title" className={styles.formLabel}>Title *</label>
+                <input
+                  type="text"
+                  id="poll-title"
+                  value={pollData.title}
+                  onChange={(e) => setPollData({ ...pollData, title: e.target.value })}
+                  className={styles.formInput}
+                  placeholder="e.g., Weekly Meeting Time"
+                  required
+                />
+              </div>
+
+              <div className={styles.formGroup}>
+                <label htmlFor="poll-description" className={styles.formLabel}>Description</label>
+                <textarea
+                  id="poll-description"
+                  value={pollData.description}
+                  onChange={(e) => setPollData({ ...pollData, description: e.target.value })}
+                  className={styles.formTextarea}
+                  placeholder="Optional description..."
+                  rows={2}
+                />
+              </div>
+
+              <div className={styles.formGroup}>
+                <label className={styles.formLabel}>Dates *</label>
+                <div className={styles.dateInputGroup}>
+                  <input
+                    type="date"
+                    value={newDate}
+                    onChange={(e) => setNewDate(e.target.value)}
+                    className={styles.formInput}
+                    min={new Date().toISOString().split('T')[0]}
+                  />
+                  <button type="button" onClick={addDate} className={styles.addButton}>
+                    Add Date
+                  </button>
+                </div>
+                {pollData.dates.length > 0 && (
+                  <div className={styles.dateChips}>
+                    {pollData.dates.map(date => (
+                      <span key={date} className={styles.dateChip}>
+                        {new Date(date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                        <button type="button" onClick={() => removeDate(date)} className={styles.removeChip}>
+                          &times;
+                        </button>
+                      </span>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              <div className={styles.formGroup}>
+                <label htmlFor="poll-visibility" className={styles.formLabel}>Visibility</label>
+                <select
+                  id="poll-visibility"
+                  value={pollData.visibility}
+                  onChange={(e) => setPollData({ ...pollData, visibility: e.target.value })}
+                  className={styles.formSelect}
+                >
+                  <option value="unlisted">Unlisted - Only accessible via link</option>
+                  <option value="public">Public - Listed on /schedule</option>
+                </select>
+              </div>
+
+              {actionMessage.text && (
+                <div className={actionMessage.type === 'error' ? styles.errorMessage : styles.successMessage}>
+                  {actionMessage.text}
+                </div>
+              )}
+
+              <div className={styles.modalActions}>
+                <button type="button" className={styles.cancelButton} onClick={closeModal}>
+                  Cancel
+                </button>
+                <button type="submit" className={styles.submitButton} disabled={actionLoading}>
+                  {actionLoading ? 'Creating...' : 'Create Poll'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Resource Modal */}
+      {activeModal === 'resource' && (
+        <div className={styles.modalOverlay} onClick={closeModal}>
+          <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
+            <div className={styles.modalHeader}>
+              <h2 className={styles.modalTitle}>Add Resource</h2>
+              <button className={styles.modalClose} onClick={closeModal}>&times;</button>
+            </div>
+
+            <form onSubmit={handleCreateResource} className={styles.modalForm}>
+              <div className={styles.formGroup}>
+                <label htmlFor="resource-title" className={styles.formLabel}>Title *</label>
+                <input
+                  type="text"
+                  id="resource-title"
+                  value={resourceData.title}
+                  onChange={(e) => setResourceData({ ...resourceData, title: e.target.value })}
+                  className={styles.formInput}
+                  placeholder="Resource title..."
+                  required
+                />
+              </div>
+
+              <div className={styles.formGroup}>
+                <label htmlFor="resource-description" className={styles.formLabel}>Description</label>
+                <textarea
+                  id="resource-description"
+                  value={resourceData.description}
+                  onChange={(e) => setResourceData({ ...resourceData, description: e.target.value })}
+                  className={styles.formTextarea}
+                  placeholder="What is this resource about?"
+                  rows={2}
+                />
+              </div>
+
+              <div className={styles.formGroup}>
+                <label htmlFor="resource-type" className={styles.formLabel}>Type</label>
+                <select
+                  id="resource-type"
+                  value={resourceData.resourceType}
+                  onChange={(e) => setResourceData({ ...resourceData, resourceType: e.target.value })}
+                  className={styles.formSelect}
+                >
+                  <option value="link">Link</option>
+                  <option value="document">Document</option>
+                  <option value="video">Video</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+
+              <div className={styles.formGroup}>
+                <label htmlFor="resource-url" className={styles.formLabel}>URL *</label>
+                <input
+                  type="url"
+                  id="resource-url"
+                  value={resourceData.url}
+                  onChange={(e) => setResourceData({ ...resourceData, url: e.target.value })}
+                  className={styles.formInput}
+                  placeholder="https://..."
+                  required
+                />
+              </div>
+
+              {categories && categories.length > 0 && (
+                <div className={styles.formGroup}>
+                  <label htmlFor="resource-category" className={styles.formLabel}>Category</label>
+                  <select
+                    id="resource-category"
+                    value={resourceData.categoryId}
+                    onChange={(e) => setResourceData({ ...resourceData, categoryId: e.target.value })}
+                    className={styles.formSelect}
+                  >
+                    <option value="">No category</option>
+                    {categories.map(cat => (
+                      <option key={cat._id} value={cat._id}>{cat.name}</option>
+                    ))}
+                  </select>
+                </div>
+              )}
+
+              {actionMessage.text && (
+                <div className={actionMessage.type === 'error' ? styles.errorMessage : styles.successMessage}>
+                  {actionMessage.text}
+                </div>
+              )}
+
+              <div className={styles.modalActions}>
+                <button type="button" className={styles.cancelButton} onClick={closeModal}>
+                  Cancel
+                </button>
+                <button type="submit" className={styles.submitButton} disabled={actionLoading}>
+                  {actionLoading ? 'Creating...' : 'Add Resource'}
+                </button>
+              </div>
             </form>
           </div>
         </div>

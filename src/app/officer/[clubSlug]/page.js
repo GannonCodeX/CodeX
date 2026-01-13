@@ -73,6 +73,15 @@ async function getClubStats(clubId) {
   }
 }
 
+async function getCategories() {
+  return client.fetch(
+    `*[_type == "resourceCategory"] | order(name asc){
+      _id,
+      name
+    }`
+  )
+}
+
 async function getRecentActivity(clubId) {
   // Get recent activity across different content types
   const [recentAnnouncements, recentEvents, recentPolls] = await Promise.all([
@@ -194,12 +203,15 @@ export default async function OfficerDashboardPage({ params: paramsPromise, sear
 
   // If we have a valid session, fetch dashboard data
   let dashboardData = null
+  let categories = []
   if (session) {
-    const [stats, activity] = await Promise.all([
+    const [stats, activity, cats] = await Promise.all([
       getClubStats(club._id),
-      getRecentActivity(club._id)
+      getRecentActivity(club._id),
+      getCategories()
     ])
     dashboardData = { stats, activity }
+    categories = cats
   }
 
   return (
@@ -211,6 +223,7 @@ export default async function OfficerDashboardPage({ params: paramsPromise, sear
           session={session}
           sessionError={sessionError}
           dashboardData={dashboardData}
+          categories={categories}
         />
       </main>
       <Footer />
