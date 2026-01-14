@@ -1,6 +1,10 @@
 // src/app/api/officer/request-access/route.js
 import { client } from '@/sanity/lib/client'
 import crypto from 'crypto'
+import { Resend } from 'resend'
+import { OfficerMagicLinkEmail } from '@/app/components/emails/OfficerMagicLinkEmail'
+
+const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null
 
 export async function POST(request) {
   try {
@@ -94,25 +98,50 @@ export async function POST(request) {
 
     const magicLink = `${baseUrl}/officer/${officer.club.slug}?token=${token}`
 
-    // Log the magic link (email sending out of scope)
     // Get role from member.affiliations for this club
     const clubAffiliation = officer.member?.affiliations?.find(
       (a) => a.club?._ref === officer.club._id
     )
     const role = clubAffiliation?.clubRole || 'Officer'
-    console.log('=================================================')
-    console.log('OFFICER ACCESS MAGIC LINK')
-    console.log('=================================================')
-    console.log(`Officer: ${officer.member?.name || officer.email}`)
-    console.log(`Club: ${officer.club.title}`)
-    console.log(`Role: ${role}`)
-    console.log(`Link: ${magicLink}`)
-    console.log(`Expires: ${tokenExpiry}`)
-    console.log('=================================================')
+    const officerName = officer.member?.name || 'Officer'
+
+    // Send magic link email
+    if (resend) {
+      try {
+        await resend.emails.send({
+          from: 'Gannon CodeX <noreply@codexgu.dev>',
+          to: [email],
+          subject: `Officer Dashboard Access - ${officer.club.title}`,
+          react: OfficerMagicLinkEmail({
+            officerName,
+            clubName: officer.club.title,
+            magicLink,
+            expiresIn: '24 hours'
+          })
+        })
+        console.log(`Magic link email sent to ${email}`)
+      } catch (emailError) {
+        console.error('Failed to send email:', emailError)
+        // Don't fail the request if email fails, just log it
+      }
+    } else {
+      // Log the magic link if email not configured
+      console.log('=================================================')
+      console.log('OFFICER ACCESS MAGIC LINK (Email not configured)')
+      console.log('=================================================')
+      console.log(`Officer: ${officerName}`)
+      console.log(`Club: ${officer.club.title}`)
+      console.log(`Role: ${role}`)
+      console.log(`Link: ${magicLink}`)
+      console.log(`Expires: ${tokenExpiry}`)
+      console.log('=================================================')
+    }
 
     return Response.json({
       success: true,
-      message: 'Access link sent! Check your email for the magic link.',
+      message: resend
+        ? 'Access link sent! Check your email for the magic link.'
+        : 'Access link generated! Check the server console for the link (email not configured).',
       clubSlug: officer.club.slug,
       expiresIn: '24 hours'
     })
