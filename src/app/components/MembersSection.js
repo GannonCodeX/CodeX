@@ -9,11 +9,12 @@ function urlFor(source) {
 }
 
 async function getMembers() {
-  const query = `*[_type == "member"]{ 
-    name, 
-    role, 
+  // Only fetch members who are on the executive board of at least one club
+  const query = `*[_type == "member" && count(affiliations[isEboard == true]) > 0]{
+    name,
+    role,
     avatar,
-    affiliations[]{
+    affiliations[isEboard == true]{
       "clubTitle": club->title,
       "clubShort": club->shortName,
       clubRole,
