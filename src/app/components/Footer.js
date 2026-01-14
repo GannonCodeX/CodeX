@@ -11,6 +11,7 @@ const Footer = () => {
         <a href="https://discord.gg/3qEnhQYtp3" target="_blank" rel="noopener noreferrer">Discord</a>
         <a href="/partner">Partner</a>
         <a href="/propose-a-project">Propose a Project</a>
+        <a href="/schedule">Schedule A Meet</a>
         <a href="mailto:gannoncodex@gmail.com">Contact</a>
       </div>
     </footer>

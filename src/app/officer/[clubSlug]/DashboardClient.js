@@ -24,6 +24,10 @@ export default function DashboardClient({ club, session, sessionError, dashboard
   const [actionLoading, setActionLoading] = useState(false)
   const [actionMessage, setActionMessage] = useState({ type: '', text: '' })
 
+  // Manage announcements state
+  const [announcements, setAnnouncements] = useState(dashboardData?.stats?.recentAnnouncements || [])
+  const [deletingId, setDeletingId] = useState(null)
+
   // Announcement form
   const [announcementData, setAnnouncementData] = useState({
     title: '',
@@ -226,6 +230,43 @@ export default function DashboardClient({ club, session, sessionError, dashboard
 
   const removeDate = (dateToRemove) => {
     setPollData({ ...pollData, dates: pollData.dates.filter(d => d !== dateToRemove) })
+  }
+
+  // Delete Announcement
+  const handleDeleteAnnouncement = async (announcementId) => {
+    if (!confirm('Are you sure you want to delete this announcement?')) {
+      return
+    }
+
+    setDeletingId(announcementId)
+
+    try {
+      const response = await fetch('/api/officer/delete-announcement', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ announcementId })
+      })
+
+      const data = await response.json()
+
+      if (response.ok) {
+        // Remove from local state immediately for UI responsiveness
+        setAnnouncements(prev => prev.filter(a => a._id !== announcementId))
+        // Also update stats if needed
+        if (stats) {
+          setStats(prev => ({
+            ...prev,
+            recentAnnouncements: prev.recentAnnouncements?.filter(a => a._id !== announcementId)
+          }))
+        }
+      } else {
+        alert(data.error || 'Failed to delete announcement')
+      }
+    } catch (error) {
+      alert('Network error. Please try again.')
+    } finally {
+      setDeletingId(null)
+    }
   }
 
   const formatDate = (dateString) => {
@@ -485,9 +526,9 @@ export default function DashboardClient({ club, session, sessionError, dashboard
 
           <div className={styles.sectionCard}>
             <h2 className={styles.sectionTitle}>// Recent Announcements</h2>
-            {stats?.recentAnnouncements?.length > 0 ? (
+            {announcements?.length > 0 ? (
               <ul className={styles.announcementsList}>
-                {stats.recentAnnouncements.map((announcement) => (
+                {announcements.map((announcement) => (
                   <li key={announcement._id} className={styles.announcementItem}>
                     <div className={styles.announcementContent}>
                       <span className={styles.announcementTitle}>
@@ -498,6 +539,14 @@ export default function DashboardClient({ club, session, sessionError, dashboard
                         {formatDate(announcement.publishedAt)} - {announcement.type}
                       </span>
                     </div>
+                    <button
+                      className={styles.deleteButton}
+                      onClick={() => handleDeleteAnnouncement(announcement._id)}
+                      disabled={deletingId === announcement._id}
+                      title="Delete announcement"
+                    >
+                      {deletingId === announcement._id ? '...' : 'x'}
+                    </button>
                   </li>
                 ))}
               </ul>
