@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { client } from '@/sanity/client'
+import { client } from '@/sanity/lib/client'
 import { cookies } from 'next/headers'
 
 export async function DELETE(request) {
