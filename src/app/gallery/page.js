@@ -19,9 +19,13 @@ export const metadata = createMetadata({
 });
 
 async function getGalleryImages() {
-  noStore(); // 🔒 disable caching for this fetch path
+  noStore(); // disable caching for this fetch path
 
   const query = `*[_type == "gallery"] | order(_createdAt desc) {
+    _id,
+    title,
+    "clubName": club->title,
+    "clubSlug": club->slug.current,
     "images": images[0...12]{
       _key,
       alt,
@@ -29,10 +33,24 @@ async function getGalleryImages() {
       "imageUrl": image.asset->url,
       "metadata": image.asset->metadata
     }
-  }.images`;
+  }`;
 
-  const result = await client.fetch(query);
-  return result ? result.flat() : [];
+  const galleries = await client.fetch(query);
+  if (!galleries) return [];
+
+  // Flatten images but preserve club info
+  const images = [];
+  for (const gallery of galleries) {
+    for (const image of gallery.images || []) {
+      images.push({
+        ...image,
+        galleryTitle: gallery.title,
+        clubName: gallery.clubName,
+        clubSlug: gallery.clubSlug
+      });
+    }
+  }
+  return images;
 }
 
 export default async function GalleryPage() {

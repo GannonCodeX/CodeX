@@ -3,7 +3,8 @@ import { client } from '@/sanity/lib/client'
 import { Resend } from 'resend'
 import { generateSecureToken } from '@/lib/secure-tokens'
 
-const resend = new Resend(process.env.RESEND_API_KEY)
+// Only initialize Resend if API key exists
+const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null
 
 export async function POST(request) {
   try {
@@ -66,6 +67,15 @@ export async function POST(request) {
       : process.env.NEXTAUTH_URL || 'http://localhost:3000'
     
     const accessUrl = `${baseUrl}/projects/${projectSlug}/applications?token=${token}`
+
+    // Check if Resend is configured
+    if (!resend) {
+      console.warn('Resend API key not configured. Cannot send access email.');
+      return Response.json(
+        { error: 'Email service not configured. Please try again later.' },
+        { status: 503 }
+      )
+    }
 
     // Send email with secure link
     const { data, error } = await resend.emails.send({

@@ -57,6 +57,12 @@ export default {
       type: 'string',
     },
     {
+      name: 'engage',
+      title: 'Engage Link',
+      type: 'url',
+      description: 'Link to the club\'s Gannon Engage page',
+    },
+    {
       name: 'social',
       title: 'Social Links',
       type: 'object',
@@ -65,6 +71,7 @@ export default {
         { name: 'discord', title: 'Discord', type: 'url' },
         { name: 'x', title: 'X/Twitter', type: 'url' },
         { name: 'instagram', title: 'Instagram', type: 'url' },
+        { name: 'linkedin', title: 'LinkedIn', type: 'url' },
       ],
     },
     {
@@ -81,6 +88,100 @@ export default {
       title: 'Featured',
       type: 'boolean',
       initialValue: false,
+    },
+    {
+      name: 'acceptingMembers',
+      title: 'Accepting New Members',
+      type: 'boolean',
+      initialValue: true,
+      description: 'Is the club currently accepting new members?',
+    },
+    {
+      name: 'joinInstructions',
+      title: 'Join Instructions',
+      type: 'text',
+      description: 'How can someone join this club? Describe the process.',
+    },
+    {
+      name: 'joinLink',
+      title: 'Join Link',
+      type: 'url',
+      description: 'External link to join form (e.g., Google Forms, Engage page)',
+    },
+    {
+      name: 'membershipRequirements',
+      title: 'Membership Requirements',
+      type: 'text',
+      description: 'Any requirements for membership (e.g., "Must be CS major", "Open to all students")',
+    },
+    {
+      name: 'meetingSchedule',
+      title: 'Meeting Schedule',
+      type: 'object',
+      fields: [
+        {
+          name: 'dayOfWeek',
+          title: 'Day of Week',
+          type: 'string',
+          options: {
+            list: [
+              { title: 'Monday', value: 'Monday' },
+              { title: 'Tuesday', value: 'Tuesday' },
+              { title: 'Wednesday', value: 'Wednesday' },
+              { title: 'Thursday', value: 'Thursday' },
+              { title: 'Friday', value: 'Friday' },
+              { title: 'Saturday', value: 'Saturday' },
+              { title: 'Sunday', value: 'Sunday' },
+            ],
+          },
+        },
+        {
+          name: 'time',
+          title: 'Time',
+          type: 'string',
+          description: 'e.g., "6:00 PM" or "3:30 PM"',
+        },
+        {
+          name: 'frequency',
+          title: 'Frequency',
+          type: 'string',
+          options: {
+            list: [
+              { title: 'Weekly', value: 'weekly' },
+              { title: 'Biweekly', value: 'biweekly' },
+              { title: 'Monthly', value: 'monthly' },
+            ],
+          },
+          initialValue: 'weekly',
+        },
+      ],
+    },
+    {
+      name: 'meetingLocation',
+      title: 'Meeting Location',
+      type: 'string',
+      description: 'e.g., "Zurn 262" or "Science Building Room 101"',
+    },
+    {
+      name: 'meetingNotes',
+      title: 'Meeting Notes',
+      type: 'text',
+      description: 'Additional info like "No meetings during finals week"',
+    },
+    {
+      name: 'gallery',
+      title: 'Photo Gallery',
+      type: 'array',
+      of: [
+        {
+          type: 'galleryImage',
+        },
+      ],
+      options: {
+        layout: 'grid',
+        sortable: true,
+      },
+      description: 'Club photo gallery images with captions',
     },
   ],
   preview: {

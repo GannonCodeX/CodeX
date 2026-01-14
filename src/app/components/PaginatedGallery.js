@@ -16,13 +16,17 @@ export default function PaginatedGallery({ initialImages = [] }) {
 
   const loadMoreImages = async () => {
     if (loading || !hasMore) return;
-    
+
     setLoading(true);
     try {
       const startIndex = currentPage * IMAGES_PER_PAGE;
-      const endIndex = startIndex + IMAGES_PER_PAGE - 1;
-      
+      const endIndex = startIndex + IMAGES_PER_PAGE;
+
       const query = `*[_type == "gallery"] | order(_createdAt desc) {
+        _id,
+        title,
+        "clubName": club->title,
+        "clubSlug": club->slug.current,
         "images": images[${startIndex}...${endIndex}]{
           _key,
           alt,
@@ -30,11 +34,21 @@ export default function PaginatedGallery({ initialImages = [] }) {
           "imageUrl": image.asset->url,
           "metadata": image.asset->metadata
         }
-      }.images`;
-      
-      const result = await client.fetch(query);
-      const newImages = result ? result.flat() : [];
-      
+      }`;
+
+      const galleries = await client.fetch(query);
+      const newImages = [];
+      for (const gallery of galleries || []) {
+        for (const image of gallery.images || []) {
+          newImages.push({
+            ...image,
+            galleryTitle: gallery.title,
+            clubName: gallery.clubName,
+            clubSlug: gallery.clubSlug
+          });
+        }
+      }
+
       if (newImages.length > 0) {
         setImages(prev => [...prev, ...newImages]);
         setCurrentPage(prev => prev + 1);
@@ -119,6 +133,9 @@ export default function PaginatedGallery({ initialImages = [] }) {
               {image.caption && (
                 <h3 className={styles.imageTitle}>{image.caption}</h3>
               )}
+              {image.clubName && (
+                <span className={styles.clubTag}>{image.clubName}</span>
+              )}
             </div>
           </div>
         ))}
@@ -161,8 +178,15 @@ export default function PaginatedGallery({ initialImages = [] }) {
                 height={selectedImage.metadata?.dimensions?.height || 800}
                 className={styles.lightboxImage}
               />
-              {selectedImage.caption && (
-                <p className={styles.lightboxCaption}>{selectedImage.caption}</p>
+              {(selectedImage.caption || selectedImage.clubName) && (
+                <div className={styles.lightboxInfo}>
+                  {selectedImage.caption && (
+                    <p className={styles.lightboxCaption}>{selectedImage.caption}</p>
+                  )}
+                  {selectedImage.clubName && (
+                    <span className={styles.lightboxClub}>{selectedImage.clubName}</span>
+                  )}
+                </div>
               )}
             </div>
             <button 
