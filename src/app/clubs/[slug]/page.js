@@ -132,7 +132,7 @@ async function getClubResourcesCount(clubId) {
 }
 
 async function getClubPolls(clubId) {
-  const pollsQuery = `*[_type == "availabilityPoll" && club._ref == $clubId] | order(createdAt desc){
+  const pollsQuery = `*[_type == "availabilityPoll" && club._ref == $clubId && visibility == "public"] | order(createdAt desc){
     _id,
     title,
     "slug": slug.current,
