@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { client } from '@/sanity/lib/client'
 import { generateMetadata as createMetadata } from '@/lib/metadata'
 import styles from './resources.module.css'
+import { getResourceHref, isPublicResource } from '@/lib/resources.mjs'
 
 export const dynamic = 'force-dynamic'
 export const revalidate = 0
@@ -41,7 +42,7 @@ async function getClub(slug) {
 }
 
 async function getClubResources(clubId) {
-  const query = `*[_type == "clubResource" && club._ref == $clubId] | order(featured desc, publishedAt desc){
+  const query = `*[_type == "clubResource" && club._ref == $clubId && (!defined(accessLevel) || accessLevel == "public")] | order(featured desc, publishedAt desc){
     _id,
     title,
     description,
@@ -60,7 +61,8 @@ async function getClubResources(clubId) {
       order
     }
   }`
-  return client.fetch(query, { clubId })
+  const resources = await client.fetch(query, { clubId })
+  return resources.filter(resource => isPublicResource(resource) && getResourceHref(resource))
 }
 
 async function getResourceCategories() {
@@ -258,14 +260,14 @@ export default async function ClubResourcesPage({ params: paramsPromise }) {
 }
 
 function ResourceCard({ resource, featured = false }) {
-  const href = resource.resourceType === 'link' ? resource.url : resource.fileUrl
-  const isExternal = resource.resourceType === 'link'
+  const href = getResourceHref(resource)
+  if (!href) return null
 
   return (
     <a
-      href={href || '#'}
-      target={href ? '_blank' : undefined}
-      rel={href ? 'noopener noreferrer' : undefined}
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
       className={`${styles.resourceCard} ${featured ? styles.featuredCard : ''}`}
     >
       <div className={styles.resourceHeader}>
@@ -314,7 +316,7 @@ function ResourceCard({ resource, featured = false }) {
           </span>
         )}
         <span className={styles.viewLink}>
-          {isExternal ? 'Open Link' : 'Download'}
+          Open Resource
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <line x1="5" y1="12" x2="19" y2="12" />
             <polyline points="12 5 19 12 12 19" />

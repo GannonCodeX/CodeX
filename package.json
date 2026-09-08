@@ -6,7 +6,8 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test:resources": "node --experimental-vm-modules --test src/lib/resources.test.mjs src/app/resources/library.test.mjs src/app/api/officer/create-resource/route.test.mjs"
   },
   "dependencies": {
     "@portabletext/react": "^3.2.1",

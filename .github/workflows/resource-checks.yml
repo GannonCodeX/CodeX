@@ -1,0 +1,21 @@
+name: Resource checks
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  resource-tests:
+    name: Resource tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      # These tests use Node's built-in runner and in-memory CMS/auth fixtures.
+      - run: npm run test:resources

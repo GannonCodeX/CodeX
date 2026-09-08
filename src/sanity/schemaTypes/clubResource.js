@@ -1,4 +1,5 @@
 // src/sanity/schemaTypes/clubResource.js
+import { RESOURCE_TYPES, RESOURCE_LEVELS, RESOURCE_SECTIONS } from '../../lib/resources.mjs'
 
 export default {
   name: 'clubResource',
@@ -29,25 +30,35 @@ export default {
       title: 'Resource Type',
       type: 'string',
       options: {
-        list: [
-          { title: 'Link', value: 'link' },
-          { title: 'Document', value: 'document' },
-          { title: 'Template', value: 'template' },
-          { title: 'Guide', value: 'guide' },
-        ],
+        list: RESOURCE_TYPES.map(({ value, label }) => ({ title: label, value })),
       },
+    },
+    {
+      name: 'librarySection',
+      title: 'Resource Library Collection',
+      type: 'string',
+      description: 'Include this public resource in /resources. Leave blank to show it only on its club page.',
+      options: { list: RESOURCE_SECTIONS.map(({ value, label }) => ({ title: label, value })) },
+    },
+    {
+      name: 'difficulty',
+      title: 'Experience Level',
+      type: 'string',
+      initialValue: 'all',
+      options: { list: RESOURCE_LEVELS.map(({ value, label }) => ({ title: label, value })) },
     },
     {
       name: 'url',
       title: 'External URL',
       type: 'url',
-      hidden: ({ document }) => document?.resourceType !== 'link',
+      description: 'Link to a video, website, course, or shared file. Used before the uploaded file if both are set.',
+      validation: Rule => Rule.uri({ scheme: ['http', 'https'] }),
     },
     {
       name: 'file',
       title: 'File',
       type: 'file',
-      hidden: ({ document }) => document?.resourceType === 'link',
+      hidden: ({ document }) => ['link', 'video', 'course', 'tool', 'other'].includes(document?.resourceType),
     },
     {
       name: 'description',

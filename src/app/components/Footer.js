@@ -9,6 +9,7 @@ const Footer = () => {
       <div className={styles.links}>
         <a href="/clubs">Clubs</a>
         <a href="/projects">Projects</a>
+        <a href="/resources">Resources</a>
         <a href="/events/calendar">Events</a>
         <a href="/gallery">Gallery</a>
         <a href="/schedule">Schedule</a>

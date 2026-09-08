@@ -127,7 +127,7 @@ async function getClubAnnouncements(clubId) {
 }
 
 async function getClubResourcesCount(clubId) {
-  const countQuery = `count(*[_type == "clubResource" && club._ref == $clubId])`
+  const countQuery = `count(*[_type == "clubResource" && club._ref == $clubId && (!defined(accessLevel) || accessLevel == "public")])`
   return client.fetch(countQuery, { clubId })
 }
 

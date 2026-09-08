@@ -7,14 +7,17 @@
   font-family: var(--mono);
   color: var(--subtle-gray);
   font-size: 0.9rem;
+  flex-wrap: wrap;
+  gap: 1.5rem;
 }
 
 .copyright {
-  flex: 1;
+  flex: 1 0 200px;
 }
 
 .links {
   display: flex;
+  flex-wrap: wrap;
   gap: 1.5rem;
 }
 
@@ -24,6 +27,14 @@
 }
 
 .links a:hover {
-  color: var(--accent);
+  color: var(--fg);
   text-decoration: underline;
+}
+
+@media (max-width: 800px) {
+  .footer { padding: 2rem; }
+  .links { gap: 1rem 1.5rem; }
+}
+@media (max-width: 480px) {
+  .footer { padding: 2rem 1rem; }
 }

@@ -35,6 +35,7 @@ export default async function sitemap() {
     '/about', 
     '/events',
     '/projects',
+    '/resources',
     '/clubs',
     '/gallery',
     '/links',
