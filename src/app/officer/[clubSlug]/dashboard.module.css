@@ -733,6 +733,13 @@
   padding: 1.5rem;
 }
 
+.formHint {
+  color: var(--subtle-gray);
+  font-size: .8rem;
+  line-height: 1.6;
+  margin: 0;
+}
+
 .formGroupInline {
   margin-bottom: 1.5rem;
 }

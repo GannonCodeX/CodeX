@@ -4,6 +4,9 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import styles from './dashboard.module.css'
+import { RESOURCE_TYPES, RESOURCE_LEVELS, RESOURCE_SECTIONS } from '@/lib/resources.mjs'
+
+const emptyResource = { title: '', description: '', resourceType: 'link', url: '', categoryId: '', librarySection: 'learn', difficulty: 'all', tagsText: '' }
 
 export default function DashboardClient({ club, session, sessionError, dashboardData, categories }) {
   const router = useRouter()
@@ -49,13 +52,7 @@ export default function DashboardClient({ club, session, sessionError, dashboard
   const [newDate, setNewDate] = useState('')
 
   // Resource form
-  const [resourceData, setResourceData] = useState({
-    title: '',
-    description: '',
-    resourceType: 'link',
-    url: '',
-    categoryId: ''
-  })
+  const [resourceData, setResourceData] = useState({ ...emptyResource })
 
   // Store session token in cookie when coming from magic link
   useEffect(() => {
@@ -113,7 +110,7 @@ export default function DashboardClient({ club, session, sessionError, dashboard
       timeSlotMinutes: 30,
       visibility: 'unlisted'
     })
-    setResourceData({ title: '', description: '', resourceType: 'link', url: '', categoryId: '' })
+    setResourceData({ ...emptyResource })
   }
 
   // Create Announcement
@@ -200,7 +197,7 @@ export default function DashboardClient({ club, session, sessionError, dashboard
       const response = await fetch('/api/officer/create-resource', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(resourceData)
+        body: JSON.stringify({ ...resourceData, tags: resourceData.tagsText.split(',').map(tag => tag.trim()).filter(Boolean) })
       })
 
       const data = await response.json()
@@ -868,11 +865,13 @@ export default function DashboardClient({ club, session, sessionError, dashboard
             </div>
 
             <form onSubmit={handleCreateResource} className={styles.modalForm}>
+              <p className={styles.formHint}>Public resources appear in the resource library and on your club page.</p>
               <div className={styles.formGroup}>
                 <label htmlFor="resource-title" className={styles.formLabel}>Title *</label>
                 <input
                   type="text"
                   id="resource-title"
+                  maxLength={160}
                   value={resourceData.title}
                   onChange={(e) => setResourceData({ ...resourceData, title: e.target.value })}
                   className={styles.formInput}
@@ -885,6 +884,7 @@ export default function DashboardClient({ club, session, sessionError, dashboard
                 <label htmlFor="resource-description" className={styles.formLabel}>Description</label>
                 <textarea
                   id="resource-description"
+                  maxLength={2000}
                   value={resourceData.description}
                   onChange={(e) => setResourceData({ ...resourceData, description: e.target.value })}
                   className={styles.formTextarea}
@@ -901,10 +901,7 @@ export default function DashboardClient({ club, session, sessionError, dashboard
                   onChange={(e) => setResourceData({ ...resourceData, resourceType: e.target.value })}
                   className={styles.formSelect}
                 >
-                  <option value="link">Link</option>
-                  <option value="document">Document</option>
-                  <option value="video">Video</option>
-                  <option value="other">Other</option>
+                  {RESOURCE_TYPES.map(item => <option key={item.value} value={item.value}>{item.label}</option>)}
                 </select>
               </div>
 
@@ -919,6 +916,24 @@ export default function DashboardClient({ club, session, sessionError, dashboard
                   placeholder="https://..."
                   required
                 />
+              </div>
+
+              <div className={styles.formGroup}>
+                <label htmlFor="resource-section" className={styles.formLabel}>Library collection</label>
+                <select id="resource-section" value={resourceData.librarySection} onChange={e => setResourceData({ ...resourceData, librarySection: e.target.value })} className={styles.formSelect}>
+                  {RESOURCE_SECTIONS.map(item => <option key={item.value} value={item.value}>{item.label}</option>)}
+                </select>
+              </div>
+              <div className={styles.formGroup}>
+                <label htmlFor="resource-level" className={styles.formLabel}>Experience level</label>
+                <select id="resource-level" value={resourceData.difficulty} onChange={e => setResourceData({ ...resourceData, difficulty: e.target.value })} className={styles.formSelect}>
+                  {RESOURCE_LEVELS.map(item => <option key={item.value} value={item.value}>{item.label}</option>)}
+                </select>
+              </div>
+              <div className={styles.formGroup}>
+                <label htmlFor="resource-tags" className={styles.formLabel}>Topics (separate with commas)</label>
+                <input id="resource-tags" type="text" value={resourceData.tagsText} onChange={e => setResourceData({ ...resourceData, tagsText: e.target.value })} className={styles.formInput} placeholder="Python, Web development, Git & teamwork" aria-describedby="resource-tags-hint" />
+                <small id="resource-tags-hint" className={styles.formHint}>Up to 8 topics, 40 characters each.</small>
               </div>
 
               {categories && categories.length > 0 && (

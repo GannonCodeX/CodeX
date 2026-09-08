@@ -2,6 +2,7 @@
 import { client } from '@/sanity/lib/client'
 import { verifySecureToken } from '@/lib/secure-tokens'
 import { cookies } from 'next/headers'
+import { validateResourceInput } from '@/lib/resources.mjs'
 
 export async function POST(request) {
   try {
@@ -24,42 +25,18 @@ export async function POST(request) {
       )
     }
 
-    const { title, description, resourceType, url, categoryId } = await request.json()
-
-    if (!title) {
-      return Response.json(
-        { error: 'Title is required', code: 'MISSING_FIELDS' },
-        { status: 400 }
-      )
-    }
-
-    if (resourceType === 'link' && !url) {
-      return Response.json(
-        { error: 'URL is required for link resources', code: 'MISSING_URL' },
-        { status: 400 }
-      )
-    }
+    const { value, error } = validateResourceInput(await request.json())
+    if (error) return Response.json({ error, code: 'INVALID_RESOURCE' }, { status: 400 })
 
     // Create resource in Sanity
     const resourceData = {
       _type: 'clubResource',
-      title,
-      description: description || '',
-      resourceType: resourceType || 'link',
+      ...value,
+      accessLevel: 'public',
+      publishedAt: new Date().toISOString(),
       club: {
         _type: 'reference',
         _ref: verification.data.clubId
-      }
-    }
-
-    if (resourceType === 'link' && url) {
-      resourceData.url = url
-    }
-
-    if (categoryId) {
-      resourceData.category = {
-        _type: 'reference',
-        _ref: categoryId
       }
     }
 
